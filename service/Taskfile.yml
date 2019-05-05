@@ -1,0 +1,58 @@
+version: '2'
+
+output: 'prefixed'
+
+env:
+  MODULE: github.com/sazzer/goworlds/service
+  BUILD_DIR: output
+
+tasks:
+  clean:
+    silent: true
+    cmds:
+      - rm -rf ${BUILD_DIR}
+
+  build:
+    silent: true
+    deps: [generate, lint, test]
+    cmds:
+      - go build -o ${BUILD_DIR}/goworlds-service ${MODULE}/cmd/service
+    sources:
+      - cmd/**/*
+      - internal/**/*
+    generates:
+      - ${BUILD_DIR}/goworlds-service
+
+  run:
+    silent: true
+    deps: [generate, lint, test]
+    cmds:
+      - go run ${MODULE}/cmd/service
+
+  lint:
+    silent: true
+    cmds:
+      - golangci-lint run --enable-all --disable lll,dupl
+
+  test:
+    silent: true
+    cmds:
+      - go test -covermode=count -coverprofile=${BUILD_DIR}/coverage.out ${MODULE}/internal/...
+
+  cover-report:
+    silent: true
+    deps: [test]
+    cmds:
+      - go tool cover -html=${BUILD_DIR}/coverage.out
+
+  get-deps:
+    silent: true
+    cmds:
+      - go get github.com/golangci/golangci-lint/cmd/golangci-lint@master
+      - go get
+
+  generate:
+    silent: true
+    cmds:
+      - mkdir -p output
+      - go generate ${MODULE}/...
