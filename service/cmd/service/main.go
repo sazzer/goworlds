@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
+	"github.com/sazzer/goworlds/service/internal/server"
 	"github.com/sirupsen/logrus"
 )
 
@@ -12,5 +15,11 @@ func main() {
 
 	config := LoadConfig()
 
-	logrus.WithField("config", config).Info("Hello")
+	server := server.New()
+
+	address := fmt.Sprintf(":%d", config.HTTPPort)
+	logrus.WithField("address", address).Info("Starting server")
+	if err := http.ListenAndServe(address, server); err != nil {
+		logrus.WithError(err).Fatal("Failed to start server")
+	}
 }
