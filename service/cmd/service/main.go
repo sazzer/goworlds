@@ -10,5 +10,7 @@ func main() {
 	logrus.SetOutput(os.Stdout)
 	logrus.SetLevel(logrus.DebugLevel)
 
-	logrus.Info("Hello")
+	config := LoadConfig()
+
+	logrus.WithField("config", config).Info("Hello")
 }
