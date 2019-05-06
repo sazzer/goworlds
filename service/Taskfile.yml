@@ -11,6 +11,7 @@ tasks:
     silent: true
     cmds:
       - rm -rf ${BUILD_DIR}
+      - rm -rf vendor
 
   build:
     silent: true
@@ -56,3 +57,11 @@ tasks:
     cmds:
       - mkdir -p output
       - go generate ${MODULE}/...
+
+  docker:
+    silent: true
+    deps: [clean,get-deps]
+    cmds:
+      - go mod vendor
+      - docker build -t uk.co.grahamcox.goworlds.service/goworlds-service:latest .
+      - rm -rf vendor
