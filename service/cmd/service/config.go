@@ -10,6 +10,9 @@ import (
 type Config struct {
 	// HTTPPort is the port to listen on for the HTTP Server
 	HTTPPort int `envconfig:"PORT,default=3000"`
+
+	// DatabaseURL is the connection string for the Postgres Database
+	DatabaseURL string `envconfig:"DATABASE_URL"`
 }
 
 // LoadConfig will load the configuration for the application

@@ -5,19 +5,14 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/sazzer/goworlds/service/internal/database"
 	"github.com/sazzer/goworlds/service/internal/health"
 	"github.com/sazzer/goworlds/service/internal/health/healthwiring"
 	"github.com/sazzer/goworlds/service/internal/server"
 	"github.com/sirupsen/logrus"
+
+	_ "github.com/lib/pq"
 )
-
-type Healthcheck struct {
-	status error
-}
-
-func (s Healthcheck) CheckHealth() error {
-	return s.status
-}
 
 func main() {
 	logrus.SetOutput(os.Stdout)
@@ -25,8 +20,13 @@ func main() {
 
 	config := LoadConfig()
 
+	database, err := database.NewFromURL(config.DatabaseURL)
+	if err != nil {
+		logrus.WithError(err).Fatal("Failed to connect to database")
+	}
+
 	healthchecks := healthwiring.New(map[string]health.Healthcheck{
-		"database": Healthcheck{nil},
+		"database": database,
 	})
 
 	server := server.New(healthchecks.Route)

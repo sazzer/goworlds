@@ -8,6 +8,7 @@ require (
 	github.com/golangci/golangci-lint v1.16.1-0.20190425135923-692dacb773b7 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
+	github.com/lib/pq v1.1.1
 	github.com/sirupsen/logrus v1.4.1
 	github.com/stretchr/testify v1.3.0 // indirect
 	github.com/vrischmann/envconfig v1.1.0
