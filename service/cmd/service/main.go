@@ -15,7 +15,13 @@ func main() {
 
 	config := LoadConfig()
 
-	server := server.New()
+	server := server.New(server.Route{
+		URL:    "/test",
+		Method: http.MethodGet,
+		Handler: func(w http.ResponseWriter, r *http.Request) {
+			_, _ = w.Write([]byte("hi"))
+		},
+	})
 
 	address := fmt.Sprintf(":%d", config.HTTPPort)
 	logrus.WithField("address", address).Info("Starting server")
