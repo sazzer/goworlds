@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/sazzer/goworlds/service/internal/health"
+	"github.com/sazzer/goworlds/service/internal/server"
 )
 
 const (
@@ -46,7 +46,8 @@ func (handler HealthcheckHandler) Handle(w http.ResponseWriter, r *http.Request)
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(statusCode)
-	_ = json.NewEncoder(w).Encode(result)
+	server.JSONResponse{
+		StatusCode: statusCode,
+		Body:       result,
+	}.Write(w)
 }
