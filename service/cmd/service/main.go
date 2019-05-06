@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	fmt.Printf("Hello")
+	logrus.SetOutput(os.Stdout)
+	logrus.SetLevel(logrus.DebugLevel)
+
+	logrus.Info("Hello")
 }
