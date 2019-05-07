@@ -1,12 +1,11 @@
 package server_test
 
 import (
-	"bytes"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/kinbiko/jsonassert"
 	"github.com/sazzer/goworlds/service/internal/server"
+	"github.com/sazzer/goworlds/service/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -40,13 +39,7 @@ func TestJSONResponse(t *testing.T) {
 			response := w.Result()
 
 			assert.Equal(t, 200, response.StatusCode)
-
-			ja := jsonassert.New(t)
-
-			buf := new(bytes.Buffer)
-			buf.ReadFrom(response.Body)
-
-			ja.Assertf(tc.output, buf.String())
+			testutils.AssertJSONResponse(t, tc.output, response)
 		})
 	}
 }
@@ -76,13 +69,7 @@ func TestStatusCode(t *testing.T) {
 			response := w.Result()
 
 			assert.Equal(t, tc.expected, response.StatusCode)
-
-			ja := jsonassert.New(t)
-
-			buf := new(bytes.Buffer)
-			buf.ReadFrom(response.Body)
-
-			ja.Assertf(`"Hello"`, buf.String())
+			testutils.AssertJSONResponse(t, `"Hello"`, response)
 		})
 	}
 }
