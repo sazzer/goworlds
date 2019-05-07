@@ -13,7 +13,7 @@ func AssertJSONResponse(t *testing.T, expected string, response *http.Response) 
 	ja := jsonassert.New(t)
 
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(response.Body)
+	_, _ = buf.ReadFrom(response.Body)
 
 	ja.Assertf(expected, buf.String())
 }

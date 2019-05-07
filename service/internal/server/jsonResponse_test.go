@@ -29,6 +29,8 @@ func TestJSONResponse(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
+
 		t.Run(tc.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			server.JSONResponse{
@@ -59,6 +61,8 @@ func TestStatusCode(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
+
 		t.Run(tc.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			server.JSONResponse{
