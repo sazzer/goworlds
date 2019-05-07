@@ -7,8 +7,7 @@ import (
 
 	"github.com/sazzer/goworlds/service/internal/health"
 	"github.com/sazzer/goworlds/service/internal/health/handlers"
-	"github.com/sazzer/goworlds/service/testutils"
-	"github.com/stretchr/testify/assert"
+	"github.com/sazzer/goworlds/service/testutils/httptesting"
 )
 
 type TestHealthcheck struct {
@@ -86,14 +85,10 @@ func TestHealthchecks(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			handler := handlers.NewHealthcheckHandler(tc.checks)
 
-			w := httptest.NewRecorder()
-			req := httptest.NewRequest("GET", "http://example.com/health", nil)
-			handler.Handle(w, req)
-
-			response := w.Result()
-
-			assert.Equal(t, tc.statusCode, response.StatusCode)
-			testutils.AssertJSONResponse(t, tc.output, response)
+			httptesting.NewHandlerTest(handler.Handle).
+				Handle(t, httptest.NewRequest("GET", "http://example.com/health", nil)).
+				IsStatus(tc.statusCode).
+				IsJSONBody(tc.output)
 		})
 	}
 }
