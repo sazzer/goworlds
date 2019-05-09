@@ -11,7 +11,7 @@ func (db Wrapper) Migrate() error {
 		Dir: "migrations",
 	}
 
-	n, err := migrate.Exec(db.db, "postgres", migrations, migrate.Up)
+	n, err := migrate.Exec(db.db.DB, "postgres", migrations, migrate.Up)
 	if err != nil {
 		logrus.WithError(err).Error("Failed to migrate database")
 		return err
