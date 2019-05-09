@@ -1,0 +1,4 @@
+development:
+  dialect: postgres
+  datasource: postgres://goworlds:goworlds@localhost:35432/goworlds?sslmode=disable
+  dir: migrations

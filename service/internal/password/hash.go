@@ -5,17 +5,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// hashParams represents the parameters to the password hash algorithm
-var hashParams = argon2id.Params{
-	Memory:      64 * 1024,
-	Iterations:  3,
-	Parallelism: 2,
-	SaltLength:  16,
-	KeyLength:   32,
-}
-
 // Hash will convert a plaintext string into a securely hashed string
 func Hash(plaintext string) (string, error) {
+	hashParams := argon2id.Params{
+		Memory:      64 * 1024,
+		Iterations:  3,
+		Parallelism: 2,
+		SaltLength:  16,
+		KeyLength:   32,
+	}
+
 	hash, err := argon2id.CreateHash(plaintext, &hashParams)
 
 	if err != nil {

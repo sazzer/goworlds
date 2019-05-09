@@ -11,6 +11,7 @@ require (
 	github.com/kinbiko/jsonassert v1.0.0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/lib/pq v1.1.1
+	github.com/rubenv/sql-migrate v0.0.0-20190327083759-54bad0a9b051
 	github.com/sirupsen/logrus v1.4.1
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/stretchr/testify v1.3.0
@@ -20,4 +21,5 @@ require (
 	golang.org/x/sys v0.0.0-20190507160741-ecd444e8653b // indirect
 	golang.org/x/text v0.3.2 // indirect
 	golang.org/x/tools v0.0.0-20190508025753-952990169864 // indirect
+	gopkg.in/gorp.v1 v1.7.2 // indirect
 )

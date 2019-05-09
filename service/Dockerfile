@@ -27,5 +27,6 @@ ENV PORT=3000
 WORKDIR /app
 COPY --from=build-env /go/bin/service /app/goworlds
 COPY docker/start.sh /app/start.sh
+COPY migrations /app/migrations
 CMD /app/start.sh
 

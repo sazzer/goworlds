@@ -24,6 +24,9 @@ func main() {
 	if err != nil {
 		logrus.WithError(err).Fatal("Failed to connect to database")
 	}
+	if err := database.Migrate(); err != nil {
+		logrus.WithError(err).Fatal("Failed to migrate database")
+	}
 
 	healthchecks := healthwiring.New(map[string]health.Healthcheck{
 		"database": database,
