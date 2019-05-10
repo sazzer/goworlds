@@ -1,0 +1,20 @@
+Service:
+  - Setup
+    - Web Server @done
+    - Logging
+    - Config
+    - Docker
+    - Database Connection
+    - Migrations
+  - Healthchecks
+  - Password Hashing
+  - Users
+    - Model
+    - DAO
+      - Schema
+      - Get By ID
+      - Get By ID and Password
+    - Handlers
+      - Get By ID
+  - OAuth2
+Integration Testing:
