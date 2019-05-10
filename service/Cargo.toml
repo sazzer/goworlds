@@ -6,4 +6,6 @@ edition = "2018"
 
 [dependencies]
 dotenv = "0.10.1"
+config = "0.9.3"
+serde = "1.0.91"
 actix-web = "1.0.0-beta.3"

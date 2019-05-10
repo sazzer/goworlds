@@ -1,6 +1,8 @@
 use actix_web::{middleware, web, App, HttpServer};
 use std::sync::Arc;
 
+pub mod settings;
+
 trait UserRetriever {
   fn get_user_name(&self) -> String;
 }

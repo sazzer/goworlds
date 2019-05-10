@@ -2,7 +2,7 @@ Service:
   - Setup
     - Web Server @done
     - Logging
-    - Config
+    - Config @done
     - Docker
     - Database Connection
     - Migrations
