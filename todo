@@ -1,7 +1,7 @@
 Service:
   - Setup
     - Web Server @done
-    - Logging
+    - Logging @done
     - Config @done
     - Docker
     - Database Connection

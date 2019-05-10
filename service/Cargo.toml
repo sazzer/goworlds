@@ -5,7 +5,9 @@ authors = ["Graham Cox <graham@grahamcox.co.uk>"]
 edition = "2018"
 
 [dependencies]
-dotenv = "0.10.1"
+dotenv = "0.14.0"
 config = "0.9.3"
 serde = "1.0.91"
+log = "0.4.6"
+log4rs = "0.8.3"
 actix-web = "1.0.0-beta.3"
