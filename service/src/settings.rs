@@ -5,7 +5,7 @@ use config::{Config, ConfigError, Environment};
 #[derive(Debug, Deserialize)]
 pub struct Settings {
   /// port is the port that the HTTP Server will be listening on
-  port: u16,
+  pub port: u16,
 }
 
 impl Settings {
