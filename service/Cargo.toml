@@ -5,4 +5,5 @@ authors = ["Graham Cox <graham@grahamcox.co.uk>"]
 edition = "2018"
 
 [dependencies]
+dotenv = "0.10.1"
 actix-web = "1.0.0-beta.3"
