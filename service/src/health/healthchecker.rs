@@ -10,16 +10,10 @@ pub struct Healthchecker {
 
 impl Healthchecker {
   // Create a new empty Healthchecker
-  pub fn new() -> Self {
+  pub fn new(checks: HashMap<String, Arc<Healthcheck>>) -> Self {
     Healthchecker {
-      checks: HashMap::new(),
+      checks: checks,
     }
-  }
-
-  // Add a new check to be performed
-  pub fn add_check(&mut self, name: String, check: Arc<Healthcheck>) -> &mut Self {
-    self.checks.insert(name, check);
-    self
   }
 
   // Actually perform all of the healthchecks and return the collected results
@@ -41,7 +35,8 @@ mod tests {
 
   #[test]
   fn test_no_checks() {
-    let checker = Healthchecker::new();
+    let checks = HashMap::new();
+    let checker = Healthchecker::new(checks);
 
     let result = checker.check_health();
 
@@ -51,8 +46,9 @@ mod tests {
 
   #[test]
   fn test_passing_check() {
-    let mut checker = Healthchecker::new();
-    checker.add_check("passing".to_owned(), Arc::new(Ok("Passed".to_owned())));
+    let mut checks: HashMap<String, Arc<Healthcheck>> = HashMap::new();
+    checks.insert("passing".to_owned(), Arc::new(Ok("Passed".to_owned())));
+    let checker = Healthchecker::new(checks);
 
     let result = checker.check_health();
 
@@ -63,8 +59,9 @@ mod tests {
 
   #[test]
   fn test_failing_check() {
-    let mut checker = Healthchecker::new();
-    checker.add_check("failing".to_owned(), Arc::new(Err("Failed".to_owned())));
+    let mut checks: HashMap<String, Arc<Healthcheck>> = HashMap::new();
+    checks.insert("failing".to_owned(), Arc::new(Err("Failed".to_owned())));
+    let checker = Healthchecker::new(checks);
 
     let result = checker.check_health();
 
@@ -75,9 +72,10 @@ mod tests {
 
   #[test]
   fn test_mixed_check() {
-    let mut checker = Healthchecker::new();
-    checker.add_check("passing".to_owned(), Arc::new(Ok("Passed".to_owned())));
-    checker.add_check("failing".to_owned(), Arc::new(Err("Failed".to_owned())));
+    let mut checks: HashMap<String, Arc<Healthcheck>> = HashMap::new();
+    checks.insert("passing".to_owned(), Arc::new(Ok("Passed".to_owned())));
+    checks.insert("failing".to_owned(), Arc::new(Err("Failed".to_owned())));
+    let checker = Healthchecker::new(checks);
 
     let result = checker.check_health();
 
