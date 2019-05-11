@@ -3,27 +3,27 @@ use std::sync::Arc;
 use super::Healthcheck;
 
 // The component that is able to check the overall health of the system
-struct Healthchecker {
+pub struct Healthchecker {
   // The checks that are to be performed
   checks: HashMap<String, Arc<Healthcheck>>,
 }
 
 impl Healthchecker {
   // Create a new empty Healthchecker
-  fn new() -> Self {
+  pub fn new() -> Self {
     Healthchecker {
       checks: HashMap::new(),
     }
   }
 
   // Add a new check to be performed
-  fn add_check(&mut self, name: String, check: Arc<Healthcheck>) -> &mut Self {
+  pub fn add_check(&mut self, name: String, check: Arc<Healthcheck>) -> &mut Self {
     self.checks.insert(name, check);
     self
   }
 
   // Actually perform all of the healthchecks and return the collected results
-  fn check_health(&self) -> HashMap<String, Result<String, String>> {
+  pub fn check_health(&self) -> HashMap<String, Result<String, String>> {
     let mut result = HashMap::new();
 
     for (k, v) in self.checks.clone() {

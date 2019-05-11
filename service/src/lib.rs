@@ -14,7 +14,10 @@ fn register_index(_: &mut actix_web::web::ServiceConfig) {
 
 // Actually build and start the service running, using the provided settings
 pub fn start_service(config: settings::Settings) -> Result<()> {
+  let health_wiring = health::wiring::new();
+
   server::Server::new(config.port)
+    .add_configuration(Arc::new(health_wiring))
     .add_configuration(Arc::new(register_index))
     .add_configuration(Arc::new(|_: &mut actix_web::web::ServiceConfig| {
       info!("Registering route in closure");
