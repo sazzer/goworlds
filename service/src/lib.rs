@@ -1,5 +1,4 @@
-#![feature(unboxed_closures)]
-#![feature(fn_traits)]
+#![allow(dead_code)]
 
 use std::io::Result;
 use std::sync::Arc;
@@ -7,6 +6,7 @@ use log::info;
 
 pub mod settings;
 pub mod server;
+pub mod health;
 
 fn register_index(_: &mut actix_web::web::ServiceConfig) {
   info!("Registering route in free function");
