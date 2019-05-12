@@ -1,0 +1,28 @@
+version: '3'
+services:
+    goworlds-postgres:
+        image: postgres:10.6-alpine
+        environment:
+            POSTGRES_DB: goworlds
+            POSTGRES_USER: goworlds
+            POSTGRES_PASSWORD: goworlds
+        networks:
+            - goworlds-e2e
+    goworlds-service:
+        image: uk.co.grahamcox.goworlds/goworlds-service:latest
+        environment:
+            PORT: 8080
+            DATABASE_URI: postgres://goworlds:goworlds@goworlds-postgres:5432/goworlds?sslmode=disable
+            DOCKERIZE_WAIT: -wait tcp://goworlds-postgres:5432
+        networks:
+            - goworlds-e2e
+    goworlds-e2e:
+        image: uk.co.grahamcox.goworlds/goworlds-e2e:latest
+        environment:
+            CYPRESS_SERVICE_URI: http://goworlds-service:8080
+        networks:
+            - goworlds-e2e
+networks:
+    goworlds-e2e:
+
+
