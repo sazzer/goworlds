@@ -1,6 +1,3 @@
 mod server;
 
-pub use {
-  server::Server,
-  server::ServerConfigurer
-};
+pub use {server::Server, server::ServerConfigurer};
