@@ -1,9 +1,30 @@
 version: '3'
 services:
+    goworlds-postgres:
+        image: postgres:10.6-alpine
+        environment:
+            POSTGRES_DB: goworlds
+            POSTGRES_USER: goworlds
+            POSTGRES_PASSWORD: goworlds
+        ports:
+            - "127.0.0.1:35432:5432"
+        networks:
+            - goworlds-dev
+    goworlds-pgweb:
+        image: sosedoff/pgweb
+        environment:
+            DATABASE_URL: postgres://goworlds:goworlds@goworlds-postgres:5432/goworlds?sslmode=disable
+        ports:
+            - "127.0.0.1:38081:8081"
+        depends_on:
+            - goworlds-postgres
+        networks:
+            - goworlds-dev
     goworlds-service:
         image: uk.co.grahamcox.goworlds/goworlds-service:latest
         environment:
             PORT: 8080
+            DOCKERIZE_WAIT: -wait tcp://goworlds-postgres:5432
         ports:
             - "127.0.0.1:38080:8080"
         networks:

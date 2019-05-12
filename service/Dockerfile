@@ -25,12 +25,20 @@ RUN cargo build --release --target=x86_64-unknown-linux-musl
 # our final base
 FROM alpine:latest
 
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+  && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+ENV PORT=3000
+
 # Set up where we deploy the app
 WORKDIR /goworlds
 
 # copy the build artifact from the build stage
 COPY --from=build /goworlds/target/x86_64-unknown-linux-musl/release/goworlds-service .
 COPY log4rs.yml .
+COPY docker/start.sh .
 
 # set the startup command to run your binary
-CMD ["./goworlds-service"]
+CMD ["./start.sh"]
