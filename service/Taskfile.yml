@@ -1,0 +1,36 @@
+version: '2'
+
+output: 'prefixed'
+
+tasks:
+  setup:
+    cmds:
+      - rustup update
+      - rustup component add clippy
+  clean:
+    cmds:
+      - cargo clean
+
+  build:
+    deps: [lint,test]
+    cmds:
+      - cargo build
+
+  run:
+    deps: [lint,test]
+    cmds:
+      - cargo run
+
+  test:
+    cmds:
+      - cargo test
+
+  lint:
+    cmds:
+      - cargo check
+      - cargo clippy
+
+  docker:
+    deps: [lint,test]
+    cmds:
+      - docker build -t uk.co.grahamcox.goworlds/goworlds-service:latest .

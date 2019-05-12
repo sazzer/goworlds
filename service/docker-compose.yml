@@ -1,0 +1,14 @@
+version: '3'
+services:
+    goworlds-service:
+        image: uk.co.grahamcox.goworlds/goworlds-service:latest
+        environment:
+            PORT: 8080
+        ports:
+            - "127.0.0.1:38080:8080"
+        networks:
+            - goworlds-dev
+networks:
+    goworlds-dev:
+
+
