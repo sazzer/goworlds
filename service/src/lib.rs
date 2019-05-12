@@ -18,9 +18,10 @@ fn register_index(_: &mut actix_web::web::ServiceConfig) {
 
 // Actually build and start the service running, using the provided settings
 pub fn start_service(config: settings::Settings) -> Result<()> {
-    let database = database::DatabaseWrapper::new(config.database_uri).unwrap();
+    let database = Arc::new(database::DatabaseWrapper::new(config.database_uri).unwrap());
 
-    let healthchecks = HashMap::new();
+    let mut healthchecks: HashMap<String, Arc<health::Healthcheck>> = HashMap::new();
+    healthchecks.insert("database".to_owned(), database);
     let health_wiring = health::wiring::new(healthchecks);
 
     server::Server::new(config.port)

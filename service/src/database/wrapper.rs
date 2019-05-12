@@ -1,7 +1,9 @@
 use super::Database;
+use crate::health::Healthcheck;
 use log::error;
 use postgres::NoTls;
 use r2d2_postgres::PostgresConnectionManager;
+use std::time::Duration;
 
 /// A wrapper around a connection pool with which we can actually talk to the database
 pub struct DatabaseWrapper {
@@ -44,3 +46,14 @@ impl DatabaseWrapper {
 }
 
 impl Database for DatabaseWrapper {}
+
+impl Healthcheck for DatabaseWrapper {
+    fn check_health(&self) -> Result<String, String> {
+        let timeout = Duration::from_secs(10);
+        let mut client = self.pool.get_timeout(timeout).map_err(|e| format!("{}", e))?;
+        match client.execute("SELECT 1", &[]) {
+            Ok(_) => Ok("Database Connected".to_owned()),
+            Err(e) => Err(format!("{}", e)),
+        }
+    }
+}
