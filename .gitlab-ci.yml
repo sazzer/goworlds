@@ -28,12 +28,15 @@ build-service-container:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull clux/muslrust
-    - docker pull $IMAGE_TAG
+    - docker pull $IMAGE_TAG:build
+    - docker pull $IMAGE_TAG:latest
   script:
-    - docker build -t $IMAGE_TAG service
+    - docker build -t $IMAGE_TAG:build --target --cache-from $IMAGE_TAG:build build service
+    - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:build --cache-from $IMAGE_TAG:latest service
   after_script:
-    - docker push $IMAGE_TAG
+    - docker push $IMAGE_TAG:build
+    - docker push $IMAGE_TAG:latest
