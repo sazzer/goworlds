@@ -32,6 +32,6 @@ build-service-container:
   before_script:
    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t $IMAGE_TAG service
+    - docker build -t $IMAGE_TAG --cache-from $IMAGE_TAG service
   after_script:
     - docker push $IMAGE_TAG
