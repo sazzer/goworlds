@@ -32,8 +32,8 @@ build-service-container:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull clux/muslrust
-    - docker pull $IMAGE_TAG:build
-    - docker pull $IMAGE_TAG:latest
+    - (docker pull $IMAGE_TAG:build || true)
+    - (docker pull $IMAGE_TAG:latest || true)
   script:
     - docker build -t $IMAGE_TAG:build --target build --cache-from $IMAGE_TAG:build service
     - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:build --cache-from $IMAGE_TAG:latest service
