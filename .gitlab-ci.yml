@@ -30,7 +30,8 @@ build-service-container:
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest
   before_script:
-   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $IMAGE_TAG
   script:
     - docker build -t $IMAGE_TAG --cache-from $IMAGE_TAG service
   after_script:
