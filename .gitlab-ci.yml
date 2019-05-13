@@ -1,0 +1,16 @@
+stages:
+  - build
+  - test
+
+build-service:
+  stage: build
+  image: rust:latest
+  before_scripts:
+    - curl -sL https://taskfile.dev/install.sh | sh
+    - cd service
+    - task setup
+    - rustc --version
+    - cargo --version
+  script:
+    - cd service
+    - task build
