@@ -5,7 +5,7 @@ stages:
 build-service:
   stage: build
   image: rust:latest
-  before_scripts:
+  before_script:
     - curl -sL https://taskfile.dev/install.sh | sh
     - cd service
     - task setup
