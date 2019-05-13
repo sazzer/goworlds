@@ -6,7 +6,7 @@ build-service:
   stage: build
   image: rust:latest
   variables:
-    CARGO_HOME: /usr/local/cargo
+    CARGO_HOME: ~/.cargo
   before_script:
     - cd service
     - rustup update
