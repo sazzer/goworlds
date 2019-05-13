@@ -44,7 +44,7 @@ build-service-container:
 build-e2e-container:
   stage: build
   image: docker:stable
-    services:
+  services:
     - docker:dind
   variables:
     DOCKER_HOST: tcp://docker:2375
