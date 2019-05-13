@@ -20,3 +20,11 @@ build-service:
     paths:
     - target/
   
+build-service-container:
+  stage: build
+  before_script:
+   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY/uk.co.grahamcox.goworlds/goworlds-service:latest service
+  after_script:
+    - docker push $CI_REGISTRY/uk.co.grahamcox.goworlds/goworlds-service:latest
