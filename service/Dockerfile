@@ -1,4 +1,7 @@
-FROM rust:1.34.1-stretch AS build
+FROM clux/muslrust AS build
+
+# Version check
+RUN rustc --version && cargo --version
 
 # create a new empty shell project
 RUN USER=root cargo new --bin /goworlds
@@ -15,11 +18,11 @@ RUN rm src/*.rs
 COPY ./src ./src
 
 # build for release
-RUN rm -rf ./target/release/deps/goworlds*
+RUN rm -rf ./target/x86_64-unknown-linux-musl/release/deps/goworlds*
 RUN cargo build --release
 
 # our final base
-FROM rust:1.34.1-stretch
+FROM alpine:latest
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -32,7 +35,7 @@ ENV PORT=3000
 WORKDIR /goworlds
 
 # copy the build artifact from the build stage
-COPY --from=build /goworlds/target/release/goworlds-service .
+COPY --from=build /goworlds/target/x86_64-unknown-linux-musl/release/goworlds-service .
 COPY log4rs.yml .
 COPY docker/start.sh .
 COPY migrations ./migrations
