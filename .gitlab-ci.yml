@@ -40,3 +40,19 @@ build-service-container:
   after_script:
     - docker push $IMAGE_TAG:build
     - docker push $IMAGE_TAG:latest
+
+build-e2e-container:
+  stage: build
+  image: docker:stable
+    services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-e2e
+  before_script:
+    - (docker pull $IMAGE_TAG:latest || true)
+  script:
+    - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:latest e2e
+  after_script:
+    - docker push $IMAGE_TAG:latest
