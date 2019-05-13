@@ -5,8 +5,6 @@ stages:
 build-service:
   stage: build
   image: rust:latest
-  variables:
-    CARGO_HOME: ~/.cargo
   before_script:
     - cd service
     - rustup update
@@ -21,5 +19,4 @@ build-service:
   cache:
     paths:
     - target/
-    - ~/.cargo/registry
   
