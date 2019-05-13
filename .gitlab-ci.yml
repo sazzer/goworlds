@@ -22,9 +22,16 @@ build-service:
   
 build-service-container:
   stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    IMAGE_TAG: $CI_REGISTRY/uk.co.grahamcox.goworlds/goworlds-service:latest
   before_script:
    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build -t $CI_REGISTRY/uk.co.grahamcox.goworlds/goworlds-service:latest service
+    - docker build -t $IMAGE_TAG service
   after_script:
-    - docker push $CI_REGISTRY/uk.co.grahamcox.goworlds/goworlds-service:latest
+    - docker push $IMAGE_TAG
