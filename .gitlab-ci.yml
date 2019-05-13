@@ -28,7 +28,7 @@ build-service-container:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    IMAGE_TAG: $CI_REGISTRY/sazzer/uk.co.grahamcox.goworlds/goworlds-service:latest
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest
   before_script:
    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
