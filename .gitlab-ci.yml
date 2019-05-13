@@ -6,11 +6,14 @@ build-service:
   stage: build
   image: rust:latest
   before_script:
-    - curl -sL https://taskfile.dev/install.sh | sh
     - cd service
-    - task setup
+    - rustup update
+    - rustup component add clippy
     - rustc --version
     - cargo --version
   script:
     - cd service
-    - task build
+    - cargo check
+    - cargo clippy
+    - cargo test
+    - cargo build
