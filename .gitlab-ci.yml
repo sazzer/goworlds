@@ -35,7 +35,7 @@ build-service-container:
     - docker pull $IMAGE_TAG:build
     - docker pull $IMAGE_TAG:latest
   script:
-    - docker build -t $IMAGE_TAG:build --target --cache-from $IMAGE_TAG:build build service
+    - docker build -t $IMAGE_TAG:build --target build --cache-from $IMAGE_TAG:build service
     - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:build --cache-from $IMAGE_TAG:latest service
   after_script:
     - docker push $IMAGE_TAG:build
