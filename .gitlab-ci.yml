@@ -5,6 +5,8 @@ stages:
 build-service:
   stage: build
   image: rust:latest
+  variables:
+    CARGO_HOME: $CI_PROJECT_DIR/cargo
   before_script:
     - cd service
     - rustup update
@@ -16,3 +18,8 @@ build-service:
     - cargo clippy
     - cargo test
     - cargo build
+  cache:
+    paths:
+    - target/
+    - $CARGO_HOME
+  
