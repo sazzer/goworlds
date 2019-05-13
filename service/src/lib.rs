@@ -1,16 +1,16 @@
 #![allow(dead_code)]
 
-use log::info;
-use std::collections::HashMap;
-use std::io::Result;
-use std::sync::Arc;
-
 pub mod database;
 pub mod health;
 pub mod server;
 pub mod settings;
 #[cfg(test)]
 pub mod test;
+
+use log::info;
+use std::collections::HashMap;
+use std::io::Result;
+use std::sync::Arc;
 
 fn register_index(_: &mut actix_web::web::ServiceConfig) {
     info!("Registering route in free function");
@@ -19,6 +19,7 @@ fn register_index(_: &mut actix_web::web::ServiceConfig) {
 // Actually build and start the service running, using the provided settings
 pub fn start_service(config: settings::Settings) -> Result<()> {
     let database = Arc::new(database::DatabaseWrapper::new(config.database_uri).unwrap());
+    database.migrate().unwrap();
 
     let mut healthchecks: HashMap<String, Arc<health::Healthcheck>> = HashMap::new();
     healthchecks.insert("database".to_owned(), database);
