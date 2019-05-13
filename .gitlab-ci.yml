@@ -34,6 +34,6 @@ build-service-container:
     - docker pull clux/muslrust
     - docker pull $IMAGE_TAG
   script:
-    - docker build -t $IMAGE_TAG --cache-from $IMAGE_TAG service
+    - docker build -t $IMAGE_TAG service
   after_script:
     - docker push $IMAGE_TAG
