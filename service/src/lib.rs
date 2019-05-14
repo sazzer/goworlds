@@ -2,6 +2,7 @@
 
 pub mod database;
 pub mod health;
+pub mod password;
 pub mod server;
 pub mod settings;
 #[cfg(test)]

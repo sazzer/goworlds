@@ -44,17 +44,23 @@ impl DatabaseWrapper {
             Ok(p) => p,
         };
 
-        Ok(DatabaseWrapper { uri: uri, pool: pool })
+        Ok(DatabaseWrapper {
+            uri: uri,
+            pool: pool,
+        })
     }
 
     pub fn migrate(&self) -> Result<(), String> {
         let driver = get_driver(&self.uri).map_err(|e| format!("Failed to get driver: {}", e))?;
 
         let migrations_path = Path::new("./migrations");
-        debug!("Loading migrations from {}", migrations_path.canonicalize().unwrap().display());
+        debug!(
+            "Loading migrations from {}",
+            migrations_path.canonicalize().unwrap().display()
+        );
 
-        let migration_files =
-            read_migration_files(migrations_path).map_err(|e| format!("Failed to get migrations: {}", e))?;
+        let migration_files = read_migration_files(migrations_path)
+            .map_err(|e| format!("Failed to get migrations: {}", e))?;
 
         let current = driver.get_current_number();
         let max = migration_files.keys().max().unwrap_or(&0i32);
@@ -70,13 +76,18 @@ impl DatabaseWrapper {
             if number > &current {
                 let mig_file = migration.up.as_ref().unwrap();
                 info!("Applying migration {}: {}", number, mig_file.name);
-                let content = mig_file.content.clone()
+                let content = mig_file
+                    .content
+                    .clone()
                     .ok_or(format!("Failed to read migation file {}", mig_file.name))?;
 
                 match driver.migrate(content, mig_file.number) {
                     Err(e) => {
                         error!("Failed to apply migration {}: {}", mig_file.name, e);
-                        return Err(format!("Failed to apply migration {}: {}", mig_file.name, e));
+                        return Err(format!(
+                            "Failed to apply migration {}: {}",
+                            mig_file.name, e
+                        ));
                     }
                     Ok(_) => {
                         info!("Applied migration {}: {}", number, mig_file.name);
@@ -87,7 +98,6 @@ impl DatabaseWrapper {
 
         Ok(())
     }
-
 }
 
 impl Database for DatabaseWrapper {}
