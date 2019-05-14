@@ -69,6 +69,9 @@ run-e2e-tests:
     SERVICE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
     E2E_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-e2e
   before_script:
+    - apk update
+    - apk upgrade
+    - apk add python python-dev py-pip build-base
     - pip install docker-compose
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $SERVICE_TAG:latest
