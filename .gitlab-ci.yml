@@ -57,3 +57,22 @@ build-e2e-container:
     - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:latest e2e
   after_script:
     - docker push $IMAGE_TAG:latest
+
+run-e2e-tests:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    SERVICE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
+    E2E_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-e2e
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $SERVICE_TAG:latest
+    - docker pull $E2E_TAG:latest
+    - docker tag $SERVICE_TAG:latest uk.co.grahamcox.goworlds/goworlds-service:latest
+    - docker tag $E2E_TAG:latest uk.co.grahamcox.goworlds/goworlds-e2e:latest
+  script:
+    - docker-compose -f docker-compose.e2e.yml up --exit-code-from=goworlds-e2e
