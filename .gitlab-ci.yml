@@ -49,8 +49,9 @@ build-e2e-container:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-tests
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-e2e
   before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - (docker pull $IMAGE_TAG:latest || true)
   script:
     - docker build -t $IMAGE_TAG:latest --cache-from $IMAGE_TAG:latest e2e
