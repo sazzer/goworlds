@@ -5,6 +5,9 @@ pub mod health;
 pub mod password;
 pub mod server;
 pub mod settings;
+pub mod model;
+pub mod users;
+pub mod oauth2;
 #[cfg(test)]
 pub mod test;
 
