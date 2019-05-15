@@ -7,7 +7,8 @@ build-service:
   image: rust:latest
   before_script:
     - cd service
-    - rustup update
+    - rustup toolchain install nightly
+    - rustup default nightly
     - rustup component add clippy
     - rustc --version
     - cargo --version
@@ -18,8 +19,8 @@ build-service:
     - cargo build
   cache:
     paths:
-    - target/
-  
+      - target/
+
 build-service-container:
   stage: build
   image: docker:stable
@@ -73,7 +74,7 @@ run-e2e-tests:
     - apk upgrade
     - apk add python python-dev py-pip build-base libffi-dev openssl-dev
     - pip install docker-compose
-    
+
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $SERVICE_TAG:latest
     - docker pull $E2E_TAG:latest

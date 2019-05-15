@@ -1,6 +1,8 @@
 FROM clux/muslrust AS build
 
 # Version check
+RUN rustup toolchain install nightly
+RUN rustup default nightly
 RUN rustc --version && cargo --version
 
 # create a new empty shell project
