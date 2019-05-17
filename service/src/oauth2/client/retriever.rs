@@ -1,6 +1,7 @@
 use super::{OAuth2ClientID, OAuth2ClientModel};
 
 /// Possible errors when retrieving an OAuth2 Client
+#[derive(Debug, PartialEq)]
 pub enum RetrieverError {
     ClientNotFound
 }

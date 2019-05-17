@@ -22,6 +22,7 @@ pub enum GrantType {
 }
 
 /// The details of an OAuth2 Client
+#[derive(Debug)]
 pub struct OAuth2ClientData {
     name: String,
     secret: String,

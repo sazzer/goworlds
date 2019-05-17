@@ -1,6 +1,6 @@
 mod model;
 mod retriever;
-mod dao;
+pub mod dao;
 
 pub use model::{
     OAuth2ClientID,
@@ -8,4 +8,9 @@ pub use model::{
     GrantType,
     OAuth2ClientData,
     OAuth2ClientModel
+};
+
+pub use retriever::{
+    OAuth2ClientRetriever,
+    RetrieverError
 };
