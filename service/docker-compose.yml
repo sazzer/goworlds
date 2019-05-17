@@ -24,7 +24,7 @@ services:
         image: uk.co.grahamcox.goworlds/goworlds-service:latest
         environment:
             PORT: 8080
-            DATABASE_URI: postgres://goworlds:goworlds@goworlds-postgres:5432/goworlds?sslmode=disable
+            DATABASE_URI: jdbc:postgresql://goworlds-postgres:5432/goworlds?user=goworlds&password=goworlds
             DOCKERIZE_WAIT: -wait tcp://goworlds-postgres:5432
         ports:
             - "127.0.0.1:38080:8080"

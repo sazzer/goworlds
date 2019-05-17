@@ -1,3 +1,5 @@
 server.port=$PORT
 
 logging.level.uk.co.grahamcox=$GOWORLDS_LOGGING_LEVEL
+
+spring.datasource.url=$DATABASE_URI
