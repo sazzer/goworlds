@@ -1,0 +1,41 @@
+stages:
+  - build
+  - docker
+
+build-service:
+  stage: build
+  image: maven:3.6.1-jdk-12
+
+  variables:
+    MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+    MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+
+  script:
+    - cd service
+    - mvn $MAVEN_CLI_OPTS clean install
+
+  artifacts:
+    paths:
+      - service/target/goworlds-service.jar
+
+  cache:
+    paths:
+      - $CI_PROJECT_DIR/.m2/repository
+
+build-service-container:
+  stage: docker
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
+
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd service
+    - docker build -t $IMAGE_TAG:latest --build-arg JAR_FILE=target/goworlds-service.jar .
+  after_script:
+    - docker push $IMAGE_TAG:latest
