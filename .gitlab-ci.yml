@@ -4,15 +4,19 @@ stages:
 
 build-service:
   stage: build
-  image: maven:3.6.1-jdk-12
+  image: adoptopenjdk/openjdk12:jdk-12.0.1_12
 
   variables:
     MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
     MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
+  before_script:
+    - useradd -d /builds/{GITLAB_USER} -g users -M -N builder
+    - chown -R builder:users ..
+
   script:
     - cd service
-    - mvn $MAVEN_CLI_OPTS clean install
+    - su -p -c "./mvnw $MAVEN_CLI_OPTS clean install" builder
 
   artifacts:
     paths:
