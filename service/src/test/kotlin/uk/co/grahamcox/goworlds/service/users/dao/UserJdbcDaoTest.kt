@@ -14,10 +14,6 @@ import java.time.Instant
 import java.util.*
 
 internal class UserJdbcDaoTest : IntegrationTestBase() {
-    /** The JDBC Template to use */
-    @Autowired
-    private lateinit var jdbcTemplate: NamedParameterJdbcTemplate
-
     /** The test subject */
     private lateinit var userJdbcDao: UserJdbcDao
 
@@ -39,34 +35,20 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
 
     @Test
     fun getKnownUserById() {
-        val userId = UserId(UUID.randomUUID())
-        val version = UUID.randomUUID()
-        val created = Instant.parse("2019-04-18T10:40:50Z")
-        val updated = Instant.parse("2019-05-18T10:40:50Z")
+        val seededUser = seed(UserSeed())
 
-        jdbcTemplate.update("""INSERT INTO users(user_id, version, created, updated, name, email, password)
-            VALUES(:userId, :version, :created, :updated, :name, :email, :password)""",
-                mapOf(
-                        "userId" to userId.id,
-                        "version" to version,
-                        "created" to Date.from(created),
-                        "updated" to Date.from(updated),
-                        "name" to "Graham",
-                        "email" to "graham@grahamcox.co.uk",
-                        "password" to "passwordHash"
-                ))
-
+        val userId = UserId(seededUser.id)
         val user = userJdbcDao.getUserById(userId)
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(userId, user.identity.id) },
-                Executable { Assertions.assertEquals(version, user.identity.version) },
-                Executable { Assertions.assertEquals(created, user.identity.created) },
-                Executable { Assertions.assertEquals(updated, user.identity.updated) },
+                Executable { Assertions.assertEquals(seededUser.version, user.identity.version) },
+                Executable { Assertions.assertEquals(seededUser.created, user.identity.created) },
+                Executable { Assertions.assertEquals(seededUser.updated, user.identity.updated) },
 
-                Executable { Assertions.assertEquals("Graham", user.data.name) },
-                Executable { Assertions.assertEquals("graham@grahamcox.co.uk", user.data.email) },
-                Executable { Assertions.assertEquals(HashedPassword("passwordHash"), user.data.password) }
+                Executable { Assertions.assertEquals(seededUser.name, user.data.name) },
+                Executable { Assertions.assertEquals(seededUser.email, user.data.email) },
+                Executable { Assertions.assertEquals(HashedPassword(seededUser.hashedPassword), user.data.password) }
         )
     }
 }
