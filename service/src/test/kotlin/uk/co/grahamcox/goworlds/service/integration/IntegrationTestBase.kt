@@ -51,8 +51,8 @@ abstract class IntegrationTestBase {
      * @return the data that was seeded
      */
     protected fun <T : Seeder> seed(data: T) : T {
-        val update = jdbcTemplate.update(data.seedSql, data.seedParams)
-        LOG.debug("Seeded {} rows with {}", update, data)
+        jdbcTemplate.update(data.seedSql, data.seedParams)
+        LOG.debug("Seeded {}", data)
         return data
     }
 }

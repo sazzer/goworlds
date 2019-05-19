@@ -3,6 +3,8 @@ package uk.co.grahamcox.goworlds.service.users.dao
 import org.slf4j.LoggerFactory
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
+import uk.co.grahamcox.goworlds.service.database.getInstant
+import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.model.Identity
 import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
@@ -51,10 +53,10 @@ class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : Us
     private fun parseUser(rs: ResultSet) : Model<UserId, UserData> {
         return Model(
                 identity = Identity(
-                        id = UserId(UUID.fromString(rs.getString("user_id"))),
+                        id = UserId(rs.getUUID("user_id")),
                         version = UUID.fromString(rs.getString("version")),
-                        created = rs.getTimestamp("created").toInstant(),
-                        updated = rs.getTimestamp("updated").toInstant()
+                        created = rs.getInstant("created"),
+                        updated = rs.getInstant("updated")
                 ),
                 data = UserData(
                         name = rs.getString("name"),
