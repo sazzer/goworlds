@@ -37,10 +37,10 @@ class ClientJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : 
                 parseClient(rs)
             }!!
 
-            ClientJdbcDao.LOG.debug("Loaded client: {}", client)
+            LOG.debug("Loaded client: {}", client)
             return client
         } catch (e: EmptyResultDataAccessException) {
-            ClientJdbcDao.LOG.debug("No client found with ID {}", id)
+            LOG.debug("No client found with ID {}", id)
             throw UnknownClientException(id)
         }
     }

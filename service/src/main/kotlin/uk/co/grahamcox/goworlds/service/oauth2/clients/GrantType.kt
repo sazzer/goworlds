@@ -7,5 +7,5 @@ enum class GrantType {
     AUTHORIZATION_CODE,
     IMPLICIT,
     CLIENT_CREDENTIALS,
-    PASSWORD
+    REFRESH_TOKEN
 }
