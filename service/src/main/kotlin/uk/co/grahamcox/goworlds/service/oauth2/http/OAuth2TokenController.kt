@@ -5,6 +5,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.oauth2.Scope
+import uk.co.grahamcox.goworlds.service.oauth2.ScopeRegistry
 import uk.co.grahamcox.goworlds.service.oauth2.clients.*
 import java.util.*
 
@@ -14,7 +16,8 @@ import java.util.*
 @RestController
 @RequestMapping("/oauth2/token")
 class OAuth2TokenController(
-        private val clientRetriever: ClientRetriever
+        private val clientRetriever: ClientRetriever,
+        private val scopeRegistry: ScopeRegistry
 ) {
     companion object {
         /** The logger to use*/
@@ -31,7 +34,8 @@ class OAuth2TokenController(
      */
     @RequestMapping(method = [RequestMethod.POST])
     fun tokenHandler(@RequestHeader(HttpHeaders.AUTHORIZATION) authorization: String?,
-                     @RequestParam("grant_type") grantTypeValue: String?): AccessTokenModel {
+                     @RequestParam("grant_type") grantTypeValue: String?,
+                     @RequestParam("scope") scopeValue: String?): AccessTokenModel {
         val grantType = parseGrantType(grantTypeValue)
         val client = loadClient(authorization)
 
@@ -39,6 +43,8 @@ class OAuth2TokenController(
             LOG.warn("Grant Type {} is not supported by Client {}", grantType, client)
             throw OAuth2Exception(ErrorCode.UNAUTHORIZED_CLIENT, "Requested Grant Type can not be used by this client")
         }
+
+        val scopes = scopeValue?.let(::parseScopes) ?: emptySet()
 
         return AccessTokenModel(
                 accessToken = "accessToken",
@@ -59,6 +65,31 @@ class OAuth2TokenController(
 
         return GRANT_TYPES[grantTypeValue]
                 ?: throw OAuth2Exception(ErrorCode.UNSUPPORTED_GRANT_TYPE, "Unsupported grant type: $grantTypeValue")
+    }
+
+    /**
+     * Parse the scopes that were requested
+     * @param scopes The scopes string to parse
+     * @return the scopes
+     */
+    private fun parseScopes(scopes: String): Collection<Scope> {
+        val resolvedScopes = scopes.split("\\s".toRegex())
+                .map(String::trim)
+                .filter(String::isNotBlank)
+                .toSet()
+                .map { it to scopeRegistry.getScopeById(it) }
+
+        LOG.debug("Resolved scopes: {}", resolvedScopes)
+
+        val unknownScopes = resolvedScopes.filter { it.second == null }
+                .map { it.first }
+
+        if (unknownScopes.isNotEmpty()) {
+            LOG.warn("Unknown Scopes: {}", unknownScopes)
+            throw OAuth2Exception(ErrorCode.INVALID_SCOPE, "Unknown Scopes: $unknownScopes")
+        }
+
+        return resolvedScopes.mapNotNull { it.second }
     }
 
     /**

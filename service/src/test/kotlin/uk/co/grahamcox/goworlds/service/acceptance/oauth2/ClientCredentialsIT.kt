@@ -76,6 +76,23 @@ class ClientCredentialsIT : TokenTestBase() {
         )
     }
 
+    @Test
+    fun unknownScopes() {
+        val params = mapOf(
+                "grant_type" to listOf("client_credentials"),
+                "scope" to listOf("openid unknown")
+        )
+
+        val headers = mapOf("Authorization" to basicEncode("${client.id}:${client.secret}"))
+
+        val response = makeRequest(params, headers)
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.statusCode) },
+                Executable { Assertions.assertEquals("invalid_scope", response.body!!["error"]) }
+        )
+    }
+
     /**
      * Helper to encode the given string as HTTP Basic Auth
      * @param input the input to encode
