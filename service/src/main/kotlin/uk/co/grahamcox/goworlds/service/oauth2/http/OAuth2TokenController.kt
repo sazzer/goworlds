@@ -17,7 +17,8 @@ import java.util.*
 @RequestMapping("/oauth2/token")
 class OAuth2TokenController(
         private val clientRetriever: ClientRetriever,
-        private val scopeRegistry: ScopeRegistry
+        private val scopeRegistry: ScopeRegistry,
+        private val grantHandlers: Map<String, GrantTypeHandler>
 ) {
     companion object {
         /** The logger to use*/
@@ -28,6 +29,7 @@ class OAuth2TokenController(
                 "client_credentials" to GrantType.CLIENT_CREDENTIALS,
                 "refresh_token" to GrantType.REFRESH_TOKEN
         )
+
     }
     /**
      * Handle the POST method
@@ -35,7 +37,8 @@ class OAuth2TokenController(
     @RequestMapping(method = [RequestMethod.POST])
     fun tokenHandler(@RequestHeader(HttpHeaders.AUTHORIZATION) authorization: String?,
                      @RequestParam("grant_type") grantTypeValue: String?,
-                     @RequestParam("scope") scopeValue: String?): AccessTokenModel {
+                     @RequestParam("scope") scopeValue: String?,
+                     @RequestParam allParams: Map<String, String>): AccessTokenModel {
         val grantType = parseGrantType(grantTypeValue)
         val client = loadClient(authorization)
 
@@ -46,11 +49,10 @@ class OAuth2TokenController(
 
         val scopes = scopeValue?.let(::parseScopes) ?: emptySet()
 
-        return AccessTokenModel(
-                accessToken = "accessToken",
-                tokenType = "Bearer",
-                expiry = 3600
-        )
+        val handler = grantHandlers[grantTypeValue]
+                ?: throw OAuth2Exception(ErrorCode.UNSUPPORTED_GRANT_TYPE, "Unsupported grant type: $grantTypeValue")
+
+        return handler.handle(client, scopes, allParams)
     }
 
     /**
@@ -142,4 +144,5 @@ class OAuth2TokenController(
             "error" to e.code.code,
             "error_description" to e.message
     )
+
 }
