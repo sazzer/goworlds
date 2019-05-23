@@ -12,7 +12,7 @@ import uk.co.grahamcox.goworlds.service.users.UserRetriever
  */
 class ClientCredentialsGrantTypeHandler(
         private val userRetriever: UserRetriever
-) : GrantTypeHandler {
+) : AbstractGrantTypeHandler() {
     companion object {
         /** The logger to use*/
         private val LOG = LoggerFactory.getLogger(ClientCredentialsGrantTypeHandler::class.java)
@@ -26,15 +26,11 @@ class ClientCredentialsGrantTypeHandler(
      * @return the access token that was produced
      */
     override fun handle(client: Model<ClientId, ClientData>, scopes: Collection<Scope>, params: Map<String, String>): AccessTokenModel {
+        // Load the user to generate the access token for - the owner of the OAuth2 Client details
         val user = userRetriever.getUserById(client.data.owner)
 
         LOG.debug("Performing a Client Credentials Grant for user {} and client {} with scopes {}", user, client, scopes)
 
-        return AccessTokenModel(
-                accessToken = "accessToken",
-                tokenType = "Bearer",
-                expiry = 3600
-        )
-
+        return buildAccessToken(user, client, scopes)
     }
 }
