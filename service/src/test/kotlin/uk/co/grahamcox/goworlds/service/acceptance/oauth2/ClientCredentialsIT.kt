@@ -93,6 +93,24 @@ class ClientCredentialsIT : TokenTestBase() {
         )
     }
 
+    @Test
+    fun successfulAccessToken() {
+        val params = mapOf(
+                "grant_type" to listOf("client_credentials")
+        )
+
+        val headers = mapOf("Authorization" to basicEncode("${client.id}:${client.secret}"))
+
+        val response = makeRequest(params, headers)
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(HttpStatus.OK, response.statusCode) },
+                Executable { Assertions.assertNotNull(response.body!!["access_token"]) },
+                Executable { Assertions.assertEquals("Bearer", response.body!!["token_type"]) },
+                Executable { Assertions.assertNotNull(response.body!!["expires_in"]) }
+        )
+    }
+
     /**
      * Helper to encode the given string as HTTP Basic Auth
      * @param input the input to encode

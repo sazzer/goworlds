@@ -1,5 +1,6 @@
 package uk.co.grahamcox.goworlds.service.oauth2.spring
 
+import io.fusionauth.jwt.hmac.HMACSigner
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
@@ -36,7 +37,9 @@ class OAuth2Config(context: GenericApplicationContext) {
                 AccessTokenGeneratorImpl(ref(), Duration.parse("PT24H"))
             }
             bean<AccessTokenSerializer> {
-                JwtAccessTokenSerializerImpl()
+                JwtAccessTokenSerializerImpl(
+                        HMACSigner.newSHA512Signer("too many secrets")
+                )
             }
             bean {
                 OAuth2TokenController(
