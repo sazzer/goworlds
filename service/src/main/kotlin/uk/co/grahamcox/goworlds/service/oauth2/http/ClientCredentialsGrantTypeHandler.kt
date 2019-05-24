@@ -15,8 +15,9 @@ import java.time.Clock
 class ClientCredentialsGrantTypeHandler(
         private val userRetriever: UserRetriever,
         clock: Clock,
-        accessTokenGenerator: AccessTokenGenerator
-) : AbstractGrantTypeHandler(clock, accessTokenGenerator) {
+        accessTokenGenerator: AccessTokenGenerator,
+        accessTokenSerializer: AccessTokenSerializer
+) : AbstractGrantTypeHandler(clock, accessTokenGenerator, accessTokenSerializer) {
     companion object {
         /** The logger to use*/
         private val LOG = LoggerFactory.getLogger(ClientCredentialsGrantTypeHandler::class.java)

@@ -17,7 +17,8 @@ import java.time.Period
  */
 abstract class AbstractGrantTypeHandler(
         private val clock: Clock,
-        private val accessTokenGenerator: AccessTokenGenerator
+        private val accessTokenGenerator: AccessTokenGenerator,
+        private val accessTokenSerializer: AccessTokenSerializer
 ) : GrantTypeHandler {
     companion object {
         /** The logger to use */
@@ -38,14 +39,15 @@ abstract class AbstractGrantTypeHandler(
         val accessToken = accessTokenGenerator.generate(user, client, scopes)
         LOG.debug("Generated Access Token: {}", accessToken)
 
-        // TODO: Generate an Access Token Model for the requested details
-        // And return it
-
+        // Generate an Access Token Model for the requested details
         val now = clock.instant()
         val expiresIn = Duration.between(now, accessToken.expires).seconds
 
+        val serializedAccessToken = accessTokenSerializer.serialize(accessToken)
+
+        // And return it
         return AccessTokenModel(
-                accessToken = "accessToken",
+                accessToken = serializedAccessToken,
                 tokenType = "Bearer",
                 expiry = expiresIn
         )
