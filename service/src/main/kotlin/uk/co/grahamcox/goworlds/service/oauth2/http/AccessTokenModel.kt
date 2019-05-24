@@ -13,7 +13,7 @@ data class AccessTokenModel(
         val tokenType: String,
 
         @JsonProperty("expires_in")
-        val expiry: Int,
+        val expiry: Long,
 
         @JsonProperty("scope")
         val scope: String? = null,

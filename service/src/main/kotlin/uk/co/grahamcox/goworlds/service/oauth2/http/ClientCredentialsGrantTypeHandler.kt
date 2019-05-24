@@ -5,14 +5,18 @@ import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.oauth2.Scope
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientData
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientId
+import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessTokenGenerator
 import uk.co.grahamcox.goworlds.service.users.UserRetriever
+import java.time.Clock
 
 /**
  * Grant Type Handler for a Client Credentials Grant
  */
 class ClientCredentialsGrantTypeHandler(
-        private val userRetriever: UserRetriever
-) : AbstractGrantTypeHandler() {
+        private val userRetriever: UserRetriever,
+        clock: Clock,
+        accessTokenGenerator: AccessTokenGenerator
+) : AbstractGrantTypeHandler(clock, accessTokenGenerator) {
     companion object {
         /** The logger to use*/
         private val LOG = LoggerFactory.getLogger(ClientCredentialsGrantTypeHandler::class.java)
