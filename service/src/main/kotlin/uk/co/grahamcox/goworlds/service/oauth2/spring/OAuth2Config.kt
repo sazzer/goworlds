@@ -4,6 +4,7 @@ import io.fusionauth.jwt.hmac.HMACSigner
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
+import org.springframework.core.env.get
 import uk.co.grahamcox.goworlds.service.oauth2.OpenIDConnectScopes
 import uk.co.grahamcox.goworlds.service.oauth2.ScopeRegistry
 import uk.co.grahamcox.goworlds.service.oauth2.ScopeRegistryImpl
@@ -34,11 +35,11 @@ class OAuth2Config(context: GenericApplicationContext) {
             }
             bean<ClientCredentialsGrantTypeHandler>()
             bean<AccessTokenGenerator> {
-                AccessTokenGeneratorImpl(ref(), Duration.parse("PT24H"))
+                AccessTokenGeneratorImpl(ref(), Duration.parse(env["goworlds.oauth2.token.duration"]))
             }
             bean<AccessTokenSerializer> {
                 JwtAccessTokenSerializerImpl(
-                        HMACSigner.newSHA512Signer("too many secrets")
+                        HMACSigner.newSHA512Signer(env["goworlds.oauth2.token.secret"])
                 )
             }
             bean {
