@@ -1,5 +1,6 @@
 package uk.co.grahamcox.goworlds.service.oauth2.http
 
+import io.fusionauth.jwt.JWTException
 import io.fusionauth.jwt.Signer
 import io.fusionauth.jwt.Verifier
 import io.fusionauth.jwt.domain.JWT
@@ -55,7 +56,12 @@ class JwtAccessTokenSerializerImpl(
      * @return the Access Token
      */
     override fun deserialize(accessToken: String): AccessToken {
-        val jwt = JWT.getDecoder().decode(accessToken, verifier)
+        val jwt = try {
+            JWT.getDecoder().decode(accessToken, verifier)
+        } catch (e: JWTException) {
+            LOG.warn("Failed to decode access token {}", accessToken, e)
+            throw AccessTokenDeserializationException(accessToken)
+        }
 
         val scopes = jwt.getList("scopes")
                 .map(Any::toString)
