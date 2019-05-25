@@ -10,10 +10,7 @@ import uk.co.grahamcox.goworlds.service.oauth2.OpenIDConnectScopes
 import uk.co.grahamcox.goworlds.service.oauth2.ScopeRegistry
 import uk.co.grahamcox.goworlds.service.oauth2.ScopeRegistryImpl
 import uk.co.grahamcox.goworlds.service.oauth2.clients.dao.ClientJdbcDao
-import uk.co.grahamcox.goworlds.service.oauth2.http.AccessTokenSerializer
-import uk.co.grahamcox.goworlds.service.oauth2.http.ClientCredentialsGrantTypeHandler
-import uk.co.grahamcox.goworlds.service.oauth2.http.JwtAccessTokenSerializerImpl
-import uk.co.grahamcox.goworlds.service.oauth2.http.OAuth2TokenController
+import uk.co.grahamcox.goworlds.service.oauth2.http.*
 import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessTokenGenerator
 import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessTokenGeneratorImpl
 import java.time.Duration
@@ -54,6 +51,8 @@ class OAuth2Config(context: GenericApplicationContext) {
                         mapOf("client_credentials" to ref<ClientCredentialsGrantTypeHandler>())
                 )
             }
+            bean<AccessTokenStore>()
+            bean<AccessTokenInterceptor>()
         }.initialize(context)
     }
 }
