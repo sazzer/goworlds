@@ -53,6 +53,9 @@ class OAuth2Config(context: GenericApplicationContext) {
             }
             bean<AccessTokenStore>()
             bean<AccessTokenInterceptor>()
+            bean<AccessTokenArgumentResolver>()
+            bean<AccessTokenController>()
+            bean<AccessTokenControllerAdvice>()
         }.initialize(context)
     }
 }

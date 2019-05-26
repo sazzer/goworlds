@@ -1,5 +1,6 @@
 package uk.co.grahamcox.goworlds.service.integration
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.slf4j.LoggerFactory
@@ -7,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.context.annotation.Import
+import org.springframework.http.*
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.util.LinkedMultiValueMap
 import uk.co.grahamcox.goworlds.service.integration.database.DatabaseCleaner
 import uk.co.grahamcox.goworlds.service.integration.database.Seeder
+import uk.co.grahamcox.goworlds.service.oauth2.clients.dao.ClientSeed
 
 /**
  * Base class for the Integration Tests
@@ -54,5 +58,49 @@ abstract class IntegrationTestBase {
         jdbcTemplate.update(data.seedSql, data.seedParams)
         LOG.debug("Seeded {}", data)
         return data
+    }
+
+    /**
+     * Make an authenticated request to the service
+     * @param client The client to authenticate as
+     * @param request The request to process
+     * @return the response
+     */
+    fun <T> makeRequest(token: String, request: RequestEntity<*>, response: Class<T>): ResponseEntity<out T> {
+        val newRequestHeaders = LinkedMultiValueMap(request.headers)
+        newRequestHeaders[HttpHeaders.AUTHORIZATION] = "Bearer $token"
+
+        val newRequest = RequestEntity(request.body, newRequestHeaders, request.method, request.url)
+        return restTemplate.exchange(newRequest, response)
+    }
+
+    /**
+     * Make an authenticated request to the service
+     * @param client The client to authenticate as
+     * @param request The request to process
+     * @return the response
+     */
+    fun <T> makeRequest(client: ClientSeed, request: RequestEntity<*>, response: Class<T>)
+        = makeRequest(getTokenForClient(client), request, response)
+
+    /**
+     * Get an Access Token that works for the given client
+     * @param client The client to authenticate as
+     * @return the token
+     */
+    private fun getTokenForClient(client: ClientSeed): String {
+        val requestHeaders = HttpHeaders()
+        requestHeaders.contentType = MediaType.APPLICATION_FORM_URLENCODED
+        requestHeaders.setBasicAuth(client.id.toString(), client.secret)
+
+        val params = mapOf("grant_type" to listOf("client_credentials"))
+
+        val tokenRequest = HttpEntity(LinkedMultiValueMap(params), requestHeaders)
+
+        val tokenResponse = restTemplate.postForEntity("/oauth2/token", tokenRequest, Map::class.java)
+
+        Assertions.assertEquals(HttpStatus.OK, tokenResponse.statusCode)
+
+        return tokenResponse.body!!["access_token"]!! as String
     }
 }
