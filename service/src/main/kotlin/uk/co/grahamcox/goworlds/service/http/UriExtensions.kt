@@ -13,6 +13,9 @@ fun KFunction<*>.buildUri(vararg params: Any?): URI {
     val declaringClass = javaMethod.declaringClass
 
     return MvcUriComponentsBuilder.fromMethod(declaringClass, javaMethod, *params)
+            .scheme(null)
+            .host(null)
+            .port(null)
             .build()
             .toUri()
 }

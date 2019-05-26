@@ -1,5 +1,6 @@
 package uk.co.grahamcox.goworlds.service.integration
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,6 +35,10 @@ abstract class IntegrationTestBase {
     @Autowired
     protected lateinit var restTemplate: TestRestTemplate
 
+    /** The Object Mapper to use  */
+    @Autowired
+    protected lateinit var objectMapper: ObjectMapper
+
     /** The JDBC Template to use */
     @Autowired
     protected lateinit var jdbcTemplate: NamedParameterJdbcTemplate
@@ -60,6 +65,13 @@ abstract class IntegrationTestBase {
         return data
     }
 
+    /**
+     * Assert that the given JSON String matches the actual response
+     */
+    protected fun assertJson(expected: String, actual: Any) {
+        val parsed = objectMapper.readValue(expected, actual.javaClass)
+        Assertions.assertEquals(parsed, actual)
+    }
     /**
      * Make an authenticated request to the service
      * @param client The client to authenticate as
