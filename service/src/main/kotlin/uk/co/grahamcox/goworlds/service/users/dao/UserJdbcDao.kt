@@ -12,6 +12,7 @@ import uk.co.grahamcox.goworlds.service.users.UnknownUserException
 import uk.co.grahamcox.goworlds.service.users.UserData
 import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.users.UserRetriever
+import uk.co.grahamcox.skl.select
 import java.sql.ResultSet
 import java.util.*
 
@@ -32,8 +33,14 @@ class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : Us
     override fun getUserById(id: UserId): Model<UserId, UserData> {
         LOG.debug("Getting user with ID: {}", id)
         try {
-            val user = jdbcOperations.queryForObject("SELECT * FROM users WHERE user_id = :userId",
-                    mapOf("userId" to id.id)) { rs, _ ->
+            val query = select {
+                val (users) = from("users")
+                where {
+                    eq(users["user_id"], bind(id.id))
+                }
+            }
+
+            val user = jdbcOperations.queryForObject(query.sql, query.binds) { rs, _ ->
                 parseUser(rs)
             }!!
 
