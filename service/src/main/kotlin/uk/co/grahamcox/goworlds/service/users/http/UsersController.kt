@@ -1,14 +1,10 @@
 package uk.co.grahamcox.goworlds.service.users.http
 
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
 import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.users.UnknownUserException
 import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.users.UserRetriever
-import java.lang.IllegalArgumentException
-import java.net.URI
 import java.util.*
 
 /**

@@ -7,11 +7,10 @@ import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.model.Identity
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.model.Page
+import uk.co.grahamcox.goworlds.service.model.Sort
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
-import uk.co.grahamcox.goworlds.service.users.UnknownUserException
-import uk.co.grahamcox.goworlds.service.users.UserData
-import uk.co.grahamcox.goworlds.service.users.UserId
-import uk.co.grahamcox.goworlds.service.users.UserRetriever
+import uk.co.grahamcox.goworlds.service.users.*
 import uk.co.grahamcox.skl.select
 import java.sql.ResultSet
 import java.util.*
@@ -50,6 +49,18 @@ class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : Us
             LOG.debug("No user found with ID {}", id)
             throw UnknownUserException(id)
         }
+    }
+
+    /**
+     * Search for users in the system
+     * @param filters Filters to apply when searching
+     * @param sorts Sorts to apply for the returned users
+     * @param offset The offset of the results to return
+     * @param count The count of results to return
+     * @return the matching users
+     */
+    override fun searchUsers(filters: UserSearchFilters, sorts: List<Sort<UserSort>>, offset: Long, count: Long): Page<Model<UserId, UserData>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
