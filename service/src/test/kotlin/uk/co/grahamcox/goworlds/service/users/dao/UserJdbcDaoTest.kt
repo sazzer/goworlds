@@ -1,15 +1,17 @@
 package uk.co.grahamcox.goworlds.service.users.dao
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
+import uk.co.grahamcox.goworlds.service.model.Sort
+import uk.co.grahamcox.goworlds.service.model.SortDirection
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.UnknownUserException
 import uk.co.grahamcox.goworlds.service.users.UserId
+import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
+import uk.co.grahamcox.goworlds.service.users.UserSort
 import java.time.Instant
 import java.util.*
 
@@ -50,5 +52,173 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 Executable { Assertions.assertEquals(seededUser.email, user.data.email) },
                 Executable { Assertions.assertEquals(HashedPassword(seededUser.hashedPassword), user.data.password) }
         )
+    }
+
+    @TestFactory
+    fun searchNoUsers(): List<DynamicTest> {
+        data class Test(
+                val name: String,
+                val filters: UserSearchFilters = UserSearchFilters(),
+                val sorts: List<Sort<UserSort>> = emptyList(),
+                val offset: Long = 0,
+                val count: Long = 10
+        )
+
+        return listOf(
+                Test("Default values"),
+                Test(
+                        name = "Everything",
+                        filters = UserSearchFilters(name = "Graham", email = "graham@grahamcox.co.uk"),
+                        sorts = listOf(
+                                Sort(UserSort.NAME, SortDirection.DESCENDING),
+                                Sort(UserSort.UPDATED, SortDirection.ASCENDING)
+                        ),
+                        offset = 10,
+                        count = 10
+                )
+        ).map { test ->
+            DynamicTest.dynamicTest(test.name) {
+                val results = userJdbcDao.searchUsers(test.filters, test.sorts, test.offset, test.count)
+
+                Assertions.assertAll(
+                        Executable { Assertions.assertEquals(0, results.entries.size) },
+                        Executable { Assertions.assertEquals(0, results.total) },
+                        Executable { Assertions.assertEquals(test.offset, results.offset) }
+                )
+            }
+        }
+    }
+
+    @TestFactory
+    fun searchUsers(): List<DynamicTest> {
+        // Sort by name - 1, 2, 3
+        // Sort by created - 2, 1, 3
+        // Sort by updated - 3, 1, 2
+        // Sort by id - 1, 3, 2
+        val user1 = seed(UserSeed(
+                id = UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                name = "ABC",
+                email = "abc@example.com",
+                created = Instant.parse("2019-03-01T12:34:56Z"),
+                updated = Instant.parse("2019-03-01T12:34:56Z")
+        ))
+        val user2 = seed(UserSeed(
+                id = UUID.fromString("22222222-2222-2222-2222-222222222222"),
+                name = "def",
+                email = "def@example.com",
+                created = Instant.parse("2019-02-01T12:34:56Z"),
+                updated = Instant.parse("2019-04-01T12:34:56Z")
+        ))
+        val user3 = seed(UserSeed(
+                id = UUID.fromString("11111111-1111-1111-1111-111111111111"),
+                name = "GHI",
+                email = "ghi@example.com",
+                created = Instant.parse("2019-04-01T12:34:56Z"),
+                updated = Instant.parse("2019-02-01T12:34:56Z")
+        ))
+
+
+        data class Test(
+                val name: String,
+                val filters: UserSearchFilters = UserSearchFilters(),
+                val sorts: List<Sort<UserSort>> = emptyList(),
+                val offset: Long = 0,
+                val count: Long = 10,
+                val results: List<UserSeed>,
+                val totalCount: Long = results.size.toLong()
+        )
+
+        return listOf(
+                Test(
+                        name = "Default values",
+                        results = listOf(user1, user3, user2)
+                ),
+
+                Test(
+                        name = "Filter - Name - No Matches",
+                        filters = UserSearchFilters(name = "Other"),
+                        results = listOf()
+                ),
+                Test(
+                        name = "Filter - Email - No Matches",
+                        filters = UserSearchFilters(email = "Other"),
+                        results = listOf()
+                ),
+                Test(
+                        name = "Filter - Name - Matches",
+                        filters = UserSearchFilters(name = user2.name),
+                        results = listOf(user2)
+                ),
+                Test(
+                        name = "Filter - Email - Matches",
+                        filters = UserSearchFilters(email = user3.email),
+                        results = listOf(user3)
+                ),
+
+                Test(
+                        name = "Sort - Name Ascending",
+                        sorts = listOf(Sort(UserSort.NAME, SortDirection.ASCENDING)),
+                        results = listOf(user1, user2, user3)
+                ),
+                Test(
+                        name = "Sort - Name Descending",
+                        sorts = listOf(Sort(UserSort.NAME, SortDirection.DESCENDING)),
+                        results = listOf(user3, user2, user1)
+                ),
+                Test(
+                        name = "Sort - Updated Ascending",
+                        sorts = listOf(Sort(UserSort.UPDATED, SortDirection.ASCENDING)),
+                        results = listOf(user3, user1, user2)
+                ),
+                Test(
+                        name = "Sort - Created Descending",
+                        sorts = listOf(Sort(UserSort.CREATED, SortDirection.DESCENDING)),
+                        results = listOf(user3, user1, user2)
+                ),
+
+                Test(
+                        name = "Limit 0",
+                        count = 0,
+                        results = listOf(),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Limit 1",
+                        count = 1,
+                        results = listOf(user1),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Offset off the end",
+                        offset = 10,
+                        results = listOf(),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Offset overlaps the end",
+                        offset = 2,
+                        results = listOf(user2),
+                        totalCount = 3
+                )
+        ).map { test ->
+            DynamicTest.dynamicTest(test.name) {
+                val results = userJdbcDao.searchUsers(test.filters, test.sorts, test.offset, test.count)
+
+                Assertions.assertAll(
+                        Executable { Assertions.assertEquals(test.results.size, results.entries.size, "Number of results") },
+                        Executable { Assertions.assertEquals(test.totalCount, results.total, "Total Count") },
+                        Executable { Assertions.assertEquals(test.offset, results.offset, "Offset") },
+
+                        Executable {
+                            Assertions.assertEquals(
+                                    test.results.map(UserSeed::id).map(::UserId),
+                                    results.entries.map { it.identity.id },
+                                    "Returned IDs"
+                            )
+                        }
+                )
+            }
+        }
+
     }
 }

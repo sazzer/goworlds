@@ -88,6 +88,13 @@ class SelectBuilder {
     }
 
     /**
+     * Reset the select clauses to return
+     */
+    fun resetSelecting() {
+        selectClauses.clear()
+    }
+
+    /**
      * Specify some conditionals to use in the WHERE clause
      */
     fun where(vararg conditional: Conditional) {
@@ -126,6 +133,13 @@ class SelectBuilder {
     }
 
     /**
+     * Reset the Order By clauses to apply
+     */
+    fun resetOrderBy() {
+        orderClauses.clear()
+    }
+
+    /**
      * Generate a Bind expression for the given value
      */
     fun bind(value: Any?) : Expression {
@@ -134,6 +148,16 @@ class SelectBuilder {
 
         return BindField(bindKey)
     }
+
+    /**
+     * Wrap an expression with an alias
+     */
+    fun alias(expression: Expression, alias: String) = ExpressionAlias(expression, alias)
+
+    /**
+     * Wrap the given expression in the "UPPER" function
+     */
+    fun upper(expression: Expression) = UnaryFunction("UPPER", expression)
 
     fun build() : Query {
         val sql = StringBuilder()
@@ -155,8 +179,11 @@ class SelectBuilder {
 
         // The Where Clause, if any
         if (whereClauses.isNotEmpty()) {
-            sql.append(" WHERE ")
-            sql.append(CombiningConditional(whereClauses, "AND", false).buildQueryString())
+            val whereString = CombiningConditional(whereClauses, "AND", false).buildQueryString()
+            if (whereString.isNotBlank()) {
+                sql.append(" WHERE ")
+                sql.append(whereString)
+            }
         }
 
         // The Order By Clause, if any

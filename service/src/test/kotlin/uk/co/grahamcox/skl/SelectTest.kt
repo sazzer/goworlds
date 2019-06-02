@@ -146,6 +146,22 @@ internal class SelectTest {
                         },
                         expectedSql = "SELECT NULL FROM users"
                 ),
+                Test(
+                        name = "Field with Upper Function",
+                        builder = {
+                            from("users")
+                            selecting(upper(Field("name")))
+                        },
+                        expectedSql = "SELECT UPPER(name) FROM users"
+                ),
+                Test(
+                        name = "Field with Alias",
+                        builder = {
+                            from("users")
+                            selecting(alias(Field("name"), "n"))
+                        },
+                        expectedSql = "SELECT name AS n FROM users"
+                ),
 
                 // Specifying Limit and Offset
                 Test(
@@ -307,6 +323,15 @@ internal class SelectTest {
                             }
                         },
                         expectedSql = "SELECT * FROM users WHERE (name = 'Graham' AND age > 30)"
+                ),
+                Test(
+                        name = "With Lambda-based Condition - No Conditions",
+                        builder = {
+                            from("users")
+                            where {
+                            }
+                        },
+                        expectedSql = "SELECT * FROM users"
                 ),
 
                 // Everything together

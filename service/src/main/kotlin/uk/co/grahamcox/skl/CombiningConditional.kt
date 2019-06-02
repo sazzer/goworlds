@@ -9,14 +9,19 @@ data class CombiningConditional(val conditions: List<Conditional>,
     /**
      * Build the SQL Snippit for this part of the query
      */
-    override fun buildQueryString() = conditions.joinToString(separator = " $combining ",
-            prefix = when (brackets) {
-                true -> "("
-                false -> ""
-            },
-            postfix = when (brackets) {
-                true -> ")"
-                false -> ""
-            },
-            transform = Conditional::buildQueryString)
+    override fun buildQueryString() =
+            if (conditions.isEmpty()) {
+                ""
+            } else {
+                conditions.joinToString(separator = " $combining ",
+                        prefix = when (brackets) {
+                            true -> "("
+                            false -> ""
+                        },
+                        postfix = when (brackets) {
+                            true -> ")"
+                            false -> ""
+                        },
+                        transform = Conditional::buildQueryString)
+            }
 }

@@ -5,12 +5,13 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getUUID
-import uk.co.grahamcox.goworlds.service.model.Identity
-import uk.co.grahamcox.goworlds.service.model.Model
-import uk.co.grahamcox.goworlds.service.model.Page
-import uk.co.grahamcox.goworlds.service.model.Sort
+import uk.co.grahamcox.goworlds.service.database.queryForPage
+import uk.co.grahamcox.goworlds.service.model.*
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.*
+import uk.co.grahamcox.skl.OrderBy
+import uk.co.grahamcox.skl.SelectBuilder
+import uk.co.grahamcox.skl.SortOrder
 import uk.co.grahamcox.skl.select
 import java.sql.ResultSet
 import java.util.*
@@ -60,7 +61,39 @@ class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : Us
      * @return the matching users
      */
     override fun searchUsers(filters: UserSearchFilters, sorts: List<Sort<UserSort>>, offset: Long, count: Long): Page<Model<UserId, UserData>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val selectBuilder: SelectBuilder.() -> Unit = {
+            // Tables to select from
+            val (users) = from("users")
+
+            // Where clause to apply
+            where {
+                filters.apply {
+                    name?.let { eq(upper(users["name"]), upper(bind(it))) }
+                    email?.let { eq(upper(users["email"]), upper(bind(it))) }
+                }
+            }
+
+            // Sorts to apply
+            sorts.map { sort ->
+                val sortField = when(sort.field) {
+                    UserSort.NAME -> upper(users["name"])
+                    UserSort.CREATED -> users["created"]
+                    UserSort.UPDATED -> users["updated"]
+                }
+                val direction = when(sort.direction) {
+                    SortDirection.ASCENDING -> SortOrder.ASCENDING
+                    SortDirection.DESCENDING -> SortOrder.DESCENDING
+                }
+
+                OrderBy(sortField, direction)
+            }.forEach {
+                orderBy(it)
+            }
+
+            orderBy(users["user_id"], SortOrder.ASCENDING)
+        }
+
+        return jdbcOperations.queryForPage(selectBuilder, offset, count, this::parseUser)
     }
 
     /**
