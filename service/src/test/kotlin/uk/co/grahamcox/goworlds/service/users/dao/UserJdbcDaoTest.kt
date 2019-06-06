@@ -8,21 +8,25 @@ import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
 import uk.co.grahamcox.goworlds.service.model.Sort
 import uk.co.grahamcox.goworlds.service.model.SortDirection
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
-import uk.co.grahamcox.goworlds.service.users.UnknownUserException
-import uk.co.grahamcox.goworlds.service.users.UserId
-import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
-import uk.co.grahamcox.goworlds.service.users.UserSort
+import uk.co.grahamcox.goworlds.service.users.*
+import java.time.Clock
 import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 internal class UserJdbcDaoTest : IntegrationTestBase() {
+    companion object {
+        /** The "current" time */
+        private val NOW = Instant.parse("2019-06-06T20:28:00Z")
+    }
+
     /** The test subject */
     private lateinit var userJdbcDao: UserJdbcDao
 
     /** Set up the test subject */
     @BeforeEach
     fun setup() {
-        userJdbcDao = UserJdbcDao(jdbcTemplate)
+        userJdbcDao = UserJdbcDao(jdbcTemplate, Clock.fixed(NOW, ZoneId.of("UTC")))
     }
 
     @Test
@@ -219,6 +223,27 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 )
             }
         }
+    }
 
+
+    @Test
+    fun createNewUser() {
+        val hashedPassword = HashedPassword.hash("secret")
+
+        val user = userJdbcDao.createUser(UserData(
+                name = "Graham",
+                email = "graham@grahamcox.co.uk",
+                password = hashedPassword
+        ))
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals("Graham", user.data.name) },
+                Executable { Assertions.assertEquals("graham@grahamcox.co.uk", user.data.email) },
+                Executable { Assertions.assertEquals(hashedPassword, user.data.password) }
+        )
+
+        val loaded = userJdbcDao.getUserById(user.identity.id)
+
+        Assertions.assertEquals(loaded, user)
     }
 }

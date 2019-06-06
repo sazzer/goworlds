@@ -9,17 +9,18 @@ import uk.co.grahamcox.goworlds.service.database.queryForPage
 import uk.co.grahamcox.goworlds.service.model.*
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.*
-import uk.co.grahamcox.skl.OrderBy
-import uk.co.grahamcox.skl.SelectBuilder
-import uk.co.grahamcox.skl.SortOrder
-import uk.co.grahamcox.skl.select
+import uk.co.grahamcox.skl.*
 import java.sql.ResultSet
+import java.time.Clock
 import java.util.*
 
 /**
  * JDBC based DAO for working with Users
  */
-class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : UserRetriever {
+class UserJdbcDao(
+        private val jdbcOperations: NamedParameterJdbcOperations,
+        private val clock: Clock
+) : UserService {
     companion object {
         /** The logger to use */
         private val LOG = LoggerFactory.getLogger(UserJdbcDao::class.java)
@@ -94,6 +95,37 @@ class UserJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : Us
         }
 
         return jdbcOperations.queryForPage(selectBuilder, offset, count, this::parseUser)
+    }
+
+    /**
+     * Create a new user
+     * @param data The data for the user
+     * @return the created user
+     */
+    override fun createUser(data: UserData): Model<UserId, UserData> {
+        LOG.debug("Creating user with details: {}", data)
+
+        val now = Date.from(clock.instant())
+
+        val query = insert("users") {
+            set("user_id", bind(UUID.randomUUID()))
+            set("version", bind(UUID.randomUUID()))
+            set("created", bind(now))
+            set("updated", bind(now))
+
+            set("name", bind(data.name))
+            set("email", bind(data.email))
+            set("password", bind(data.password.hash))
+
+            returnAll()
+        }
+
+        val user = jdbcOperations.queryForObject(query.sql, query.binds) { rs, _ ->
+            parseUser(rs)
+        }!!
+
+        LOG.debug("Created user: {}", user)
+        return user
     }
 
     /**
