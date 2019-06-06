@@ -3,7 +3,7 @@ package uk.co.grahamcox.skl
 /**
  * Builder class for building Select statements
  */
-class SelectBuilder {
+class SelectBuilder : QueryBuilder() {
     /** The list of tables to select from */
     private val selectTables: MutableList<Table> = mutableListOf()
 
@@ -21,9 +21,6 @@ class SelectBuilder {
 
     /** The offset to apply */
     private var offset: Long? = null
-
-    /** The bind values */
-    private val bindValues: MutableMap<String, Any?> = mutableMapOf()
 
     /**
      * Add the tables to select from
@@ -140,26 +137,9 @@ class SelectBuilder {
     }
 
     /**
-     * Generate a Bind expression for the given value
+     * Actually build the query
      */
-    fun bind(value: Any?) : Expression {
-        val bindKey = "bind${bindValues.size}"
-        bindValues[bindKey] = value
-
-        return BindField(bindKey)
-    }
-
-    /**
-     * Wrap an expression with an alias
-     */
-    fun alias(expression: Expression, alias: String) = ExpressionAlias(expression, alias)
-
-    /**
-     * Wrap the given expression in the "UPPER" function
-     */
-    fun upper(expression: Expression) = UnaryFunction("UPPER", expression)
-
-    fun build() : Query {
+    override fun build() : Query {
         val sql = StringBuilder()
 
         sql.append("SELECT ")
