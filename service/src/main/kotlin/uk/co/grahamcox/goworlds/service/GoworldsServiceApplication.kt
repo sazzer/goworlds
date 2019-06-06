@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import uk.co.grahamcox.goworlds.service.http.problem.ProblemResponseBodyAdvice
+import uk.co.grahamcox.goworlds.service.http.problems.StandardProblemControllerAdvice
 import uk.co.grahamcox.goworlds.service.oauth2.spring.OAuth2Config
 import uk.co.grahamcox.goworlds.service.spring.WebMvcConfig
 import uk.co.grahamcox.goworlds.service.users.spring.UsersConfig
@@ -27,6 +28,7 @@ class GoworldsServiceApplication(context: GenericApplicationContext) {
 		beans {
 			bean { Clock.systemUTC() }
 			bean<ProblemResponseBodyAdvice>()
+			bean<StandardProblemControllerAdvice>()
 		}.initialize(context)
 	}
 }

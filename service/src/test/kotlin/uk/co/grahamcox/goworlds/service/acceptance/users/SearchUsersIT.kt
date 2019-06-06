@@ -306,4 +306,80 @@ class SearchUsersIT : IntegrationTestBase() {
             }
         }
     }
+
+    @TestFactory
+    fun searchInvalidRequest(): List<DynamicTest> {
+        return listOf(
+                // Invalid Offset
+                "/users?offset=a" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-offset",
+                    "title": "The specified offset was invalid",
+                    "status": 400
+                    }""",
+                "/users?offset=-1" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-offset",
+                    "title": "The specified offset was invalid",
+                    "status": 400
+                    }""",
+                "/users?offset=1.0" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-offset",
+                    "title": "The specified offset was invalid",
+                    "status": 400
+                    }""",
+
+                // Invalid Count
+                "/users?count=a" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-count",
+                    "title": "The specified count was invalid",
+                    "status": 400
+                    }""",
+                "/users?count=-1" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-count",
+                    "title": "The specified count was invalid",
+                    "status": 400
+                    }""",
+                "/users?count=1.0" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-count",
+                    "title": "The specified count was invalid",
+                    "status": 400
+                    }""",
+
+                // Invalid Sorts
+                "/users?sort=a" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-sort",
+                    "title": "The specified sorts were invalid",
+                    "status": 400,
+                    "unknown-sorts": ["a"]
+                    }""",
+                "/users?sort=name,a" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-sort",
+                    "title": "The specified sorts were invalid",
+                    "status": 400,
+                    "unknown-sorts": ["a"]
+                    }""",
+                "/users?sort=*a" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-sort",
+                    "title": "The specified sorts were invalid",
+                    "status": 400,
+                    "unknown-sorts": ["*a"]
+                    }""",
+                "/users?sort=a,b,c" to """{
+                    "type": "tag:goworlds,2019:problems/invalid-sort",
+                    "title": "The specified sorts were invalid",
+                    "status": 400,
+                    "unknown-sorts": ["a", "b", "c"]
+                    }"""
+        ).map { (url, expected) ->
+            DynamicTest.dynamicTest(url) {
+                val response = restTemplate.getForEntity(url, Map::class.java)
+
+                Assertions.assertAll(
+                        Executable { Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.statusCode) },
+                        Executable { Assertions.assertTrue(response.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON)) },
+                        Executable { assertJson(expected, response.body!!) }
+                )
+            }
+        }
+    }
+
 }

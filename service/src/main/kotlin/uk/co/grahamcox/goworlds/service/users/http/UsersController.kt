@@ -3,9 +3,12 @@ package uk.co.grahamcox.goworlds.service.users.http
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.http.collection.ResourceCollection
+import uk.co.grahamcox.goworlds.service.http.problems.InvalidCountException
+import uk.co.grahamcox.goworlds.service.http.problems.InvalidOffsetException
 import uk.co.grahamcox.goworlds.service.http.sorts.parseSorts
 import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.users.*
+import java.lang.NumberFormatException
 import java.util.*
 
 /**
@@ -44,8 +47,20 @@ class UsersController(
                     @RequestParam(name = "count", required = false) count: String?) : ResourceCollection<UserModel> {
 
         // Parse the inputs into values we can use, failing if any are invalid
-        val parsedOffset = offset?.toLong() ?: 0
-        val parsedCount = count?.toLong() ?: 10
+        val parsedOffset = try {
+            offset?.toLong() ?: 0
+        } catch (e: NumberFormatException) {
+            throw InvalidOffsetException()
+        }
+        if (parsedOffset < 0) throw InvalidOffsetException()
+
+        val parsedCount = try {
+            count?.toLong() ?: 10
+        } catch (e: NumberFormatException) {
+            throw InvalidCountException()
+        }
+        if (parsedCount < 0) throw InvalidCountException()
+
         val parsedSorts = sort?.let { parseSorts<UserSort>(it) } ?: emptyList()
 
         // Actually fetch the users
