@@ -139,7 +139,7 @@ class SelectBuilder : MatchingBuilder() {
 
         // The Where Clause, if any
         sql.append(buildWhereClause())
-        
+
         // The Order By Clause, if any
         if (orderClauses.isNotEmpty()) {
             sql.append(" ORDER BY ")

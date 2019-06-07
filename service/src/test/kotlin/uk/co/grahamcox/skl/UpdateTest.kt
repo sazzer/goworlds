@@ -5,13 +5,13 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.function.Executable
 
-internal class InsertTest {
+internal class UpdateTest {
     @TestFactory
     fun test(): List<DynamicTest> {
         data class Test(
                 val name: String,
                 val table: String,
-                val builder: InsertBuilder.() -> Unit,
+                val builder: UpdateBuilder.() -> Unit,
                 val expectedSql: String,
                 val expectedBinds: Map<String, Any?> = emptyMap()
         )
@@ -23,7 +23,7 @@ internal class InsertTest {
                         builder = {
                             set("name", Constant("Graham"))
                         },
-                        expectedSql = "INSERT INTO users(name) VALUES ('Graham')"
+                        expectedSql = "UPDATE users SET name = 'Graham'"
                 ),
                 Test(
                         name = "Bind Value",
@@ -31,7 +31,7 @@ internal class InsertTest {
                         builder = {
                             set("name", bind("Graham"))
                         },
-                        expectedSql = "INSERT INTO users(name) VALUES (:bind0)",
+                        expectedSql = "UPDATE users SET name = :bind0",
                         expectedBinds = mapOf(
                                 "bind0" to "Graham"
                         )
@@ -43,7 +43,7 @@ internal class InsertTest {
                             set("name", bind("Graham"))
                             returnAll()
                         },
-                        expectedSql = "INSERT INTO users(name) VALUES (:bind0) RETURNING *",
+                        expectedSql = "UPDATE users SET name = :bind0 RETURNING *",
                         expectedBinds = mapOf(
                                 "bind0" to "Graham"
                         )
@@ -55,7 +55,7 @@ internal class InsertTest {
                             set("name", bind("Graham"))
                             returning("user_id")
                         },
-                        expectedSql = "INSERT INTO users(name) VALUES (:bind0) RETURNING users.user_id",
+                        expectedSql = "UPDATE users SET name = :bind0 RETURNING users.user_id",
                         expectedBinds = mapOf(
                                 "bind0" to "Graham"
                         )
@@ -64,7 +64,7 @@ internal class InsertTest {
 
         return tests.map { test ->
             DynamicTest.dynamicTest(test.name) {
-                val query = insert(test.table, test.builder)
+                val query = update(test.table, test.builder)
 
                 Assertions.assertAll(
                         Executable { Assertions.assertEquals(test.expectedSql, query.sql) },
