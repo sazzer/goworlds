@@ -42,4 +42,25 @@ class StandardProblemControllerAdvice {
             statusCode = HttpStatus.BAD_REQUEST,
             details = InvalidSortsDetail(e.unknownSorts)
     )
+
+    /**
+     * Handler for a missing request body
+     */
+    @ExceptionHandler(MissingRequestException::class)
+    fun handleMissingRequest() = ProblemModel(
+            type = URI("tag:goworlds,2019:problems/missing-request-body"),
+            title = "The request body was required but not present",
+            statusCode = HttpStatus.BAD_REQUEST
+    )
+
+    /**
+     * Handler for a missing request field
+     */
+    @ExceptionHandler(MissingRequestFieldException::class)
+    fun handleMissingRequestField(e: MissingRequestFieldException) = ProblemModel(
+            type = URI("tag:goworlds,2019:problems/missing-request-field"),
+            title = "A request field was required but not present",
+            statusCode = HttpStatus.BAD_REQUEST,
+            details = e.field
+    )
 }

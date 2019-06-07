@@ -1,14 +1,20 @@
 package uk.co.grahamcox.goworlds.service.users.http
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.http.collection.ResourceCollection
+import uk.co.grahamcox.goworlds.service.http.problem.ProblemModel
 import uk.co.grahamcox.goworlds.service.http.problems.InvalidCountException
 import uk.co.grahamcox.goworlds.service.http.problems.InvalidOffsetException
+import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestException
+import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestFieldException
 import uk.co.grahamcox.goworlds.service.http.sorts.parseSorts
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.*
 import java.lang.NumberFormatException
+import java.net.URI
 import java.util.*
 
 /**
@@ -17,7 +23,7 @@ import java.util.*
 @RestController
 @RequestMapping("/users")
 class UsersController(
-        private val userRetriever: UserRetriever
+        private val userService: UserService
 ) {
     /**
      * Get the User with the given ID
@@ -31,8 +37,39 @@ class UsersController(
         } catch (e: IllegalArgumentException) {
             throw UnknownUserException(null)
         }
-        val user = userRetriever.getUserById(userId)
+        val user = userService.getUserById(userId)
 
+        return buildUserModel(user)
+    }
+
+    /**
+     * Create a new user with the given details
+     * @param input The input details from which to create a user
+     * @return the created user
+     */
+    @RequestMapping(method = [RequestMethod.POST])
+    fun createUser(@RequestBody input: CreateUserInputModel?) : UserModel {
+        // Validate our inputs
+        input ?: throw MissingRequestException()
+
+        if (input.name.isNullOrBlank()) {
+            throw MissingRequestFieldException("name")
+        }
+        if (input.email.isNullOrBlank()) {
+            throw MissingRequestFieldException("email")
+        }
+        if (input.password.isNullOrBlank()) {
+            throw MissingRequestFieldException("password")
+        }
+
+        // Actually create the user
+        val user = userService.createUser(UserData(
+                name = input.name,
+                email = input.email,
+                password = HashedPassword.hash(input.password)
+        ))
+
+        // And return the response
         return buildUserModel(user)
     }
 
@@ -64,7 +101,7 @@ class UsersController(
         val parsedSorts = sort?.let { parseSorts<UserSort>(it) } ?: emptyList()
 
         // Actually fetch the users
-        val users = userRetriever.searchUsers(
+        val users = userService.searchUsers(
                 filters = UserSearchFilters(name = name, email = email),
                 offset = parsedOffset,
                 count = parsedCount,
@@ -121,5 +158,19 @@ class UsersController(
      * Handler for when the requested user can't be found
      */
     @ExceptionHandler(UnknownUserException::class)
-    fun handleUnknownUser() = unknownUserProblem()
+    fun handleUnknownUser() = ProblemModel(
+            type = URI("tag:goworlds,2019:users/problems/unknown-user"),
+            title = "The requested user could not be found",
+            statusCode = HttpStatus.NOT_FOUND
+    )
+
+    /**
+     * Handler for when the provided email address is a duplicate
+     */
+    @ExceptionHandler(DuplicateEmailException::class)
+    fun handleDuplicateEmail() = ProblemModel(
+            type = URI("tag:goworlds,2019:users/problems/duplicate-email-address"),
+            title = "The provided email address is already in use",
+            statusCode = HttpStatus.CONFLICT
+    )
 }
