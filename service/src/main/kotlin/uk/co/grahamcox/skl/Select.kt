@@ -3,15 +3,12 @@ package uk.co.grahamcox.skl
 /**
  * Builder class for building Select statements
  */
-class SelectBuilder : QueryBuilder() {
+class SelectBuilder : MatchingBuilder() {
     /** The list of tables to select from */
     private val selectTables: MutableList<Table> = mutableListOf()
 
     /** The list of select clauses */
     private val selectClauses: MutableList<Expression> = mutableListOf()
-
-    /** The list of where clauses */
-    private val whereClauses: MutableList<Conditional> = mutableListOf()
 
     /** The list of order by clauses */
     private val orderClauses: MutableList<OrderBy> = mutableListOf()
@@ -92,23 +89,6 @@ class SelectBuilder : QueryBuilder() {
     }
 
     /**
-     * Specify some conditionals to use in the WHERE clause
-     */
-    fun where(vararg conditional: Conditional) {
-        whereClauses.addAll(conditional)
-    }
-
-    /**
-     * Use a provided Handler to build a WHERE clause
-     */
-    fun where(handler: WhereBuilder.() -> Unit) {
-        val builder = WhereBuilder()
-        handler(builder)
-
-        where(builder.build())
-    }
-
-    /**
      * Add an Order By clause
      */
     fun orderBy(expression: Expression) {
@@ -158,14 +138,8 @@ class SelectBuilder : QueryBuilder() {
         }
 
         // The Where Clause, if any
-        if (whereClauses.isNotEmpty()) {
-            val whereString = CombiningConditional(whereClauses, "AND", false).buildQueryString()
-            if (whereString.isNotBlank()) {
-                sql.append(" WHERE ")
-                sql.append(whereString)
-            }
-        }
-
+        sql.append(buildWhereClause())
+        
         // The Order By Clause, if any
         if (orderClauses.isNotEmpty()) {
             sql.append(" ORDER BY ")
