@@ -225,7 +225,6 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         }
     }
 
-
     @Test
     fun createNewUser() {
         val hashedPassword = HashedPassword.hash("secret")
@@ -245,5 +244,22 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         val loaded = userJdbcDao.getUserById(user.identity.id)
 
         Assertions.assertEquals(loaded, user)
+    }
+
+    @Test
+    fun createNewUserDuplicateEmail() {
+        seed(UserSeed(
+                email = "graham@grahamcox.co.uk"
+        ))
+
+        val e = Assertions.assertThrows(DuplicateEmailException::class.java) {
+            userJdbcDao.createUser(UserData(
+                    name = "Graham",
+                    email = "graham@grahamcox.co.uk",
+                    password = HashedPassword.hash("secret")
+            ))
+        }
+
+        Assertions.assertEquals("graham@grahamcox.co.uk", e.email)
     }
 }
