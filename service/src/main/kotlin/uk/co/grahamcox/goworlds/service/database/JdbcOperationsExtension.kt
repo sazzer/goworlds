@@ -2,11 +2,18 @@ package uk.co.grahamcox.goworlds.service.database
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import uk.co.grahamcox.goworlds.service.model.Page
-import uk.co.grahamcox.skl.Field
-import uk.co.grahamcox.skl.SelectBuilder
-import uk.co.grahamcox.skl.select
+import uk.co.grahamcox.skl.*
 import java.sql.ResultSet
 
+/**
+ * Extension function to let us run a query for a single result
+ *
+ */
+fun <T> NamedParameterJdbcOperations.queryForObject(query: Query, rowParser: (ResultSet) -> T) : T {
+    return this.queryForObject(query.sql, query.binds) { rs, _ ->
+        rowParser(rs)
+    }!!
+}
 /**
  * Extension function to let us run a query for a page of results
  * @param selectBuilder The builder for the select statement

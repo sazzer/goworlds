@@ -6,11 +6,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getList
 import uk.co.grahamcox.goworlds.service.database.getUUID
+import uk.co.grahamcox.goworlds.service.database.queryForObject
 import uk.co.grahamcox.goworlds.service.model.Identity
 import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.oauth2.clients.*
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.UserId
+import uk.co.grahamcox.skl.select
 import java.net.URI
 import java.sql.ResultSet
 import java.util.*
@@ -32,10 +34,14 @@ class ClientJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : 
     override fun getClientById(id: ClientId): Model<ClientId, ClientData> {
         ClientJdbcDao.LOG.debug("Getting client with ID: {}", id)
         try {
-            val client = jdbcOperations.queryForObject("SELECT * FROM oauth2_clients WHERE client_id = :clientId",
-                    mapOf("clientId" to id.id)) { rs, _ ->
-                parseClient(rs)
-            }!!
+            val query = select {
+                val (users) = from("oauth2_clients")
+                where {
+                    eq(users["client_id"], bind(id.id))
+                }
+            }
+
+            val client = jdbcOperations.queryForObject(query, this::parseClient)
 
             LOG.debug("Loaded client: {}", client)
             return client

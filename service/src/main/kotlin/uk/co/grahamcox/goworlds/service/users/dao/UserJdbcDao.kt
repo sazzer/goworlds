@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getUUID
+import uk.co.grahamcox.goworlds.service.database.queryForObject
 import uk.co.grahamcox.goworlds.service.database.queryForPage
 import uk.co.grahamcox.goworlds.service.model.*
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
@@ -42,9 +43,7 @@ class UserJdbcDao(
                 }
             }
 
-            val user = jdbcOperations.queryForObject(query.sql, query.binds) { rs, _ ->
-                parseUser(rs)
-            }!!
+            val user = jdbcOperations.queryForObject(query, this::parseUser)
 
             LOG.debug("Loaded user: {}", user)
             return user
@@ -122,9 +121,7 @@ class UserJdbcDao(
         }
 
         val user = try {
-            jdbcOperations.queryForObject(query.sql, query.binds) { rs, _ ->
-                parseUser(rs)
-            }!!
+            jdbcOperations.queryForObject(query, this::parseUser)
         } catch (e: DuplicateKeyException) {
             // This can only mean that the email address is a duplicate, because nothing else in the table is UNIQUE
             LOG.info("Duplicate Key error creating a new user", e)
