@@ -133,6 +133,46 @@ class UserJdbcDao(
     }
 
     /**
+     * Update the user to the given data
+     * @param userId The ID of the user
+     * @param version The version of the user in the database
+     * @param data The new data
+     * @return the newly updated user
+     */
+    override fun updateUser(userId: UserId, version: UUID, data: UserData): Model<UserId, UserData> {
+        LOG.debug("Updating user {} and version {} with details: {}", userId, version, data)
+
+        val now = Date.from(clock.instant())
+
+        val query = update("users") {
+            set("version", bind(UUID.randomUUID()))
+            set("updated", bind(now))
+
+            set("name", bind(data.name))
+            set("email", bind(data.email))
+            set("password", bind(data.password.hash))
+
+            where {
+                eq(field("user_id"), bind(userId.id))
+                eq(field("version"), bind(version))
+            }
+
+            returnAll()
+        }
+
+        val user = try {
+            jdbcOperations.queryForObject(query, this::parseUser)
+        } catch (e: DuplicateKeyException) {
+            // This can only mean that the email address is a duplicate, because nothing else in the table is UNIQUE
+            LOG.info("Duplicate Key error creating a new user", e)
+            throw DuplicateEmailException(data.email)
+        }
+
+        LOG.debug("Updated user: {}", user)
+        return user
+    }
+
+    /**
      * Parse the user that is represented by the current row in the given resultset
      * @param rs The result set to parse
      * @return the parsed user

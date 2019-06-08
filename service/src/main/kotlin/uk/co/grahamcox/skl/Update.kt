@@ -14,6 +14,11 @@ class UpdateBuilder(private val into: Table) : MatchingBuilder() {
     private var returnAll: Boolean = false
 
     /**
+     * Get the field definition for the named column
+     */
+    fun field(field: String) = into.field(field)
+
+    /**
      * Set the given field to the given value
      */
     fun set(field: String, value: Expression) {
