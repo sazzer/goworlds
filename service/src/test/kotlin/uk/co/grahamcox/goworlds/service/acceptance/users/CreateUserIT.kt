@@ -125,7 +125,8 @@ class CreateUserIT : IntegrationTestBase() {
                 Executable { Assertions.assertEquals(HttpStatus.OK, response.statusCode) },
                 Executable { Assertions.assertTrue(response.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_JSON)) },
                 Executable { Assertions.assertEquals("Graham", response.body?.get("name")) },
-                Executable { Assertions.assertEquals("graham@grahamcox.co.uk", response.body?.get("email")) }
+                Executable { Assertions.assertEquals("graham@grahamcox.co.uk", response.body?.get("email")) },
+                Executable { Assertions.assertEquals(response.body?.get("self"), response.headers.getFirst(HttpHeaders.CONTENT_LOCATION)) }
         )
     }
 

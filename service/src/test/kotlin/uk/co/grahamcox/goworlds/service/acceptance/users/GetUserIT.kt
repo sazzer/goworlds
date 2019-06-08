@@ -3,6 +3,7 @@ package uk.co.grahamcox.goworlds.service.acceptance.users
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
@@ -51,6 +52,8 @@ class GetUserIT : IntegrationTestBase() {
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(HttpStatus.OK, response.statusCode) },
                 Executable { Assertions.assertTrue(response.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_JSON)) },
+                Executable { Assertions.assertEquals(""""${user.version}"""", response.headers.eTag) },
+                Executable { Assertions.assertEquals("""/users/${user.id}""", response.headers.getFirst(HttpHeaders.CONTENT_LOCATION)) },
                 Executable { assertJson("""{
                     "self": "/users/${user.id}",
                     "created": "${user.created}",

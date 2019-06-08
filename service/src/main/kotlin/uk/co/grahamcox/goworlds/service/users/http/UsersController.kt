@@ -1,6 +1,8 @@
 package uk.co.grahamcox.goworlds.service.users.http
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.http.collection.ResourceCollection
@@ -31,7 +33,7 @@ class UsersController(
      * @return the user
      */
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.GET])
-    fun getUserById(@PathVariable("id") id: String) : UserModel {
+    fun getUserById(@PathVariable("id") id: String) : ResponseEntity<UserModel> {
         val userId = try {
             UserId(UUID.fromString(id))
         } catch (e: IllegalArgumentException) {
@@ -39,7 +41,7 @@ class UsersController(
         }
         val user = userService.getUserById(userId)
 
-        return buildUserModel(user)
+        return buildUserResponse(user)
     }
 
     /**
@@ -48,7 +50,7 @@ class UsersController(
      * @return the created user
      */
     @RequestMapping(method = [RequestMethod.POST])
-    fun createUser(@RequestBody input: CreateUserInputModel?) : UserModel {
+    fun createUser(@RequestBody input: CreateUserInputModel?) : ResponseEntity<UserModel> {
         // Validate our inputs
         input ?: throw MissingRequestException()
 
@@ -70,7 +72,7 @@ class UsersController(
         ))
 
         // And return the response
-        return buildUserModel(user)
+        return buildUserResponse(user)
     }
 
     /**
@@ -152,6 +154,20 @@ class UsersController(
                 name = user.data.name,
                 email = user.data.email
         )
+    }
+
+    /**
+     * Build an HTTP Response for a single user
+     * @param user The user
+     * @return the response
+     */
+    private fun buildUserResponse(user: Model<UserId, UserData>) : ResponseEntity<UserModel> {
+        val userModel = buildUserModel(user)
+        return ResponseEntity.ok()
+                .eTag("\"" + user.identity.version + "\"")
+                .lastModified(user.identity.updated)
+                .header(HttpHeaders.CONTENT_LOCATION, userModel.self.toString())
+                .body(userModel)
     }
 
     /**
