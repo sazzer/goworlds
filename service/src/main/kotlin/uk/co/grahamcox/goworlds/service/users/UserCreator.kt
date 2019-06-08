@@ -1,4 +1,4 @@
-package uk.co.grahamcox.goworlds.service.users.dao
+package uk.co.grahamcox.goworlds.service.users
 
 import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.users.UserData
