@@ -135,12 +135,11 @@ class UserJdbcDao(
     /**
      * Update the user to the given data
      * @param userId The ID of the user
-     * @param version The version of the user in the database
      * @param data The new data
      * @return the newly updated user
      */
-    override fun updateUser(userId: UserId, version: UUID, data: UserData): Model<UserId, UserData> {
-        LOG.debug("Updating user {} and version {} with details: {}", userId, version, data)
+    override fun updateUser(userId: UserId, data: UserData): Model<UserId, UserData> {
+        LOG.debug("Updating user {} with details: {}", userId, data)
 
         val now = Date.from(clock.instant())
 
@@ -154,7 +153,6 @@ class UserJdbcDao(
 
             where {
                 eq(field("user_id"), bind(userId.id))
-                eq(field("version"), bind(version))
             }
 
             returnAll()
@@ -170,6 +168,20 @@ class UserJdbcDao(
 
         LOG.debug("Updated user: {}", user)
         return user
+    }
+
+    /**
+     * Update the user with the given lambda
+     * @param userId The ID of the user
+     * @param modifier The means to mutate the user
+     * @return the newly updated user
+     */
+    override fun updateUser(userId: UserId, modifier: (Model<UserId, UserData>) -> UserData): Model<UserId, UserData> {
+        val currentUser = getUserById(userId)
+
+        val newData = modifier(currentUser)
+
+        return updateUser(userId, newData)
     }
 
     /**

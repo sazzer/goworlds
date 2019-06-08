@@ -267,7 +267,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun updateUserSuccess() {
         val user = seed(UserSeed())
 
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id), user.version, UserData(
+        val updatedUser = userJdbcDao.updateUser(UserId(user.id), UserData(
                 name = "new name",
                 email = "new email",
                 password = HashedPassword.hash("new password")
@@ -289,7 +289,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun updateUserReRetrieve() {
         val user = seed(UserSeed())
 
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id), user.version, UserData(
+        val updatedUser = userJdbcDao.updateUser(UserId(user.id), UserData(
                 name = "new name",
                 email = "new email",
                 password = HashedPassword.hash("new password")
@@ -297,5 +297,31 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
 
         val retrievedUser = userJdbcDao.getUserById(UserId(user.id))
         Assertions.assertEquals(updatedUser, retrievedUser)
+    }
+
+    @Test
+    fun updateUserLambdaSuccess() {
+        val user = seed(UserSeed(
+                password = "password"
+        ))
+
+        val updatedUser = userJdbcDao.updateUser(UserId(user.id)) { user ->
+            user.data.copy(
+                    name = "new name",
+                    email = "new email"
+            )
+        }
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(updatedUser.identity.id, UserId(user.id)) },
+                Executable { Assertions.assertNotEquals(updatedUser.identity.version, user.version) },
+                Executable { Assertions.assertEquals(updatedUser.identity.created, user.created) },
+                Executable { Assertions.assertNotEquals(updatedUser.identity.updated, user.updated) },
+
+                Executable { Assertions.assertEquals(updatedUser.data.name, "new name") },
+                Executable { Assertions.assertEquals(updatedUser.data.email, "new email") },
+                // Unchanged
+                Executable { Assertions.assertTrue(updatedUser.data.password.check("password")) }
+        )
     }
 }
