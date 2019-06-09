@@ -87,6 +87,16 @@ class UsersController(
         // Validate our inputs
         input ?: throw MissingRequestException()
 
+        if (input.name?.isBlank() == true) {
+            throw MissingRequestFieldException("name")
+        }
+        if (input.email?.isBlank() == true) {
+            throw MissingRequestFieldException("email")
+        }
+        if (input.password?.isBlank() == true) {
+            throw MissingRequestFieldException("password")
+        }
+
         val userId = try {
             UserId(UUID.fromString(id))
         } catch (e: IllegalArgumentException) {
