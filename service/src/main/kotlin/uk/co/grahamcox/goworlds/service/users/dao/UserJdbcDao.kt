@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
+import org.springframework.transaction.annotation.Transactional
 import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.database.queryForObject
@@ -19,7 +20,8 @@ import java.util.*
 /**
  * JDBC based DAO for working with Users
  */
-class UserJdbcDao(
+@Transactional
+open class UserJdbcDao(
         private val jdbcOperations: NamedParameterJdbcOperations,
         private val clock: Clock
 ) : UserService {
