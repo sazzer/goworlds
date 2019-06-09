@@ -262,45 +262,8 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
 
         Assertions.assertEquals("graham@grahamcox.co.uk", e.email)
     }
-
     @Test
     fun updateUserSuccess() {
-        val user = seed(UserSeed())
-
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id), UserData(
-                name = "new name",
-                email = "new email",
-                password = HashedPassword.hash("new password")
-        ))
-
-        Assertions.assertAll(
-                Executable { Assertions.assertEquals(updatedUser.identity.id, UserId(user.id)) },
-                Executable { Assertions.assertNotEquals(updatedUser.identity.version, user.version) },
-                Executable { Assertions.assertEquals(updatedUser.identity.created, user.created) },
-                Executable { Assertions.assertNotEquals(updatedUser.identity.updated, user.updated) },
-
-                Executable { Assertions.assertEquals(updatedUser.data.name, "new name") },
-                Executable { Assertions.assertEquals(updatedUser.data.email, "new email") },
-                Executable { Assertions.assertTrue(updatedUser.data.password.check("new password")) }
-        )
-    }
-
-    @Test
-    fun updateUserReRetrieve() {
-        val user = seed(UserSeed())
-
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id), UserData(
-                name = "new name",
-                email = "new email",
-                password = HashedPassword.hash("new password")
-        ))
-
-        val retrievedUser = userJdbcDao.getUserById(UserId(user.id))
-        Assertions.assertEquals(updatedUser, retrievedUser)
-    }
-
-    @Test
-    fun updateUserLambdaSuccess() {
         val user = seed(UserSeed(
                 password = "password"
         ))
@@ -324,4 +287,20 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 Executable { Assertions.assertTrue(updatedUser.data.password.check("password")) }
         )
     }
+
+    @Test
+    fun updateUserReRetrieve() {
+        val user = seed(UserSeed())
+
+        val updatedUser = userJdbcDao.updateUser(UserId(user.id)) { user ->
+            user.data.copy(
+                    name = "new name",
+                    email = "new email"
+            )
+        }
+
+        val retrievedUser = userJdbcDao.getUserById(UserId(user.id))
+        Assertions.assertEquals(updatedUser, retrievedUser)
+    }
+
 }

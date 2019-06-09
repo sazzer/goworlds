@@ -7,14 +7,6 @@ import uk.co.grahamcox.goworlds.service.model.Model
  */
 interface UserUpdater {
     /**
-     * Update the user to the given data
-     * @param userId The ID of the user
-     * @param data The new data
-     * @return the newly updated user
-     */
-    fun updateUser(userId: UserId, data: UserData) : Model<UserId, UserData>
-
-    /**
      * Update the user with the given lambda
      * @param userId The ID of the user
      * @param modifier The means to mutate the user

@@ -138,7 +138,7 @@ class UserJdbcDao(
      * @param data The new data
      * @return the newly updated user
      */
-    override fun updateUser(userId: UserId, data: UserData): Model<UserId, UserData> {
+    private fun updateUser(userId: UserId, data: UserData): Model<UserId, UserData> {
         LOG.debug("Updating user {} with details: {}", userId, data)
 
         val now = Date.from(clock.instant())
