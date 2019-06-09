@@ -2,6 +2,7 @@ package uk.co.grahamcox.goworlds.service.users.http
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
@@ -50,7 +51,7 @@ class UsersController(
      * @return the created user
      */
     @RequestMapping(method = [RequestMethod.POST])
-    fun createUser(@RequestBody input: CreateUserInputModel?) : ResponseEntity<UserModel> {
+    fun createUser(@RequestBody input: UserInputModel?) : ResponseEntity<UserModel> {
         // Validate our inputs
         input ?: throw MissingRequestException()
 
@@ -70,6 +71,36 @@ class UsersController(
                 email = input.email,
                 password = HashedPassword.hash(input.password)
         ))
+
+        // And return the response
+        return buildUserResponse(user)
+    }
+
+    /**
+     * Update an existing user with the given details
+     * @param id The ID of the user to update
+     * @param input The input details from which to update the user
+     * @return the created user
+     */
+    @RequestMapping(value = ["/{id}"], method = [RequestMethod.PATCH])
+    fun patchUser(@PathVariable("id") id: String, @RequestBody input: UserInputModel?) : ResponseEntity<UserModel> {
+        // Validate our inputs
+        input ?: throw MissingRequestException()
+
+        val userId = try {
+            UserId(UUID.fromString(id))
+        } catch (e: IllegalArgumentException) {
+            throw UnknownUserException(null)
+        }
+
+        // Actually update the user
+        val user = userService.updateUser(userId) {currentUser ->
+            currentUser.data.copy(
+                    name = input.name ?: currentUser.data.name,
+                    email = input.email ?: currentUser.data.email,
+                    password = input.password?.let(HashedPassword.Companion::hash) ?: currentUser.data.password
+            )
+        }
 
         // And return the response
         return buildUserResponse(user)
@@ -167,6 +198,7 @@ class UsersController(
                 .eTag("\"" + user.identity.version + "\"")
                 .lastModified(user.identity.updated)
                 .header(HttpHeaders.CONTENT_LOCATION, userModel.self.toString())
+                .header("Accept-Patch", "application/merge-patch+json")
                 .body(userModel)
     }
 
