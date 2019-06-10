@@ -19,11 +19,9 @@ class AccessTokenArgumentResolver(
 ) : HandlerMethodArgumentResolver {
     companion object {
         private val PARAMETER_MAPPING = mapOf(
-                AccessToken::class.java to { accessToken : AccessToken? -> accessToken },
-                UserId::class.java to { accessToken : AccessToken? -> accessToken?.user },
-                Authorizer::class.java to { accessToken : AccessToken? ->
-                    Authorizer(accessToken ?: throw MissingAccessTokenException())
-                }
+                AccessToken::class.java to { accessToken : AccessToken -> accessToken },
+                UserId::class.java to { accessToken : AccessToken -> accessToken?.user },
+                Authorizer::class.java to { accessToken : AccessToken -> Authorizer(accessToken) }
         )
     }
     /**
@@ -44,6 +42,9 @@ class AccessTokenArgumentResolver(
             throw MissingAccessTokenException()
         }
 
-        return PARAMETER_MAPPING[parameter.parameterType]?.invoke(accessToken)
+        return accessToken?.let {
+            PARAMETER_MAPPING[parameter.parameterType]?.invoke(accessToken)
+        }
+
     }
 }
