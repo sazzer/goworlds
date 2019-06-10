@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.context.support.beans
 import uk.co.grahamcox.goworlds.service.users.dao.UserJdbcDao
+import uk.co.grahamcox.goworlds.service.users.http.EmailController
 import uk.co.grahamcox.goworlds.service.users.http.UsersController
 
 /**
@@ -15,6 +16,7 @@ class UsersConfig(context: GenericApplicationContext) {
         beans {
             bean<UserJdbcDao>()
             bean<UsersController>()
+            bean<EmailController>()
         }.initialize(context)
     }
 }
