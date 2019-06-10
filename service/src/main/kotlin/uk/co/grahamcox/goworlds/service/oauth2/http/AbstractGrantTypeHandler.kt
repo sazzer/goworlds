@@ -26,6 +26,30 @@ abstract class AbstractGrantTypeHandler(
     }
 
     /**
+     * Get the user that this token is for
+     * @param client The Client that is making the request
+     * @param scopes The Scopes that are requested
+     * @param params The parameters to the request
+     * @return the user
+     */
+    protected abstract fun getUser(client: Model<ClientId, ClientData>,
+                                   scopes: Collection<Scope>,
+                                   params: Map<String, String>) : Model<UserId, UserData>
+
+    /**
+     * Handle the Grant Type
+     * @param client The Client that is making the request
+     * @param scopes The Scopes that are requested
+     * @param params The parameters to the request
+     * @return the access token that was produced
+     */
+    override fun handle(client: Model<ClientId, ClientData>, scopes: Collection<Scope>, params: Map<String, String>): AccessTokenModel {
+        val user = getUser(client, scopes, params)
+
+        return buildAccessToken(user, client, scopes)
+    }
+
+    /**
      * Actually generate the Access Token for the provided caller
      * @param user The User that is the Access Token is for
      * @param client The Client that is making the request

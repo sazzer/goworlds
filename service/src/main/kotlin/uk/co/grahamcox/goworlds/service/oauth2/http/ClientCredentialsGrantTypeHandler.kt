@@ -6,6 +6,8 @@ import uk.co.grahamcox.goworlds.service.oauth2.Scope
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientData
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientId
 import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessTokenGenerator
+import uk.co.grahamcox.goworlds.service.users.UserData
+import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.users.UserRetriever
 import java.time.Clock
 
@@ -24,18 +26,17 @@ class ClientCredentialsGrantTypeHandler(
     }
 
     /**
-     * Handle the Grant Type
+     * Get the user that this token is for
      * @param client The Client that is making the request
      * @param scopes The Scopes that are requested
      * @param params The parameters to the request
-     * @return the access token that was produced
+     * @return the user
      */
-    override fun handle(client: Model<ClientId, ClientData>, scopes: Collection<Scope>, params: Map<String, String>): AccessTokenModel {
-        // Load the user to generate the access token for - the owner of the OAuth2 Client details
+    override fun getUser(client: Model<ClientId, ClientData>, scopes: Collection<Scope>, params: Map<String, String>): Model<UserId, UserData> {
         val user = userRetriever.getUserById(client.data.owner)
 
-        LOG.debug("Performing a Client Credentials Grant for user {} and client {} with scopes {}", user, client, scopes)
+        ClientCredentialsGrantTypeHandler.LOG.debug("Performing a Client Credentials Grant for user {} and client {} with scopes {}", user, client, scopes)
 
-        return buildAccessToken(user, client, scopes)
+        return user
     }
 }

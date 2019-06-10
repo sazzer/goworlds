@@ -32,6 +32,7 @@ class OAuth2Config(context: GenericApplicationContext) {
                 )
             }
             bean<ClientCredentialsGrantTypeHandler>()
+            bean<EmailExtensionGrantTypeHandler>()
             bean<AccessTokenGenerator> {
                 AccessTokenGeneratorImpl(ref(), Duration.parse(env["goworlds.oauth2.token.duration"]))
             }
@@ -48,7 +49,9 @@ class OAuth2Config(context: GenericApplicationContext) {
                 OAuth2TokenController(
                         ref(),
                         ref(),
-                        mapOf("client_credentials" to ref<ClientCredentialsGrantTypeHandler>())
+                        mapOf(
+                                "client_credentials" to ref<ClientCredentialsGrantTypeHandler>(),
+                                "tag:goworlds,2019:oauth2/grant_type/email_password" to ref<EmailExtensionGrantTypeHandler>())
                 )
             }
             bean<AccessTokenStore>()

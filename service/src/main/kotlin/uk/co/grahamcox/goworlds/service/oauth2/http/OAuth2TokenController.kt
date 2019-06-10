@@ -27,7 +27,8 @@ class OAuth2TokenController(
         /** Map of supported Grant Types to the enum value */
         private val GRANT_TYPES = mapOf(
                 "client_credentials" to GrantType.CLIENT_CREDENTIALS,
-                "refresh_token" to GrantType.REFRESH_TOKEN
+                "refresh_token" to GrantType.REFRESH_TOKEN,
+                "tag:goworlds,2019:oauth2/grant_type/email_password" to GrantType.EMAIL_PASSWORD_EXTENSION
         )
 
     }
