@@ -16,6 +16,13 @@ interface UserRetriever {
     fun getUserById(id : UserId) : Model<UserId, UserData>
 
     /**
+     * Get the user with the given Email
+     * @param email The email of the user
+     * @return the user details
+     */
+    fun getUserByEmail(email: String) : Model<UserId, UserData>
+
+    /**
      * Search for users in the system
      * @param filters Filters to apply when searching
      * @param sorts Sorts to apply for the returned users

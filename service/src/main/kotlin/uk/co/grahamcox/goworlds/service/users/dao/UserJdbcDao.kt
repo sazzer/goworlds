@@ -56,6 +56,31 @@ open class UserJdbcDao(
     }
 
     /**
+     * Get the user with the given Email
+     * @param email The email of the user
+     * @return the user details
+     */
+    override fun getUserByEmail(email: String): Model<UserId, UserData> {
+        LOG.debug("Getting user with Email: {}", email)
+        try {
+            val query = select {
+                val (users) = from("users")
+                where {
+                    eq(users["email"], bind(email))
+                }
+            }
+
+            val user = jdbcOperations.queryForObject(query, this::parseUser)
+
+            LOG.debug("Loaded user: {}", user)
+            return user
+        } catch (e: EmptyResultDataAccessException) {
+            LOG.debug("No user found with email {}", email)
+            throw UnknownUserException(email)
+        }
+    }
+
+    /**
      * Search for users in the system
      * @param filters Filters to apply when searching
      * @param sorts Sorts to apply for the returned users

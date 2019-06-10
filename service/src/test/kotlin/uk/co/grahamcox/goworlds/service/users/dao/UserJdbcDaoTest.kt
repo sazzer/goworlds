@@ -2,8 +2,6 @@ package uk.co.grahamcox.goworlds.service.users.dao
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
 import uk.co.grahamcox.goworlds.service.model.Sort
 import uk.co.grahamcox.goworlds.service.model.SortDirection
@@ -48,6 +46,34 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(userId, user.identity.id) },
+                Executable { Assertions.assertEquals(seededUser.version, user.identity.version) },
+                Executable { Assertions.assertEquals(seededUser.created, user.identity.created) },
+                Executable { Assertions.assertEquals(seededUser.updated, user.identity.updated) },
+
+                Executable { Assertions.assertEquals(seededUser.name, user.data.name) },
+                Executable { Assertions.assertEquals(seededUser.email, user.data.email) },
+                Executable { Assertions.assertEquals(HashedPassword(seededUser.hashedPassword), user.data.password) }
+        )
+    }
+
+    @Test
+    fun getUnknownUserByEmail() {
+        val email = "unknown@example.com"
+        val exception = Assertions.assertThrows(UnknownUserException::class.java) {
+            userJdbcDao.getUserByEmail(email)
+        }
+
+        Assertions.assertEquals(email, exception.id)
+    }
+
+    @Test
+    fun getKnownUserByEmail() {
+        val seededUser = seed(UserSeed())
+
+        val user = userJdbcDao.getUserByEmail(seededUser.email)
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(UserId(seededUser.id), user.identity.id) },
                 Executable { Assertions.assertEquals(seededUser.version, user.identity.version) },
                 Executable { Assertions.assertEquals(seededUser.created, user.identity.created) },
                 Executable { Assertions.assertEquals(seededUser.updated, user.identity.updated) },

@@ -6,11 +6,10 @@ import uk.co.grahamcox.goworlds.service.oauth2.Scope
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientData
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientId
 import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessTokenGenerator
+import uk.co.grahamcox.goworlds.service.users.UnknownUserException
 import uk.co.grahamcox.goworlds.service.users.UserData
 import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.users.UserRetriever
-import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
-import java.lang.UnsupportedOperationException
 import java.time.Clock
 
 /**
@@ -39,22 +38,18 @@ class EmailExtensionGrantTypeHandler(
         if (email.isNullOrBlank()) {
             throw OAuth2Exception(ErrorCode.INVALID_REQUEST, "Required field was not present: email")
         }
-        
+
         val password = params["password"]
         if (password.isNullOrBlank()) {
             throw OAuth2Exception(ErrorCode.INVALID_REQUEST, "Required field was not present: password")
         }
 
-        val users = userRetriever.searchUsers(filters = UserSearchFilters(email = email),
-                offset = 0,
-                count = 1)
-
-        if (users.entries.isEmpty()) {
+        val user = try {
+            userRetriever.getUserByEmail(email)
+        } catch (e: UnknownUserException) {
             LOG.info("Authentication attempt from unknown email address: {}", email)
             throw OAuth2Exception(ErrorCode.ACCESS_DENIED, "Unknown email address: $email")
         }
-
-        val user = users.entries[0]
 
         if (!user.data.password.check(password)) {
             LOG.info("Authentication attempt with incorrect password: {}", email)
