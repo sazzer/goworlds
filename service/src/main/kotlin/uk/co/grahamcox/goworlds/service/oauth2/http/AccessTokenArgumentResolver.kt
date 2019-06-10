@@ -6,6 +6,7 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import uk.co.grahamcox.goworlds.service.oauth2.AccessTokenHolder
+import uk.co.grahamcox.goworlds.service.oauth2.authorization.Authorizer
 import uk.co.grahamcox.goworlds.service.oauth2.tokens.AccessToken
 import uk.co.grahamcox.goworlds.service.users.UserId
 import kotlin.reflect.jvm.kotlinFunction
@@ -19,7 +20,10 @@ class AccessTokenArgumentResolver(
     companion object {
         private val PARAMETER_MAPPING = mapOf(
                 AccessToken::class.java to { accessToken : AccessToken? -> accessToken },
-                UserId::class.java to { accessToken : AccessToken? -> accessToken?.user }
+                UserId::class.java to { accessToken : AccessToken? -> accessToken?.user },
+                Authorizer::class.java to { accessToken : AccessToken? ->
+                    Authorizer(accessToken ?: throw MissingAccessTokenException())
+                }
         )
     }
     /**

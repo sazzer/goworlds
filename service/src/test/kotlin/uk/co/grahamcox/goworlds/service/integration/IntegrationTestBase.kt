@@ -78,9 +78,11 @@ abstract class IntegrationTestBase {
      * @param request The request to process
      * @return the response
      */
-    fun <T> makeRequest(token: String, request: RequestEntity<*>, response: Class<T>): ResponseEntity<out T> {
+    fun <T> makeRequest(token: String?, request: RequestEntity<*>, response: Class<T>): ResponseEntity<out T> {
         val newRequestHeaders = LinkedMultiValueMap(request.headers)
-        newRequestHeaders[HttpHeaders.AUTHORIZATION] = "Bearer $token"
+        token?.let {
+            newRequestHeaders[HttpHeaders.AUTHORIZATION] = "Bearer $token"
+        }
 
         val newRequest = RequestEntity(request.body, newRequestHeaders, request.method, request.url)
         return restTemplate.exchange(newRequest, response)
@@ -92,8 +94,11 @@ abstract class IntegrationTestBase {
      * @param request The request to process
      * @return the response
      */
-    fun <T> makeRequest(client: ClientSeed, request: RequestEntity<*>, response: Class<T>)
-        = makeRequest(getTokenForClient(client), request, response)
+    fun <T> makeRequest(client: ClientSeed?, request: RequestEntity<*>, response: Class<T>): ResponseEntity<out T> {
+        val token = client?.let { getTokenForClient(client) }
+
+        return makeRequest(token, request, response)
+    }
 
     /**
      * Get an Access Token that works for the given client

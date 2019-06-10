@@ -21,7 +21,7 @@ data class ClientSeed(
         val ownerId: UUID,
         val redirectUris: Set<URI> = setOf(),
         val responseTypes: Set<ResponseType> = setOf(),
-        val grantTypes: Set<GrantType> = setOf()
+        val grantTypes: Set<GrantType> = setOf(GrantType.CLIENT_CREDENTIALS)
 ) : Seeder {
     /** The hashed password */
     val clientSecret = HashedPassword.hash(secret).hash

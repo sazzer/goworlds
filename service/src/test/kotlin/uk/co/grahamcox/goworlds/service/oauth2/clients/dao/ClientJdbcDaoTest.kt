@@ -38,7 +38,7 @@ internal class ClientJdbcDaoTest : IntegrationTestBase() {
     @Test
     fun getSimpleClientById() {
         val seededUser = seed(UserSeed())
-        val seededClient = seed(ClientSeed(ownerId = seededUser.id))
+        val seededClient = seed(ClientSeed(ownerId = seededUser.id, grantTypes = emptySet()))
 
         val clientId = ClientId(seededClient.id)
         val client = clientJdbcDao.getClientById(clientId)

@@ -14,6 +14,7 @@ import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestException
 import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestFieldException
 import uk.co.grahamcox.goworlds.service.http.sorts.parseSorts
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.oauth2.authorization.Authorizer
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.*
 import java.lang.NumberFormatException
@@ -83,7 +84,9 @@ class UsersController(
      * @return the created user
      */
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.PATCH])
-    fun patchUser(@PathVariable("id") id: String, @RequestBody input: UserInputModel?) : ResponseEntity<UserModel> {
+    fun patchUser(@PathVariable("id") id: String,
+                  @RequestBody input: UserInputModel?,
+                  authorizer: Authorizer) : ResponseEntity<UserModel> {
         // Validate our inputs
         input ?: throw MissingRequestException()
 
@@ -101,6 +104,11 @@ class UsersController(
             UserId(UUID.fromString(id))
         } catch (e: IllegalArgumentException) {
             throw UnknownUserException(null)
+        }
+
+        // Authorize the request
+        authorizer {
+            sameUser(userId)
         }
 
         // Actually update the user

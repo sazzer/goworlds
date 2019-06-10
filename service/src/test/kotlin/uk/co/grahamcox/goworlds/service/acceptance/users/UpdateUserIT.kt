@@ -1,12 +1,10 @@
 package uk.co.grahamcox.goworlds.service.acceptance.users
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import org.springframework.http.*
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
+import uk.co.grahamcox.goworlds.service.oauth2.clients.dao.ClientSeed
 import uk.co.grahamcox.goworlds.service.users.dao.UserSeed
 import java.net.URI
 import java.util.*
@@ -15,6 +13,24 @@ import java.util.*
  * Acceptance tests for updating a user
  */
 class UpdateUserIT : IntegrationTestBase() {
+    /** A user to work as */
+    private lateinit var user: UserSeed
+
+    /** A client to work as */
+    private lateinit var client: ClientSeed
+
+    /**
+     * Create the common data
+     */
+    @BeforeEach
+    fun createData() {
+        user = seed(UserSeed(
+                name = "Original",
+                email = "original@example.com"
+        ))
+        client = seed(ClientSeed(ownerId = user.id))
+    }
+
     @TestFactory
     fun createInvalidRequest(): List<DynamicTest> {
         return listOf(
@@ -46,7 +62,7 @@ class UpdateUserIT : IntegrationTestBase() {
                 }"""
         ).map { (input, expected) ->
             DynamicTest.dynamicTest("Posting: $input") {
-                val response = makeRequest(UUID.randomUUID().toString(), input)
+                val response = makeRequest(client, UUID.randomUUID().toString(), input)
 
                 Assertions.assertAll(
                         Executable { Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.statusCode) },
@@ -59,10 +75,9 @@ class UpdateUserIT : IntegrationTestBase() {
 
     @Test
     fun updateDuplicateEmail() {
-        val user1 = seed(UserSeed(email = "graham1@grahamcox.co.uk"))
         val user2 = seed(UserSeed(email = "graham2@grahamcox.co.uk"))
 
-        val response = makeRequest(user1.id.toString(), mapOf(
+        val response = makeRequest(client, user.id.toString(), mapOf(
                 "email" to user2.email
         ))
 
@@ -79,11 +94,7 @@ class UpdateUserIT : IntegrationTestBase() {
 
     @Test
     fun updateSuccess() {
-        val user = seed(UserSeed(
-                name = "Original",
-                email = "original@example.com"
-        ))
-        val response = makeRequest(user.id.toString(), mapOf(
+        val response = makeRequest(client, user.id.toString(), mapOf(
                 "name" to "Graham",
                 "email" to "graham@grahamcox.co.uk"
         ))
@@ -102,11 +113,7 @@ class UpdateUserIT : IntegrationTestBase() {
 
     @Test
     fun createSuccessReRetrieve() {
-        val user = seed(UserSeed(
-                name = "Original",
-                email = "original@example.com"
-        ))
-        val updated = makeRequest(user.id.toString(), mapOf(
+        val updated = makeRequest(client, user.id.toString(), mapOf(
                 "name" to "Graham",
                 "email" to "graham@grahamcox.co.uk"
         ))
@@ -116,22 +123,42 @@ class UpdateUserIT : IntegrationTestBase() {
                 Executable { Assertions.assertTrue(updated.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_JSON)) }
         )
 
-        val uri = URI(updated.body!!["self"].toString())
         val retrieved = restTemplate.getForEntity("/users/${user.id}", Map::class.java)
 
         Assertions.assertEquals(retrieved.body, updated.body)
+    }
 
+    @Test
+    fun updateNoToken() {
+        val response = makeRequest(null, user.id.toString(), mapOf(
+                "name" to "Graham",
+                "email" to "graham@grahamcox.co.uk"
+        ))
+
+        Assertions.assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
+    }
+
+    @Test
+    fun updateWrongUser() {
+        val response = makeRequest(client, UUID.randomUUID().toString(), mapOf(
+                "name" to "Graham",
+                "email" to "graham@grahamcox.co.uk"
+        ))
+
+        Assertions.assertEquals(HttpStatus.FORBIDDEN, response.statusCode)
     }
 
     /**
      * Actually make the request to the API
      */
-    private fun makeRequest(userId: String, input: Map<String, Any>?): ResponseEntity<Map<*, *>> {
+    private fun makeRequest(clientSeed: ClientSeed?,
+                            userId: String,
+                            input: Map<String, Any>?): ResponseEntity<out Map<*, *>> {
         val requestHeaders = HttpHeaders()
         requestHeaders.contentType = MediaType.parseMediaType("application/merge-patch+json")
 
-        val request = HttpEntity(input, requestHeaders)
+        val request = RequestEntity(input, requestHeaders, HttpMethod.PATCH, URI("/users/$userId"))
 
-        return restTemplate.exchange("/users/$userId", HttpMethod.PATCH, request, Map::class.java)
+        return makeRequest(clientSeed, request, Map::class.java)
     }
 }
