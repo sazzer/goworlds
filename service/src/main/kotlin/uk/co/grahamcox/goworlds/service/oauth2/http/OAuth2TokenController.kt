@@ -128,7 +128,7 @@ class OAuth2TokenController(
             throw OAuth2Exception(ErrorCode.INVALID_CLIENT, "Unknown Client ID and Secret")
         }
 
-        if (!client.data.secret.check(clientSecret)) {
+        if (client.data.secret.hash.isNotBlank() && !client.data.secret.check(clientSecret)) {
             LOG.warn("Client Secret is not valid for Client ID: {}", clientId)
             throw OAuth2Exception(ErrorCode.INVALID_CLIENT, "Unknown Client ID and Secret")
         }
