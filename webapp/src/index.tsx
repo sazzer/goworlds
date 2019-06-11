@@ -3,6 +3,8 @@ import 'semantic-ui-css/semantic.min.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {buildStore} from './redux/store';
 
 import App from './ui/App';
 
@@ -11,7 +13,9 @@ import App from './ui/App';
  * @return {*} the main application
  */
 const AppWrapper = () => (
-    <App />
+    <Provider store={buildStore()}>
+        <App />
+    </Provider>
 );
 
 ReactDOM.render(<AppWrapper />, document.getElementById('root'));
