@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {Menu} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
+
+/** The props that a HeaderBar needs */
+type HeaderBarProps = {};
 
 /**
  * The main header bar for the application
  * @constructor
  */
-export default function HeaderBar() {
+export const HeaderBar: FunctionComponent<HeaderBarProps> = () => {
     const { t } = useTranslation();
 
     return (
@@ -15,5 +18,5 @@ export default function HeaderBar() {
                 {t('page.header')}
             </Menu.Item>
         </Menu>
-    )
-}
+    );
+};

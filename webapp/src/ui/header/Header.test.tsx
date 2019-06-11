@@ -2,7 +2,7 @@ import '../../i18n';
 
 import React from 'react';
 import {shallow} from 'enzyme';
-import HeaderBar from "./index";
+import {HeaderBar} from "./index";
 
 
 /** Set up the component to test */

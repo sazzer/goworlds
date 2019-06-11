@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {buildStore} from './redux/store';
 
-import App from './ui/App';
+import {App} from './ui/App';
 
 /**
  * The wrapper around the main application to set everything up
