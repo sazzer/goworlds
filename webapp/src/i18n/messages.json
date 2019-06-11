@@ -1,3 +1,5 @@
 {
-  "hello": "Hello, World!"
+  "page": {
+    "header": "Go Worlds"
+  }
 }

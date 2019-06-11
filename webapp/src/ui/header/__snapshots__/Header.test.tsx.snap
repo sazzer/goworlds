@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<Menu
+  fixed="top"
+  fluid={true}
+  inverted={true}
+>
+  <MenuItem
+    header={true}
+  >
+    Go Worlds
+  </MenuItem>
+</Menu>
+`;
