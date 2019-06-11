@@ -4,6 +4,7 @@ import 'semantic-ui-css/semantic.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
+import {BrowserRouter as Router} from 'react-router-dom';
 import {buildStore} from './redux/store';
 
 import App from './ui/App';
@@ -13,9 +14,11 @@ import App from './ui/App';
  * @return {*} the main application
  */
 const AppWrapper = () => (
-    <Provider store={buildStore()}>
-        <App />
-    </Provider>
+    <Router>
+        <Provider store={buildStore()}>
+            <App />
+        </Provider>
+    </Router>
 );
 
 ReactDOM.render(<AppWrapper />, document.getElementById('root'));

@@ -2,6 +2,15 @@
 
 exports[`renders without crashing 1`] = `
 <Container>
-  Hello, World!
+  <Route
+    exact={true}
+    path="/"
+    render={[Function]}
+  />
+  <Route
+    exact={true}
+    path="/hello"
+    render={[Function]}
+  />
 </Container>
 `;
