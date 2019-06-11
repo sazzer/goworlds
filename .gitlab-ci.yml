@@ -23,8 +23,25 @@ build-service:
       - service/target/goworlds-service.jar
 
   cache:
+    key: goworlds-service
     paths:
       - $CI_PROJECT_DIR/.m2/repository
+
+build-webapp:
+  stage: build
+  image: node:latest
+
+  before_script:
+    - cd webapp
+    - yarn install
+
+  script:
+    - yarn test
+
+  cache:
+    key: goworlds-webapp
+    paths:
+      - webapp/node_modules
 
 build-service-container:
   stage: docker
