@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders the email address that was entered 1`] = `
+<Form
+  as="form"
+  onSubmit={[Function]}
+>
+  <FormField>
+    <label>
+      Email Address
+    </label>
+    <input
+      autoFocus={true}
+      name="email"
+      onChange={[Function]}
+      placeholder="Email Address"
+      type="text"
+      value="graham@grahamcox.co.uk"
+    />
+  </FormField>
+  <Button
+    as="button"
+    primary={true}
+    type="submit"
+  >
+    Login/Register
+  </Button>
+</Form>
+`;
+
+exports[`renders without crashing 1`] = `
+<Form
+  as="form"
+  onSubmit={[Function]}
+>
+  <FormField>
+    <label>
+      Email Address
+    </label>
+    <input
+      autoFocus={true}
+      name="email"
+      onChange={[Function]}
+      placeholder="Email Address"
+      type="text"
+      value=""
+    />
+  </FormField>
+  <Button
+    as="button"
+    primary={true}
+    type="submit"
+  >
+    Login/Register
+  </Button>
+</Form>
+`;

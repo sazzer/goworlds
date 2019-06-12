@@ -1,5 +1,15 @@
 {
   "page": {
-    "header": "Go Worlds"
+    "header": "Application Name"
+  },
+  "loginArea": {
+    "header": "Login/Register",
+    "email": {
+      "label": "Email Address",
+      "placeholder": "Email Address"
+    },
+    "submit": {
+      "loginRegister": "Login/Register"
+    }
   }
 }

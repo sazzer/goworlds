@@ -1,5 +1,3 @@
-import '../../i18n';
-
 import React from 'react';
 import {shallow} from 'enzyme';
 import {HeaderBar} from "./index";

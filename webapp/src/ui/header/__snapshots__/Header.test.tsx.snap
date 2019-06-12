@@ -9,7 +9,7 @@ exports[`renders without crashing 1`] = `
   <MenuItem
     header={true}
   >
-    Go Worlds
+    Application Name
   </MenuItem>
 </Menu>
 `;
