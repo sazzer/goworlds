@@ -12,6 +12,17 @@ export const succeededAction = (action: string) => action + '_SUCCEEDED';
 /** Create an action type to indicate that the async action has failed */
 export const failedAction = (action: string) => action + '_FAILED';
 
+/** The shape of an async action */
+export interface AsyncAction<I> {
+    type: string,
+    input?: I
+}
+
+/** The shape of a resolved async action */
+export interface ResolvedAsyncAction<I, T> extends AsyncAction<I> {
+    payload?: T,
+}
+
 /**
  * Execute an asynchronous action and trigger the expected events as we go
  * @param type the type of action

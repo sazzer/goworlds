@@ -1,5 +1,5 @@
 import {sagas as demoSagas} from './demoModule';
-import {sagas as authenticationSagas} from "../authentication";
+import authenticationSagas from "../authentication/sagas";
 
 /**
  * The set of Sagas to use
