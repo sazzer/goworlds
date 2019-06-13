@@ -40,6 +40,9 @@ const MODULE_PREFIX = 'CheckEmailExists/';
 /** The action type for checking if an email exists */
 const CHECK_EMAIL_ACTION = MODULE_PREFIX + 'checkEmailExists';
 
+/** The action type for resetting the check for if an email exists */
+const RESET_ACTION = MODULE_PREFIX + 'reset';
+
 /** The shape of the action to check if an email exists */
 type CheckEmailExistsAction = string;
 
@@ -49,6 +52,13 @@ type CheckEmailExistsAction = string;
  */
 export function checkEmailExists(email: string): Action<CheckEmailExistsAction> {
     return buildAction(CHECK_EMAIL_ACTION, email);
+}
+
+/**
+ * Build the Redux action to check if an email exists
+ */
+export function reset(): Action<null> {
+    return buildAction(RESET_ACTION, null);
 }
 
 /**
@@ -84,6 +94,17 @@ export function CheckEmailExistsSuccessReducer(state: State, action: ResolvedAsy
     });
 }
 
+/**
+ * Reducer for when we reset the check if an email address exists
+ * @param state the state to update
+ */
+export function ResetReducer(state: State) : State {
+    return produce(state, (draft: State) => {
+        delete draft.state;
+        delete draft.email;
+    });
+}
+
 /** Selector to get the state of the Check Email process */
 export const selectCheckEmailStatus = buildSelector(['checkEmailExists'], (state: State) => state.state);
 
@@ -96,6 +117,7 @@ export const selectCheckEmailValue = buildSelector(['checkEmailExists'], (state:
 export const reducers = createReducer(INITIAL_STATE, {
     [startedAction(CHECK_EMAIL_ACTION)] : CheckEmailExistsStartReducer,
     [succeededAction(CHECK_EMAIL_ACTION)] : CheckEmailExistsSuccessReducer,
+    [RESET_ACTION] : ResetReducer
 });
 
 /** The sagas for this module */
@@ -105,7 +127,12 @@ export const sagas = [
 
 /** The actual module */
 export default {
+    CHECK_STATUS_START,
+    CHECK_STATUS_EXISTS,
+    CHECK_STATUS_UNKNOWN,
+
     checkEmailExists,
+    reset,
 
     selectCheckEmailStatus,
     selectCheckEmailValue

@@ -3,7 +3,7 @@ import {Grid, Image, Segment, Header} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 
 import homepageImage from './homepage.jpg';
-import {Login} from "./Login";
+import {Login} from "./login/Login";
 
 /** The props that an HomePage needs */
 type HomePageProps = {};

@@ -6,10 +6,25 @@
     "header": "Login/Register",
     "email": {
       "label": "Email Address",
-      "placeholder": "Email Address"
+      "placeholder": "Enter Email Address"
+    },
+    "name": {
+      "label": "Name",
+      "placeholder": "Enter Name"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter Password"
+    },
+    "password2": {
+      "label": "Re-enter Password",
+      "placeholder": "Enter Password"
     },
     "submit": {
-      "loginRegister": "Login/Register"
+      "loginRegister": "Login/Register",
+      "login": "Login",
+      "register": "Register",
+      "cancel": "Cancel"
     }
   }
 }
