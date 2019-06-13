@@ -1,6 +1,6 @@
 import {createReducer} from "redux-create-reducer";
 import produce from 'immer';
-import {buildSaga, buildAction, Action} from "../redux";
+import {buildSaga, buildAction, Action, asyncAction} from "../redux";
 
 /** The shape of the state for this module */
 export type State = {
@@ -34,6 +34,18 @@ export function checkEmailExists(email: string): Action<CheckEmailExistsAction> 
     });
 }
 
+/**
+ * Saga to check if an email address is already registered with the server
+ * @param action the action to handle
+ */
+export function* checkEmailExistsSaga(action: Action<CheckEmailExistsAction>) : IterableIterator<any> {
+    yield asyncAction(CHECK_EMAIL_ACTION, (email: string) => {
+        return new Promise<string>((resolve) => {
+            setTimeout(() => resolve('Success: ' + email), 5000);
+        });
+    }, action.payload.email);
+}
+
 /** The reducers for this module */
 export const reducers = createReducer(INITIAL_STATE, {
 
@@ -41,7 +53,7 @@ export const reducers = createReducer(INITIAL_STATE, {
 
 /** The sagas for this module */
 export const sagas = [
-
+    buildSaga(CHECK_EMAIL_ACTION, checkEmailExistsSaga),
 ];
 
 /** The actual module */
