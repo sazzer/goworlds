@@ -6,6 +6,7 @@ import {
     AsyncAction,
     buildAction,
     buildSaga,
+    buildSelector,
     ResolvedAsyncAction,
     startedAction,
     succeededAction
@@ -83,6 +84,12 @@ export function CheckEmailExistsSuccessReducer(state: State, action: ResolvedAsy
     });
 }
 
+/** Selector to get the state of the Check Email process */
+export const selectCheckEmailStatus = buildSelector(['checkEmailExists'], (state: State) => state.state);
+
+/** Selector to get the Email Address we are working with */
+export const selectCheckEmailValue = buildSelector(['checkEmailExists'], (state: State) => state.email);
+
 //////// The actual module definitions
 
 /** The reducers for this module */
@@ -98,5 +105,8 @@ export const sagas = [
 
 /** The actual module */
 export default {
-    checkEmailExists
+    checkEmailExists,
+
+    selectCheckEmailStatus,
+    selectCheckEmailValue
 }
