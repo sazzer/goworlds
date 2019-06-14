@@ -13,7 +13,7 @@ exports[`renders the email address that was entered 1`] = `
       autoFocus={true}
       name="email"
       onChange={[Function]}
-      placeholder="Email Address"
+      placeholder="Enter Email Address"
       type="text"
       value="graham@grahamcox.co.uk"
     />
@@ -41,7 +41,7 @@ exports[`renders without crashing 1`] = `
       autoFocus={true}
       name="email"
       onChange={[Function]}
-      placeholder="Email Address"
+      placeholder="Enter Email Address"
       type="text"
       value=""
     />
