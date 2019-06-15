@@ -23,6 +23,7 @@ export const CheckingEmail: FunctionComponent<CheckingEmailProps> = ({email}) =>
                 <input placeholder={t('loginArea.email.placeholder')}
                        name="email"
                        type="text"
+                       readOnly
                        value={email}/>
             </Form.Field>
         </Form>

@@ -11,6 +11,7 @@ import {
     startedAction,
     succeededAction
 } from "../redux";
+import {request} from "../api";
 
 /** Status to indicate that we've started to check if an email address exists */
 export const CHECK_STATUS_START = 'Started';
@@ -61,13 +62,25 @@ export function reset(): Action<null> {
     return buildAction(RESET_ACTION, null);
 }
 
+/** The shape of the response from the server on checking if an email address exists */
+type CheckEmailExistsServiceResponse = {
+    exists: boolean,
+};
+
 /**
  * Saga to check if an email address is already registered with the server
  * @param action the action to handle
  */
 export function* checkEmailExistsSaga(action: Action<CheckEmailExistsAction>) : IterableIterator<any> {
-    yield asyncAction(CHECK_EMAIL_ACTION, (email: string) => {
-        return (email === 'graham@grahamcox.co.uk');
+    yield asyncAction(CHECK_EMAIL_ACTION, async (email: string) => {
+        const response = await request<CheckEmailExistsServiceResponse>('/emails/{email}', {
+            method: 'GET',
+            urlParams: {
+                email,
+            }
+        });
+
+        return response.body.exists;
     }, action.payload);
 }
 
