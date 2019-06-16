@@ -1,9 +1,9 @@
 import React, {FunctionComponent} from 'react';
 import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
-import {Formik, ErrorMessage as FormikErrorMessage} from "formik";
+import {Formik} from "formik";
 import * as Yup from 'yup';
-import {ErrorMessage} from "../../common/ErrorMessage";
+import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 
 /** The props that the EmailEntry area needs */
 type EmailEntryProps = {
@@ -40,9 +40,7 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     autoFocus />
-                        <FormikErrorMessage name="email">
-                            {msg => <ErrorMessage errors={[msg]} /> }
-                        </FormikErrorMessage>
+                        <FormikErrorMessage name="email" />
                     </Form.Field>
                     <Button type="submit" primary>
                         {t('loginArea.submit.loginRegister')}
