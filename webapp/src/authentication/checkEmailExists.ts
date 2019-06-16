@@ -13,6 +13,9 @@ import {
 } from "../redux";
 import {request} from "../api";
 
+/** Prefix for actions in this module */
+const MODULE_PREFIX = 'CheckEmailExists/';
+
 /** Status to indicate that we've started to check if an email address exists */
 export const CHECK_STATUS_START = 'Started';
 
@@ -24,25 +27,31 @@ export const CHECK_STATUS_UNKNOWN = 'Unknown';
 
 /** The shape of the state for this module */
 export interface State {
-    email?: string,
-    state?: string,
+    email: string | undefined,
+    state: string | undefined,
 }
 
 /** The initial state for this module */
 const INITIAL_STATE: State = {
-
+    email: undefined,
+    state: undefined,
 };
 
-/** Prefix for actions in this module */
-const MODULE_PREFIX = 'CheckEmailExists/';
+//////// Selectors for getting details from the state
 
-//////// Check If Email Exists
+/** The path to this module */
+const MODULE_ROOT = ['checkEmailExists'];
+
+/** Selector to get the state of the Check Email process */
+export const selectCheckEmailStatus = buildSelector([...MODULE_ROOT, 'state']);
+
+/** Selector to get the Email Address we are working with */
+export const selectCheckEmailValue = buildSelector([...MODULE_ROOT, 'email']);
+
+//////// Action for checking if an email address exists
 
 /** The action type for checking if an email exists */
 const CHECK_EMAIL_ACTION = MODULE_PREFIX + 'checkEmailExists';
-
-/** The action type for resetting the check for if an email exists */
-const RESET_ACTION = MODULE_PREFIX + 'reset';
 
 /** The shape of the action to check if an email exists */
 type CheckEmailExistsAction = string;
@@ -53,13 +62,6 @@ type CheckEmailExistsAction = string;
  */
 export function checkEmailExists(email: string): Action<CheckEmailExistsAction> {
     return buildAction(CHECK_EMAIL_ACTION, email);
-}
-
-/**
- * Build the Redux action to check if an email exists
- */
-export function reset(): Action<null> {
-    return buildAction(RESET_ACTION, null);
 }
 
 /** The shape of the response from the server on checking if an email address exists */
@@ -103,8 +105,21 @@ export function CheckEmailExistsStartReducer(state: State, action: AsyncAction<s
  */
 export function CheckEmailExistsSuccessReducer(state: State, action: ResolvedAsyncAction<string, boolean>) : State {
     return produce(state, (draft: State) => {
+        draft.email = action.input;
         draft.state = action.payload ? CHECK_STATUS_EXISTS : CHECK_STATUS_UNKNOWN;
     });
+}
+
+//////// Action for resetting the results of checking an email address
+
+/** The action type for resetting the check for if an email exists */
+const RESET_ACTION = MODULE_PREFIX + 'reset';
+
+/**
+ * Build the Redux action to check if an email exists
+ */
+export function reset(): Action<null> {
+    return buildAction(RESET_ACTION, null);
 }
 
 /**
@@ -117,13 +132,6 @@ export function ResetReducer(state: State) : State {
         delete draft.email;
     });
 }
-
-/** Selector to get the state of the Check Email process */
-export const selectCheckEmailStatus = buildSelector(['checkEmailExists'], (state: State) => state.state);
-
-/** Selector to get the Email Address we are working with */
-export const selectCheckEmailValue = buildSelector(['checkEmailExists'], (state: State) => state.email);
-
 //////// The actual module definitions
 
 /** The reducers for this module */
