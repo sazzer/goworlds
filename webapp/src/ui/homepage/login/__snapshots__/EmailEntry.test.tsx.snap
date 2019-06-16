@@ -1,16 +1,54 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders the email address that was entered 1`] = `
+exports[`renders an error if submitted without an email address 1`] = `
 <Form
   as="form"
+  error={true}
   onSubmit={[Function]}
 >
   <FormField>
     <label>
       Email Address
     </label>
-    <input
+    <FormInput
+      as={[Function]}
       autoFocus={true}
+      control={[Function]}
+      error={true}
+      fluid={true}
+      name="email"
+      onChange={[Function]}
+      placeholder="Enter Email Address"
+      type="text"
+      value=""
+    />
+  </FormField>
+  <Button
+    as="button"
+    primary={true}
+    type="submit"
+  >
+    Login/Register
+  </Button>
+</Form>
+`;
+
+exports[`renders the email address that was entered 1`] = `
+<Form
+  as="form"
+  error={false}
+  onSubmit={[Function]}
+>
+  <FormField>
+    <label>
+      Email Address
+    </label>
+    <FormInput
+      as={[Function]}
+      autoFocus={true}
+      control={[Function]}
+      error={false}
+      fluid={true}
       name="email"
       onChange={[Function]}
       placeholder="Enter Email Address"
@@ -31,14 +69,19 @@ exports[`renders the email address that was entered 1`] = `
 exports[`renders without crashing 1`] = `
 <Form
   as="form"
+  error={false}
   onSubmit={[Function]}
 >
   <FormField>
     <label>
       Email Address
     </label>
-    <input
+    <FormInput
+      as={[Function]}
       autoFocus={true}
+      control={[Function]}
+      error={false}
+      fluid={true}
       name="email"
       onChange={[Function]}
       placeholder="Enter Email Address"

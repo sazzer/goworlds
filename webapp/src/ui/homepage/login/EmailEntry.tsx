@@ -14,25 +14,36 @@ type EmailEntryProps = {
 export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
     const [email, setEmail] = useState("");
+    const [emailAbsent, setEmailAbsent] = useState(false);
 
     const doSubmit = () => {
         if (email) {
+            setEmailAbsent(false);
             onSubmit(email);
+        } else {
+            setEmailAbsent(true);
         }
     };
 
+    const doChangeEmail = (email: string) => {
+        setEmail(email);
+        setEmailAbsent(false);
+    };
+
     return (
-        <Form onSubmit={doSubmit}>
+        <Form onSubmit={doSubmit} error={emailAbsent}>
             <Form.Field>
                 <label>
                     {t('loginArea.email.label')}
                 </label>
-                <input placeholder={t('loginArea.email.placeholder')}
-                       name="email"
-                       type="text"
-                       value={email}
-                       onChange={e => setEmail(e.target.value)}
-                       autoFocus/>
+                <Form.Input fluid
+                            placeholder={t('loginArea.email.placeholder')}
+                            name="email"
+                            type="text"
+                            value={email}
+                            error={emailAbsent}
+                            onChange={e => doChangeEmail(e.target.value)}
+                            autoFocus />
             </Form.Field>
             <Button type="submit" primary>
                 {t('loginArea.submit.loginRegister')}

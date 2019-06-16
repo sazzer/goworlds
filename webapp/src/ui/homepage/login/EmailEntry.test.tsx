@@ -9,7 +9,7 @@ function setup() {
     const element = shallow(<EmailEntry onSubmit={onSubmit}/>);
 
     const submitForm = () => element.find('Form').simulate('submit');
-    const enterEmail = (email) => element.find('input[name="email"]').simulate('change', {
+    const enterEmail = (email) => element.find('FormInput[name="email"]').simulate('change', {
         target: {
             value: email
         }
@@ -53,4 +53,12 @@ it("doesn't submit the email address if one wasn't provided", () => {
     submitForm();
 
     expect(onSubmit).toBeCalledTimes(0);
+});
+
+it("renders an error if submitted without an email address", () => {
+    const {element, submitForm} = setup();
+
+    submitForm();
+
+    expect(element).toMatchSnapshot();
 });
