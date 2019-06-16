@@ -1,100 +1,592 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders an error if submitted without an email address 1`] = `
-<Form
-  as="form"
-  error={true}
-  onSubmit={[Function]}
+<EmailEntry
+  onSubmit={[MockFunction]}
 >
-  <FormField>
-    <label>
-      Email Address
-    </label>
-    <FormInput
-      as={[Function]}
-      autoFocus={true}
-      control={[Function]}
-      error={true}
-      fluid={true}
-      name="email"
-      onChange={[Function]}
-      placeholder="Enter Email Address"
-      type="text"
-      value=""
-    />
-  </FormField>
-  <Button
-    as="button"
-    primary={true}
-    type="submit"
+  <Formik
+    enableReinitialize={false}
+    initialValues={
+      Object {
+        "email": "",
+      }
+    }
+    isInitialValid={false}
+    onSubmit={[Function]}
+    validateOnBlur={true}
+    validateOnChange={true}
+    validationSchema={
+      ObjectSchema {
+        "_blacklist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "_conditions": Array [],
+        "_defaultDefault": [Function],
+        "_deps": Array [],
+        "_excludedEdges": Array [],
+        "_exclusive": Object {},
+        "_mutate": undefined,
+        "_nodes": Array [
+          "email",
+        ],
+        "_options": Object {
+          "abortEarly": true,
+          "recursive": true,
+        },
+        "_type": "object",
+        "_typeError": [Function],
+        "_whitelist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "fields": Object {
+          "email": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "min": true,
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "tests": Array [
+              [Function],
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+        },
+        "tests": Array [],
+        "transforms": Array [
+          [Function],
+        ],
+      }
+    }
   >
-    Login/Register
-  </Button>
-</Form>
+    <Form
+      as="form"
+      error={true}
+      onSubmit={[Function]}
+    >
+      <form
+        className="ui error form"
+        onSubmit={[Function]}
+      >
+        <FormField>
+          <div
+            className="field"
+          >
+            <label>
+              Email Address
+            </label>
+            <FormInput
+              as={[Function]}
+              autoFocus={true}
+              control={[Function]}
+              error={true}
+              fluid={true}
+              name="email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Enter Email Address"
+              type="text"
+              value=""
+            >
+              <FormField
+                autoFocus={true}
+                control={[Function]}
+                error={true}
+                fluid={true}
+                name="email"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Enter Email Address"
+                type="text"
+                value=""
+              >
+                <div
+                  className="error field"
+                >
+                  <Input
+                    autoFocus={true}
+                    fluid={true}
+                    name="email"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="Enter Email Address"
+                    type="text"
+                    value=""
+                  >
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        autoFocus={true}
+                        name="email"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="Enter Email Address"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </Input>
+                </div>
+              </FormField>
+            </FormInput>
+          </div>
+        </FormField>
+        <Button
+          as="button"
+          primary={true}
+          type="submit"
+        >
+          <Ref
+            innerRef={
+              Object {
+                "current": <button
+                  class="ui primary button"
+                  type="submit"
+                >
+                  Login/Register
+                </button>,
+              }
+            }
+          >
+            <RefFindNode
+              innerRef={
+                Object {
+                  "current": <button
+                    class="ui primary button"
+                    type="submit"
+                  >
+                    Login/Register
+                  </button>,
+                }
+              }
+            >
+              <button
+                className="ui primary button"
+                onClick={[Function]}
+                type="submit"
+              >
+                Login/Register
+              </button>
+            </RefFindNode>
+          </Ref>
+        </Button>
+      </form>
+    </Form>
+  </Formik>
+</EmailEntry>
 `;
 
 exports[`renders the email address that was entered 1`] = `
-<Form
-  as="form"
-  error={false}
-  onSubmit={[Function]}
+<EmailEntry
+  onSubmit={[MockFunction]}
 >
-  <FormField>
-    <label>
-      Email Address
-    </label>
-    <FormInput
-      as={[Function]}
-      autoFocus={true}
-      control={[Function]}
-      error={false}
-      fluid={true}
-      name="email"
-      onChange={[Function]}
-      placeholder="Enter Email Address"
-      type="text"
-      value="graham@grahamcox.co.uk"
-    />
-  </FormField>
-  <Button
-    as="button"
-    primary={true}
-    type="submit"
+  <Formik
+    enableReinitialize={false}
+    initialValues={
+      Object {
+        "email": "",
+      }
+    }
+    isInitialValid={false}
+    onSubmit={[Function]}
+    validateOnBlur={true}
+    validateOnChange={true}
+    validationSchema={
+      ObjectSchema {
+        "_blacklist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "_conditions": Array [],
+        "_defaultDefault": [Function],
+        "_deps": Array [],
+        "_excludedEdges": Array [],
+        "_exclusive": Object {},
+        "_mutate": undefined,
+        "_nodes": Array [
+          "email",
+        ],
+        "_options": Object {
+          "abortEarly": true,
+          "recursive": true,
+        },
+        "_type": "object",
+        "_typeError": [Function],
+        "_whitelist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "fields": Object {
+          "email": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "min": true,
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "tests": Array [
+              [Function],
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+        },
+        "tests": Array [],
+        "transforms": Array [
+          [Function],
+        ],
+      }
+    }
   >
-    Login/Register
-  </Button>
-</Form>
+    <Form
+      as="form"
+      error={false}
+      onSubmit={[Function]}
+    >
+      <form
+        className="ui form"
+        onSubmit={[Function]}
+      >
+        <FormField>
+          <div
+            className="field"
+          >
+            <label>
+              Email Address
+            </label>
+            <FormInput
+              as={[Function]}
+              autoFocus={true}
+              control={[Function]}
+              error={false}
+              fluid={true}
+              name="email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Enter Email Address"
+              type="text"
+              value="graham@grahamcox.co.uk"
+            >
+              <FormField
+                autoFocus={true}
+                control={[Function]}
+                error={false}
+                fluid={true}
+                name="email"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Enter Email Address"
+                type="text"
+                value="graham@grahamcox.co.uk"
+              >
+                <div
+                  className="field"
+                >
+                  <Input
+                    autoFocus={true}
+                    fluid={true}
+                    name="email"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="Enter Email Address"
+                    type="text"
+                    value="graham@grahamcox.co.uk"
+                  >
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        autoFocus={true}
+                        name="email"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="Enter Email Address"
+                        type="text"
+                        value="graham@grahamcox.co.uk"
+                      />
+                    </div>
+                  </Input>
+                </div>
+              </FormField>
+            </FormInput>
+          </div>
+        </FormField>
+        <Button
+          as="button"
+          primary={true}
+          type="submit"
+        >
+          <Ref
+            innerRef={
+              Object {
+                "current": <button
+                  class="ui primary button"
+                  type="submit"
+                >
+                  Login/Register
+                </button>,
+              }
+            }
+          >
+            <RefFindNode
+              innerRef={
+                Object {
+                  "current": <button
+                    class="ui primary button"
+                    type="submit"
+                  >
+                    Login/Register
+                  </button>,
+                }
+              }
+            >
+              <button
+                className="ui primary button"
+                onClick={[Function]}
+                type="submit"
+              >
+                Login/Register
+              </button>
+            </RefFindNode>
+          </Ref>
+        </Button>
+      </form>
+    </Form>
+  </Formik>
+</EmailEntry>
 `;
 
 exports[`renders without crashing 1`] = `
-<Form
-  as="form"
-  error={false}
-  onSubmit={[Function]}
+<EmailEntry
+  onSubmit={[MockFunction]}
 >
-  <FormField>
-    <label>
-      Email Address
-    </label>
-    <FormInput
-      as={[Function]}
-      autoFocus={true}
-      control={[Function]}
-      error={false}
-      fluid={true}
-      name="email"
-      onChange={[Function]}
-      placeholder="Enter Email Address"
-      type="text"
-      value=""
-    />
-  </FormField>
-  <Button
-    as="button"
-    primary={true}
-    type="submit"
+  <Formik
+    enableReinitialize={false}
+    initialValues={
+      Object {
+        "email": "",
+      }
+    }
+    isInitialValid={false}
+    onSubmit={[Function]}
+    validateOnBlur={true}
+    validateOnChange={true}
+    validationSchema={
+      ObjectSchema {
+        "_blacklist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "_conditions": Array [],
+        "_defaultDefault": [Function],
+        "_deps": Array [],
+        "_excludedEdges": Array [],
+        "_exclusive": Object {},
+        "_mutate": undefined,
+        "_nodes": Array [
+          "email",
+        ],
+        "_options": Object {
+          "abortEarly": true,
+          "recursive": true,
+        },
+        "_type": "object",
+        "_typeError": [Function],
+        "_whitelist": RefSet {
+          "list": Set {},
+          "refs": Map {},
+        },
+        "fields": Object {
+          "email": StringSchema {
+            "_blacklist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "_conditions": Array [],
+            "_deps": Array [],
+            "_exclusive": Object {
+              "min": true,
+              "required": true,
+            },
+            "_mutate": undefined,
+            "_options": Object {
+              "abortEarly": true,
+              "recursive": true,
+            },
+            "_type": "string",
+            "_typeError": [Function],
+            "_whitelist": RefSet {
+              "list": Set {},
+              "refs": Map {},
+            },
+            "tests": Array [
+              [Function],
+              [Function],
+            ],
+            "transforms": Array [
+              [Function],
+            ],
+          },
+        },
+        "tests": Array [],
+        "transforms": Array [
+          [Function],
+        ],
+      }
+    }
   >
-    Login/Register
-  </Button>
-</Form>
+    <Form
+      as="form"
+      error={false}
+      onSubmit={[Function]}
+    >
+      <form
+        className="ui form"
+        onSubmit={[Function]}
+      >
+        <FormField>
+          <div
+            className="field"
+          >
+            <label>
+              Email Address
+            </label>
+            <FormInput
+              as={[Function]}
+              autoFocus={true}
+              control={[Function]}
+              error={false}
+              fluid={true}
+              name="email"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder="Enter Email Address"
+              type="text"
+              value=""
+            >
+              <FormField
+                autoFocus={true}
+                control={[Function]}
+                error={false}
+                fluid={true}
+                name="email"
+                onBlur={[Function]}
+                onChange={[Function]}
+                placeholder="Enter Email Address"
+                type="text"
+                value=""
+              >
+                <div
+                  className="field"
+                >
+                  <Input
+                    autoFocus={true}
+                    fluid={true}
+                    name="email"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder="Enter Email Address"
+                    type="text"
+                    value=""
+                  >
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        autoFocus={true}
+                        name="email"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder="Enter Email Address"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </Input>
+                </div>
+              </FormField>
+            </FormInput>
+          </div>
+        </FormField>
+        <Button
+          as="button"
+          primary={true}
+          type="submit"
+        >
+          <Ref
+            innerRef={
+              Object {
+                "current": <button
+                  class="ui primary button"
+                  type="submit"
+                >
+                  Login/Register
+                </button>,
+              }
+            }
+          >
+            <RefFindNode
+              innerRef={
+                Object {
+                  "current": <button
+                    class="ui primary button"
+                    type="submit"
+                  >
+                    Login/Register
+                  </button>,
+                }
+              }
+            >
+              <button
+                className="ui primary button"
+                onClick={[Function]}
+                type="submit"
+              >
+                Login/Register
+              </button>
+            </RefFindNode>
+          </Ref>
+        </Button>
+      </form>
+    </Form>
+  </Formik>
+</EmailEntry>
 `;

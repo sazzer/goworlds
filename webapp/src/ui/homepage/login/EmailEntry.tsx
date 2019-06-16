@@ -1,6 +1,8 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent} from 'react';
 import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
+import {Formik} from "formik";
+import * as Yup from 'yup';
 
 /** The props that the EmailEntry area needs */
 type EmailEntryProps = {
@@ -13,41 +15,36 @@ type EmailEntryProps = {
  */
 export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
-    const [email, setEmail] = useState("");
-    const [emailAbsent, setEmailAbsent] = useState(false);
 
-    const doSubmit = () => {
-        if (email) {
-            setEmailAbsent(false);
-            onSubmit(email);
-        } else {
-            setEmailAbsent(true);
-        }
-    };
-
-    const doChangeEmail = (email: string) => {
-        setEmail(email);
-        setEmailAbsent(false);
-    };
+    const schema = Yup.object().shape({
+        email: Yup.string().min(1).required()
+    });
 
     return (
-        <Form onSubmit={doSubmit} error={emailAbsent}>
-            <Form.Field>
-                <label>
-                    {t('loginArea.email.label')}
-                </label>
-                <Form.Input fluid
-                            placeholder={t('loginArea.email.placeholder')}
-                            name="email"
-                            type="text"
-                            value={email}
-                            error={emailAbsent}
-                            onChange={e => doChangeEmail(e.target.value)}
-                            autoFocus />
-            </Form.Field>
-            <Button type="submit" primary>
-                {t('loginArea.submit.loginRegister')}
-            </Button>
-        </Form>
+        <Formik initialValues={{email: ''}}
+                validationSchema={schema}
+                onSubmit={(values) => onSubmit(values.email)}>
+            {({values, errors, handleSubmit, handleChange, handleBlur}) =>
+                <Form onSubmit={handleSubmit} error={errors.email !== undefined}>
+                    <Form.Field>
+                        <label>
+                            {t('loginArea.email.label')}
+                        </label>
+                        <Form.Input fluid
+                                    placeholder={t('loginArea.email.placeholder')}
+                                    name="email"
+                                    type="text"
+                                    value={values.email}
+                                    error={errors.email !== undefined}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    autoFocus />
+                    </Form.Field>
+                    <Button type="submit" primary>
+                        {t('loginArea.submit.loginRegister')}
+                    </Button>
+                </Form>
+            }
+        </Formik>
     );
 };
