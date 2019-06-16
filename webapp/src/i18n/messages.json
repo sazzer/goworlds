@@ -6,7 +6,10 @@
     "header": "Login/Register",
     "email": {
       "label": "Email Address",
-      "placeholder": "Enter Email Address"
+      "placeholder": "Enter Email Address",
+      "errors": {
+        "required": "Please enter an Email Address"
+      }
     },
     "name": {
       "label": "Name",

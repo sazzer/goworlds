@@ -1,8 +1,9 @@
 import React, {FunctionComponent} from 'react';
 import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
-import {Formik} from "formik";
+import {Formik, ErrorMessage as FormikErrorMessage} from "formik";
 import * as Yup from 'yup';
+import {ErrorMessage} from "../../common/ErrorMessage";
 
 /** The props that the EmailEntry area needs */
 type EmailEntryProps = {
@@ -17,7 +18,7 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
 
     const schema = Yup.object().shape({
-        email: Yup.string().min(1).required()
+        email: Yup.string().required(t('loginArea.email.errors.required'))
     });
 
     return (
@@ -39,6 +40,9 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     autoFocus />
+                        <FormikErrorMessage name="email">
+                            {msg => <ErrorMessage errors={[msg]} /> }
+                        </FormikErrorMessage>
                     </Form.Field>
                     <Button type="submit" primary>
                         {t('loginArea.submit.loginRegister')}
