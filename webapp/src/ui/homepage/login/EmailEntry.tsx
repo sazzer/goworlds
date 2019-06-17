@@ -18,16 +18,18 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
 
     const schema = Yup.object().shape({
-        email: Yup.string().required(t('loginArea.email.errors.required'))
+        email: Yup.string()
+            .required(t('loginArea.email.errors.required'))
+            .email(t('loginArea.email.errors.email'))
     });
 
     return (
         <Formik initialValues={{email: ''}}
                 validationSchema={schema}
                 onSubmit={(values) => onSubmit(values.email)}>
-            {({values, errors, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={errors.email !== undefined}>
-                    <Form.Field>
+            {({values, isValid, errors, handleSubmit, handleChange, handleBlur}) =>
+                <Form onSubmit={handleSubmit} error={!isValid}>
+                    <Form.Field required>
                         <label>
                             {t('loginArea.email.label')}
                         </label>

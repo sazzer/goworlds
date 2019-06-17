@@ -8,20 +8,31 @@
       "label": "Email Address",
       "placeholder": "Enter Email Address",
       "errors": {
-        "required": "Please enter an Email Address"
+        "required": "Please enter an Email Address",
+        "email": "Please enter a valid Email Address"
       }
     },
     "name": {
       "label": "Name",
-      "placeholder": "Enter Name"
+      "placeholder": "Enter Name",
+      "errors": {
+        "required": "Please enter a user name"
+      }
     },
     "password": {
       "label": "Password",
-      "placeholder": "Enter Password"
+      "placeholder": "Enter Password",
+      "errors": {
+        "required": "Please enter a password"
+      }
     },
     "password2": {
       "label": "Re-enter Password",
-      "placeholder": "Enter Password"
+      "placeholder": "Enter Password",
+      "errors": {
+        "required": "Please re-enter the password",
+        "match": "Passwords do not match"
+      }
     },
     "submit": {
       "loginRegister": "Login/Register",

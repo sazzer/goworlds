@@ -1,6 +1,6 @@
 import React, {FunctionComponent} from 'react';
 import {ErrorMessage} from "./ErrorMessage";
-import {Formik, ErrorMessage as FormikErrorMessageWrapper} from "formik";
+import {ErrorMessage as FormikErrorMessageWrapper} from "formik";
 
 /** The props that a FormikErrorMessage needs */
 type FormikErrorMessageProps = {
