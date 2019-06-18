@@ -1,6 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
+import {of} from "rxjs";
 import {EmailEntry} from "./EmailEntry";
+import * as mockCheckEmail from '../../../authentication/checkEmail';
+
+jest.mock('../../../authentication/checkEmail');
 
 /** Set up the component to test */
 function setup() {
@@ -8,15 +12,15 @@ function setup() {
     const element = mount(<EmailEntry onSubmit={onSubmit}/>);
 
     const submitForm = () => {
-        element.find('form').simulate('submit', {
-            preventDefault: () => {}
-        });
-
         return new Promise((resolved) => {
-            setTimeout(() => {
+            element.find('form').simulate('submit', {
+                preventDefault: () => {}
+            });
+
+            setImmediate(() => {
                 element.update();
                 resolved();
-            }, 0);
+            });
         });
     };
     const enterEmail = (email) => element.find('input[name="email"]').simulate('change', {
@@ -51,11 +55,13 @@ it('renders the email address that was entered', () => {
 it('submits the email address correctly', async () => {
     const {onSubmit, enterEmail, submitForm} = setup();
 
+    (mockCheckEmail.checkEmail as jest.MockInstance).mockReturnValue(of(true));
+
     enterEmail('graham@grahamcox.co.uk');
     await submitForm();
 
     expect(onSubmit).toBeCalledTimes(1);
-    expect(onSubmit).toBeCalledWith('graham@grahamcox.co.uk');
+    expect(onSubmit).toBeCalledWith('graham@grahamcox.co.uk', true);
 });
 
 it("doesn't submit the email address if one wasn't provided", async () => {
