@@ -5,8 +5,6 @@ import {Formik} from "formik";
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import * as Yup from "yup";
 import {StringSchema} from "yup";
-import {useDispatch} from "react-redux";
-import {createUser} from "../../../authentication/createUser";
 
 /** The props that the UnknownEmail area needs */
 type UnknownEmailProps = {
@@ -15,11 +13,10 @@ type UnknownEmailProps = {
 };
 
 /**
- * The UnknownEmail area
+ * Component for when an Unknown Email Address was entered and we need to register a new user
  * @constructor
  */
 export const UnknownEmail: FunctionComponent<UnknownEmailProps> = ({email, onCancel}) => {
-    const dispatch = useDispatch();
     const { t } = useTranslation();
 
     const schema = Yup.object().shape({
@@ -38,7 +35,7 @@ export const UnknownEmail: FunctionComponent<UnknownEmailProps> = ({email, onCan
     return (
         <Formik initialValues={{email: email, name: '', password: '', password2: ''}}
                 validationSchema={schema}
-                onSubmit={(values) => dispatch(createUser(values.email, values.name, values.password))}>
+                onSubmit={(values) => console.log(values)}>
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur}) =>
                 <Form onSubmit={handleSubmit} error={!isValid}>
                     <Form.Field required>
