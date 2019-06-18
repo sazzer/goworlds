@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {of} from "rxjs";
+import {EMPTY, of} from "rxjs";
 import {EmailEntry} from "./EmailEntry";
 import * as mockCheckEmail from '../../../authentication/checkEmail';
 
@@ -41,7 +41,7 @@ function setup() {
 it('renders without crashing', () => {
     const {element} = setup();
 
-    expect(element).toMatchSnapshot();
+    expect(element.render()).toMatchSnapshot();
 });
 
 it('renders the email address that was entered', () => {
@@ -49,7 +49,7 @@ it('renders the email address that was entered', () => {
 
     enterEmail('graham@grahamcox.co.uk');
 
-    expect(element).toMatchSnapshot();
+    expect(element.render()).toMatchSnapshot();
 });
 
 it('submits the email address correctly', async () => {
@@ -62,6 +62,17 @@ it('submits the email address correctly', async () => {
 
     expect(onSubmit).toBeCalledTimes(1);
     expect(onSubmit).toBeCalledWith('graham@grahamcox.co.uk', true);
+});
+
+it('renders the form as loading whilst waiting for the API to return', async () => {
+    const {element, enterEmail, submitForm} = setup();
+
+    (mockCheckEmail.checkEmail as jest.MockInstance).mockReturnValue(EMPTY);
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(element.render()).toMatchSnapshot();
 });
 
 it("doesn't submit the email address if one wasn't provided", async () => {
@@ -77,5 +88,5 @@ it("renders an error if submitted without an email address", async () => {
 
     await submitForm();
 
-    expect(element).toMatchSnapshot();
+    expect(element.render()).toMatchSnapshot();
 });
