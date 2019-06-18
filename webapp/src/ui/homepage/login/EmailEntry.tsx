@@ -28,8 +28,8 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const doSubmit = (email: string) => {
         setSubmitting(true);
         checkEmail(email).subscribe((status: boolean) => {
-            onSubmit(email, status);
             setSubmitting(false);
+            onSubmit(email, status);
         });
     };
 
