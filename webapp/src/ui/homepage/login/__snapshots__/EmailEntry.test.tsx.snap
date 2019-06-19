@@ -1,5 +1,44 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`renders an error if an API error occurred 1`] = `
+<form
+  class="ui error form"
+>
+  <div
+    class="required field"
+  >
+    <label>
+      Email Address
+    </label>
+    <div
+      class="field"
+    >
+      <div
+        class="ui fluid input"
+      >
+        <input
+          name="email"
+          placeholder="Enter Email Address"
+          type="text"
+          value="graham@grahamcox.co.uk"
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    class="ui primary button"
+    type="submit"
+  >
+    Login/Register
+  </button>
+  <div
+    class="ui error message"
+  >
+    An unexpected error occurred
+  </div>
+</form>
+`;
+
 exports[`renders an error if submitted without an email address 1`] = `
 <form
   class="ui error form"
@@ -36,6 +75,9 @@ exports[`renders an error if submitted without an email address 1`] = `
   >
     Login/Register
   </button>
+  <div
+    class="ui error message"
+  />
 </form>
 `;
 
@@ -70,6 +112,9 @@ exports[`renders the email address that was entered 1`] = `
   >
     Login/Register
   </button>
+  <div
+    class="ui error message"
+  />
 </form>
 `;
 
@@ -104,6 +149,9 @@ exports[`renders the form as loading whilst waiting for the API to return 1`] = 
   >
     Login/Register
   </button>
+  <div
+    class="ui error message"
+  />
 </form>
 `;
 
@@ -138,5 +186,8 @@ exports[`renders without crashing 1`] = `
   >
     Login/Register
   </button>
+  <div
+    class="ui error message"
+  />
 </form>
 `;

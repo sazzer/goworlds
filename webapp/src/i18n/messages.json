@@ -38,7 +38,10 @@
       "loginRegister": "Login/Register",
       "login": "Login",
       "register": "Register",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "errors": {
+        "unexpected": "An unexpected error occurred"
+      }
     }
   }
 }

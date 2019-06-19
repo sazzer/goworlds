@@ -5,6 +5,7 @@ import {Formik} from "formik";
 import * as Yup from 'yup';
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import {checkEmail} from "../../../authentication/checkEmail";
+import {ErrorMessage} from "../../common/ErrorMessage";
 
 /** The props that the EmailEntry area needs */
 type EmailEntryProps = {
@@ -18,6 +19,7 @@ type EmailEntryProps = {
 export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
     const [submitting, setSubmitting] = useState<boolean>();
+    const [submitError, setSubmitError] = useState<boolean>(false);
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -27,10 +29,19 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
 
     const doSubmit = (email: string) => {
         setSubmitting(true);
-        checkEmail(email).subscribe((status: boolean) => {
-            setSubmitting(false);
-            onSubmit(email, status);
-        });
+        setSubmitError(false);
+
+        checkEmail(email).subscribe(
+            (status: boolean) => {
+                setSubmitting(false);
+                onSubmit(email, status);
+            },
+            (err: Error) => {
+                console.log(err);
+                setSubmitting(false);
+                setSubmitError(true);
+            }
+        );
     };
 
     return (
@@ -38,7 +49,7 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
                 validationSchema={schema}
                 onSubmit={(values) => doSubmit(values.email)}>
             {({values, isValid, errors, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid} loading={submitting}>
+                <Form onSubmit={handleSubmit} error={!isValid || submitError} loading={submitting}>
                     <Form.Field required>
                         <label>
                             {t('loginArea.email.label')}
@@ -57,6 +68,9 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
                     <Button type="submit" primary>
                         {t('loginArea.submit.loginRegister')}
                     </Button>
+                    <ErrorMessage errors={[
+                        submitError && t('loginArea.submit.errors.unexpected')
+                    ]}/>
                 </Form>
             }
         </Formik>
