@@ -24,7 +24,7 @@ export const LoginRegisterBody: FunctionComponent<object> = () => {
             return <Register email={checkEmailValue}
                              onCancel={() => dispatch(checkEmailExistsModule.reset())}/>;
         default:
-            return <EmailEntry onSubmit={(email) => dispatch(checkEmailExistsModule.checkEmailExists(email))}/>;
+            return <EmailEntry />;
     }
 };
 

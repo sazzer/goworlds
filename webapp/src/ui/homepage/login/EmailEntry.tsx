@@ -4,18 +4,16 @@ import {useTranslation} from "react-i18next";
 import {Formik} from "formik";
 import * as Yup from 'yup';
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
-
-/** The props that the EmailEntry area needs */
-type EmailEntryProps = {
-    onSubmit: (email: string) => void
-};
+import {useDispatch} from "react-redux";
+import checkEmailExistsModule from "../../../authentication/checkEmailExists";
 
 /**
  * The EmailEntry area
  * @constructor
  */
-export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
+export const EmailEntry: FunctionComponent<object> = () => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -23,10 +21,14 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
             .email(t('loginArea.email.errors.email'))
     });
 
+    const doSubmit = (email: string) => {
+        dispatch(checkEmailExistsModule.checkEmailExists(email));
+    };
+
     return (
         <Formik initialValues={{email: ''}}
                 validationSchema={schema}
-                onSubmit={(values) => onSubmit(values.email)}>
+                onSubmit={(values) => doSubmit(values.email)}>
             {({values, isValid, errors, handleSubmit, handleChange, handleBlur}) =>
                 <Form onSubmit={handleSubmit} error={!isValid}>
                     <Form.Field required>
