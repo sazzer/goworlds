@@ -8,17 +8,17 @@ import {StringSchema} from "yup";
 import {useDispatch} from "react-redux";
 import {createUser} from "../../../authentication/createUser";
 
-/** The props that the UnknownEmail area needs */
-type UnknownEmailProps = {
+/** The props that the Register area needs */
+type RegisterProps = {
     email: string,
     onCancel: () => void,
 };
 
 /**
- * The UnknownEmail area
+ * Component for registering a new account
  * @constructor
  */
-export const UnknownEmail: FunctionComponent<UnknownEmailProps> = ({email, onCancel}) => {
+export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
 

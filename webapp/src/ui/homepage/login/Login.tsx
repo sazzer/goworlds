@@ -1,54 +1,50 @@
-import React, {FunctionComponent} from 'react';
-import {useDispatch, useSelector} from 'react-redux'
-import {Header, Segment} from "semantic-ui-react";
+import React, {FunctionComponent, useState} from 'react';
+import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
-import {EmailEntry} from "./EmailEntry";
-import checkEmailExistsModule from "../../../authentication/checkEmailExists";
-import {CheckingEmail} from "./CheckingEmail";
-import {ExistingEmail} from "./ExistingEmail";
-import {UnknownEmail} from "./UnknownEmail";
 
 /** The props that the Login area needs */
-type LoginProps = {};
-
-/**
- * The body of the login area
- * @constructor
- */
-export const LoginBody: FunctionComponent<LoginProps> = () => {
-    const dispatch = useDispatch();
-    const checkEmailStatus = useSelector(checkEmailExistsModule.selectCheckEmailStatus);
-    const checkEmailValue = useSelector(checkEmailExistsModule.selectCheckEmailValue);
-
-    switch (checkEmailStatus) {
-        case checkEmailExistsModule.CHECK_STATUS_START:
-            return <CheckingEmail email={checkEmailValue} />;
-        case checkEmailExistsModule.CHECK_STATUS_EXISTS:
-            return <ExistingEmail email={checkEmailValue}
-                                  onCancel={() => dispatch(checkEmailExistsModule.reset())}/>;
-        case checkEmailExistsModule.CHECK_STATUS_UNKNOWN:
-            return <UnknownEmail email={checkEmailValue}
-                                 onCancel={() => dispatch(checkEmailExistsModule.reset())}/>;
-        default:
-            return <EmailEntry onSubmit={(email) => dispatch(checkEmailExistsModule.checkEmailExists(email))}/>;
-    }
+type LoginProps = {
+    email: string,
+    onCancel: () => void,
 };
 
 /**
- * The Login area
+ * Component for logging in to an existing account
  * @constructor
  */
-export const Login: FunctionComponent<LoginProps> = () => {
+export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
     const { t } = useTranslation();
+    const [password, setPassword] = useState("");
 
     return (
-        <Segment>
-            <Header>
-                {t('loginArea.header')}
-            </Header>
-
-            <LoginBody/>
-
-        </Segment>
+        <Form>
+            <Form.Field>
+                <label>
+                    {t('loginArea.email.label')}
+                </label>
+                <input placeholder={t('loginArea.email.placeholder')}
+                       name="email"
+                       type="text"
+                       value={email}
+                       readOnly />
+                <Form.Field>
+                    <label>
+                        {t('loginArea.password.label')}
+                    </label>
+                    <input placeholder={t('loginArea.password.placeholder')}
+                           name="password"
+                           type="password"
+                           value={password}
+                           onChange={e => setPassword(e.target.value)}
+                           autoFocus/>
+                </Form.Field>
+                <Button type="submit" primary>
+                    {t('loginArea.submit.login')}
+                </Button>
+                <Button type="reset" negative onClick={onCancel}>
+                    {t('loginArea.submit.cancel')}
+                </Button>
+            </Form.Field>
+        </Form>
     );
 };

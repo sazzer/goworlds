@@ -3,7 +3,7 @@ import {Grid, Image, Segment, Header} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 
 import homepageImage from './homepage.jpg';
-import {Login} from "./login/Login";
+import {LoginRegister} from "./login/LoginRegister";
 
 /** The props that an HomePage needs */
 type HomePageProps = {};
@@ -26,7 +26,7 @@ export const HomePage: FunctionComponent<HomePageProps> = () => {
                 </Segment>
             </Grid.Column>
             <Grid.Column width={4}>
-                <Login/>
+                <LoginRegister/>
             </Grid.Column>
         </Grid>
     );
