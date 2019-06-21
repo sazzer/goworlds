@@ -1,0 +1,493 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Initially renders correctly 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders an error if submitted without a password 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="error field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="ui error message"
+        >
+          Please enter a password
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders as loading if submitted with a password 1`] = `
+<body>
+  <div>
+    <form
+      class="ui loading form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value="password"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders correctly after entering a password 1`] = `
+<body>
+  <div>
+    <form
+      class="ui form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value="password"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Updates correctly when the callback indicates an access_denied error 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value="password"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      >
+        Invalid password or account blocked
+      </div>
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Updates correctly when the callback indicates an unexpected error 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value="password"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      >
+        An unexpected error occurred
+      </div>
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Updates correctly when the callback indicates success 1`] = `
+<body>
+  <div>
+    <form
+      class="ui form"
+    >
+      <div
+        class="required field"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              readonly=""
+              type="text"
+              value="graham@grahamcox.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+      >
+        <label>
+          Password
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="password"
+              placeholder="Enter Password"
+              type="password"
+              value="password"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Register
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Cancel
+      </button>
+      <div
+        class="ui error message"
+      />
+    </form>
+  </div>
+</body>
+`;

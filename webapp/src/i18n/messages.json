@@ -40,7 +40,8 @@
       "register": "Register",
       "cancel": "Cancel",
       "errors": {
-        "unexpected_error": "An unexpected error occurred"
+        "unexpected_error": "An unexpected error occurred",
+        "access_denied": "Invalid password or account blocked"
       }
     }
   }

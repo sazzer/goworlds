@@ -9,6 +9,8 @@ const API_URI = process.env.REACT_APP_API_URI;
 export type Request = {
     method?: Method,
     urlParams?: any,
+    body?: any,
+    clientId?: string,
 };
 
 /**
@@ -33,8 +35,15 @@ export async function request<T>(url: string, params: Request = {}) : Promise<Re
         method : params.method || 'GET',
         baseURL: API_URI,
         headers: {},
-        data: undefined,
+        data: params.body,
     };
+
+    if (params.clientId) {
+        fetchParams.auth = {
+            username: params.clientId,
+            password: ''
+        };
+    }
 
     try {
         const httpResponse: AxiosResponse = await axios(expandedUrl, fetchParams);

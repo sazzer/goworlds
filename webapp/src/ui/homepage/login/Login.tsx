@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import {useDispatch} from "react-redux";
-import {authenticate} from "../../../authentication/authenticate";
+import {authenticate, OAuth2Error} from "../../../authentication/authenticate";
 import {ErrorMessage} from "../../common/ErrorMessage";
 
 /** The props that the Login area needs */
@@ -33,11 +33,16 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
 
     const doSubmit = (email: string, password: string) => {
         setSubmitting(true);
+        setError(undefined);
 
         dispatch(authenticate(email, password, (err) => {
             setSubmitting(false);
             if (err) {
-                setError('unexpected_error');
+                if (err instanceof OAuth2Error) {
+                    setError(err.errorCode);
+                } else {
+                    setError('unexpected_error');
+                }
             }
         }));
     };
