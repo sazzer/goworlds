@@ -6,216 +6,75 @@ import MockAdapter from 'axios-mock-adapter';
 /** The Mock Axios layer */
 const mockAxios = new MockAdapter(axios);
 
-describe('Selectors', () => {
-    describe('Empty State', () => {
-        const state = {};
-
-        it('Returns undefined for the status', () => {
-            expect(testSubject.selectCheckEmailStatus(state)).toBeUndefined();
-        });
-
-        it('Returns undefined for the email value', () => {
-            expect(testSubject.selectCheckEmailValue(state)).toBeUndefined();
-        });
-    });
-
-    describe('Populated State', () => {
-        const state = {
-            checkEmailExists: {
-                state: 'Started',
-                email: 'graham@grahamcox.co.uk',
-            }
-        };
-
-        it('Returns undefined for the status', () => {
-            expect(testSubject.selectCheckEmailStatus(state)).toEqual('Started');
-        });
-
-        it('Returns undefined for the email value', () => {
-            expect(testSubject.selectCheckEmailValue(state)).toEqual('graham@grahamcox.co.uk');
-        });
-    });
-});
-
 describe('checkEmailExists', () => {
     it('Generates the correct action', () => {
-        expect(testSubject.checkEmailExists('graham@grahamcox.co.uk')).toEqual({
+        const callback = jest.fn();
+
+        expect(testSubject.checkEmailExists('graham@grahamcox.co.uk', callback)).toEqual({
             type: 'CheckEmailExists/checkEmailExists',
-            payload: 'graham@grahamcox.co.uk',
-        });
-    });
-
-    describe('Reducers', () => {
-        describe('CheckEmailExistsStartReducer', () => {
-            it('Correctly works with an empty state', () => {
-                const input = {
-                    email: undefined,
-                    state: undefined,
-                };
-
-                const result = testSubject.reducers(input, {
-                    type: 'CheckEmailExists/checkEmailExists_STARTED',
-                    input: 'graham@grahamcox.co.uk'
-                });
-
-                expect(result).toEqual({
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Started',
-                });
-            });
-
-            it('Correctly works with a populated state', () => {
-                const input = {
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Started',
-                };
-
-                const result = testSubject.reducers(input, {
-                    type: 'CheckEmailExists/checkEmailExists_STARTED',
-                    input: 'graham@grahamcox.co.uk'
-                });
-
-                expect(result).toEqual({
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Started',
-                });
-            });
-        });
-
-        describe('CheckEmailExistsSuccessReducer', () => {
-            it('Correctly works with an empty state', () => {
-                const input = {
-                    email: undefined,
-                    state: undefined,
-                };
-
-                const result = testSubject.reducers(input, {
-                    type: 'CheckEmailExists/checkEmailExists_SUCCEEDED',
-                    input: 'graham@grahamcox.co.uk',
-                    payload: true
-                });
-
-                expect(result).toEqual({
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Exists',
-                });
-            });
-
-            it('Correctly works with a populated state', () => {
-                const input = {
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Started',
-                };
-
-                const result = testSubject.reducers(input, {
-                    type: 'CheckEmailExists/checkEmailExists_SUCCEEDED',
-                    input: 'graham@grahamcox.co.uk',
-                    payload: false
-                });
-
-                expect(result).toEqual({
-                    email: 'graham@grahamcox.co.uk',
-                    state: 'Unknown',
-                });
-            });
+            payload: {
+                email: 'graham@grahamcox.co.uk',
+                callback,
+            },
         });
     });
 
     describe('checkEmailExistsSaga', () => {
-        const action = {
-            type: 'CheckEmailExists/checkEmailExists',
-            payload: 'graham@grahamcox.co.uk',
-        };
-
-        it('Acts correctly when the email exists', () => {
+        it('Acts correctly when the email exists', (done) => {
             mockAxios.onGet('/emails/graham%40grahamcox.co.uk').reply(200, {
                 exists: true
             });
 
-            return expectSaga(testSubject.checkEmailExistsSaga, action)
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_STARTED',
-                    input: 'graham@grahamcox.co.uk'
-                })
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_SUCCEEDED',
-                    input: 'graham@grahamcox.co.uk',
-                    payload: true
-                })
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_FINISHED',
-                    input: 'graham@grahamcox.co.uk'
-                })
-                .run();
+            const action = {
+                type: 'CheckEmailExists/checkEmailExists',
+                payload: {
+                    email: 'graham@grahamcox.co.uk',
+                    callback: function(status, err) {
+                        expect(status).toEqual(true);
+                        expect(err).toBeUndefined();
+                        done();
+                    },
+                },
+            };
+
+            testSubject.checkEmailExistsSaga(action);
         });
 
-        it('Acts correctly when the email is unknown', () => {
+        it('Acts correctly when the email is unknown', (done) => {
             mockAxios.onGet('/emails/graham%40grahamcox.co.uk').reply(200, {
                 exists: false
             });
 
-            return expectSaga(testSubject.checkEmailExistsSaga, action)
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_STARTED',
-                    input: 'graham@grahamcox.co.uk'
-                })
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_SUCCEEDED',
-                    input: 'graham@grahamcox.co.uk',
-                    payload: false
-                })
-                .put({
-                    type: 'CheckEmailExists/checkEmailExists_FINISHED',
-                    input: 'graham@grahamcox.co.uk'
-                })
-                .run();
-        });
-    });
-});
-
-describe('reset', () => {
-    it('Generates the correct action', () => {
-        expect(testSubject.reset()).toEqual({
-            type: 'CheckEmailExists/reset',
-            payload: null,
-        });
-    });
-
-    describe('Reducer', () => {
-        it('Correctly works with an empty state', () => {
-            const input = {
-                email: undefined,
-                state: undefined,
+            const action = {
+                type: 'CheckEmailExists/checkEmailExists',
+                payload: {
+                    email: 'graham@grahamcox.co.uk',
+                    callback: function(status, err) {
+                        expect(status).toEqual(false);
+                        expect(err).toBeUndefined();
+                        done();
+                    },
+                },
             };
 
-            const result = testSubject.reducers(input, {
-                type: 'CheckEmailExists/reset',
-                input: 'graham@grahamcox.co.uk'
-            });
-
-            expect(input).toEqual({
-                email: undefined,
-                state: undefined,
-            });
-            expect(result).toEqual({});
+            testSubject.checkEmailExistsSaga(action);
         });
 
-        it('Correctly clears a populated state', () => {
-            const input = {
-                email: 'graham@grahamcox.co.uk',
-                state: 'Started',
+        it('Acts correctly when the API call fails', (done) => {
+            mockAxios.onGet('/emails/graham%40grahamcox.co.uk').networkError();
+
+            const action = {
+                type: 'CheckEmailExists/checkEmailExists',
+                payload: {
+                    email: 'graham@grahamcox.co.uk',
+                    callback: function(status, err) {
+                        expect(err.toString()).toEqual('Error: Network Error');
+                        done();
+                    },
+                },
             };
 
-            const result = testSubject.reducers(input, {
-                type: 'CheckEmailExists/reset',
-                input: 'graham@grahamcox.co.uk'
-            });
-
-            expect(input).toEqual({
-                email: 'graham@grahamcox.co.uk',
-                state: 'Started',
-            });
-            expect(result).toEqual({});
+            testSubject.checkEmailExistsSaga(action);
         });
     });
 });

@@ -1,15 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders without crashing 1`] = `
-<Menu
-  fixed="top"
-  fluid={true}
-  inverted={true}
->
-  <MenuItem
-    header={true}
-  >
-    Application Name
-  </MenuItem>
-</Menu>
+<body>
+  <div>
+    <div
+      class="ui fluid inverted top fixed menu"
+    >
+      <div
+        class="header item"
+      >
+        Application Name
+      </div>
+    </div>
+  </div>
+</body>
 `;

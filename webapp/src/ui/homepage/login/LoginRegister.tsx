@@ -1,9 +1,7 @@
-import React, {FunctionComponent} from 'react';
-import {useDispatch, useSelector} from 'react-redux'
+import React, {FunctionComponent, useState} from 'react';
 import {Header, Segment} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {EmailEntry} from "./EmailEntry";
-import checkEmailExistsModule from "../../../authentication/checkEmailExists";
 import {Login} from "./Login";
 import {Register} from "./Register";
 
@@ -12,19 +10,26 @@ import {Register} from "./Register";
  * @constructor
  */
 export const LoginRegisterBody: FunctionComponent<object> = () => {
-    const dispatch = useDispatch();
-    const checkEmailStatus = useSelector(checkEmailExistsModule.selectCheckEmailStatus);
-    const checkEmailValue = useSelector(checkEmailExistsModule.selectCheckEmailValue);
+    const [email, setEmail] = useState<string>('');
+    const [status, setStatus] = useState<boolean>();
 
-    switch (checkEmailStatus) {
-        case checkEmailExistsModule.CHECK_STATUS_EXISTS:
-            return <Login email={checkEmailValue}
-                          onCancel={() => dispatch(checkEmailExistsModule.reset())}/>;
-        case checkEmailExistsModule.CHECK_STATUS_UNKNOWN:
-            return <Register email={checkEmailValue}
-                             onCancel={() => dispatch(checkEmailExistsModule.reset())}/>;
+    const resetStatus = () => {
+        setEmail('');
+        setStatus(undefined);
+    };
+
+    const submitEmail = (email: string, status: boolean) => {
+        setEmail(email);
+        setStatus(status);
+    };
+
+    switch (status) {
+        case true:
+            return <Login email={email} onCancel={resetStatus}/>;
+        case false:
+            return <Register email={email} onCancel={resetStatus}/>;
         default:
-            return <EmailEntry />;
+            return <EmailEntry onSubmit={submitEmail} />;
     }
 };
 

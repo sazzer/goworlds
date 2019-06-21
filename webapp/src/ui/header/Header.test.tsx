@@ -1,17 +1,17 @@
 import React from 'react';
-import {shallow} from 'enzyme';
 import {HeaderBar} from "./index";
+import {render} from "@testing-library/react";
 
 
 /** Set up the component to test */
 function setup() {
     return {
-        element: shallow(<HeaderBar />)
+        element: render(<HeaderBar />)
     };
 }
 
 it('renders without crashing', () => {
     const {element} = setup();
 
-    expect(element).toMatchSnapshot();
+    expect(element.baseElement).toMatchSnapshot();
 });

@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {Formik} from "formik";
@@ -6,14 +6,22 @@ import * as Yup from 'yup';
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import {useDispatch} from "react-redux";
 import checkEmailExistsModule from "../../../authentication/checkEmailExists";
+import {ErrorMessage} from "../../common/ErrorMessage";
+
+/** The props that the EmailEntry area needs */
+type EmailEntryProps = {
+    onSubmit: (email: string, status: boolean) => void,
+};
 
 /**
- * The EmailEntry area
+ * Component for entering an Email Address to either Login as or Register
  * @constructor
  */
-export const EmailEntry: FunctionComponent<object> = () => {
+export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -22,15 +30,25 @@ export const EmailEntry: FunctionComponent<object> = () => {
     });
 
     const doSubmit = (email: string) => {
-        dispatch(checkEmailExistsModule.checkEmailExists(email));
+        setSubmitting(true);
+        dispatch(checkEmailExistsModule.checkEmailExists(email, (status, err) => {
+            setSubmitting(false);
+            if (err) {
+                setError('unexpected_error');
+            } else {
+                onSubmit(email, status);
+            }
+        }));
     };
 
     return (
         <Formik initialValues={{email: ''}}
                 validationSchema={schema}
+                validateOnChange={true}
+                validateOnBlur={false}
                 onSubmit={(values) => doSubmit(values.email)}>
             {({values, isValid, errors, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid}>
+                <Form onSubmit={handleSubmit} error={!isValid || error !== undefined} loading={submitting}>
                     <Form.Field required>
                         <label>
                             {t('loginArea.email.label')}
@@ -49,6 +67,9 @@ export const EmailEntry: FunctionComponent<object> = () => {
                     <Button type="submit" primary>
                         {t('loginArea.submit.loginRegister')}
                     </Button>
+                    <ErrorMessage errors={[
+                        error && t('loginArea.submit.errors.' + error)
+                    ]}/>
                 </Form>
             }
         </Formik>

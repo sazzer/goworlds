@@ -1,75 +1,134 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import {EmailEntry} from "./EmailEntry";
+import {render, fireEvent} from '@testing-library/react';
+import configureStore from 'redux-mock-store';
+import {EmailEntry} from './EmailEntry';
+import {Provider} from "react-redux";
 
-/** Set up the component to test */
 function setup() {
-    const onSubmit = jest.fn();
-    const element = mount(<EmailEntry onSubmit={onSubmit}/>);
+    const mockStoreCreator = configureStore();
+    const store = mockStoreCreator({});
 
-    const submitForm = () => {
-        element.find('form').simulate('submit', {
-            preventDefault: () => {}
-        });
+    const onSubmitCallback = jest.fn();
 
-        return new Promise((resolved) => {
-            setTimeout(() => {
-                element.update();
-                resolved();
-            }, 0);
+    const element = render(<Provider store={store}><EmailEntry onSubmit={onSubmitCallback}/></Provider>);
+
+    const enterEmail = (email: string) => {
+        fireEvent.change(element.getByPlaceholderText('Enter Email Address'), {
+            target: {
+                value: email,
+            }
         });
     };
-    const enterEmail = (email) => element.find('input[name="email"]').simulate('change', {
-        target: {
-            name: 'email',
-            value: email
-        }
+
+    const submitForm = () => new Promise(resolve => {
+        fireEvent.click(element.getByText('Login/Register'));
+        setImmediate(resolve);
     });
 
+
     return {
-        onSubmit,
+        onSubmitCallback,
+        store,
+
         element,
-        submitForm,
-        enterEmail
-    };
+
+        enterEmail,
+        submitForm
+    }
 }
 
-it('renders without crashing', () => {
+it('Initially renders correctly', () => {
     const {element} = setup();
 
-    expect(element).toMatchSnapshot();
+    expect(element.baseElement).toMatchSnapshot();
 });
 
-it('renders the email address that was entered', () => {
+it('Renders correctly after entering an email address', () => {
     const {element, enterEmail} = setup();
 
     enterEmail('graham@grahamcox.co.uk');
 
-    expect(element).toMatchSnapshot();
+    expect(element.baseElement).toMatchSnapshot();
 });
 
-it('submits the email address correctly', async () => {
-    const {onSubmit, enterEmail, submitForm} = setup();
-
-    enterEmail('graham@grahamcox.co.uk');
-    await submitForm();
-
-    expect(onSubmit).toBeCalledTimes(1);
-    expect(onSubmit).toBeCalledWith('graham@grahamcox.co.uk');
-});
-
-it("doesn't submit the email address if one wasn't provided", async () => {
-    const {onSubmit, submitForm} = setup();
-
-    await submitForm();
-
-    expect(onSubmit).toBeCalledTimes(0);
-});
-
-it("renders an error if submitted without an email address", async () => {
+it('Renders an error if submitted without an email', async () => {
     const {element, submitForm} = setup();
 
     await submitForm();
 
-    expect(element).toMatchSnapshot();
+    expect(element.baseElement).toMatchSnapshot();
+});
+
+it('Renders as loading if submitted with an email', async () => {
+    const {element, enterEmail, submitForm} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(element.baseElement).toMatchSnapshot();
+});
+
+it('Triggers the correct Redux Action when submitted with an email', async () => {
+    const {enterEmail, submitForm, store} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(store.getActions()).toHaveLength(1);
+    expect(store.getActions()[0]).toMatchObject({
+        type: 'CheckEmailExists/checkEmailExists',
+        payload: {
+            email: 'graham@grahamcox.co.uk'
+        }
+    });
+});
+
+it('Triggers the callback when the Redux Action completes with "true"', async () => {
+    const {onSubmitCallback, enterEmail, submitForm, store} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(store.getActions()).toHaveLength(1);
+    store.getActions()[0].payload.callback(true, undefined);
+
+    expect(onSubmitCallback).toBeCalledTimes(1);
+    expect(onSubmitCallback).toBeCalledWith('graham@grahamcox.co.uk', true);
+});
+
+it('Triggers the callback when the Redux Action completes with "false"', async () => {
+    const {onSubmitCallback, enterEmail, submitForm, store} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(store.getActions()).toHaveLength(1);
+    store.getActions()[0].payload.callback(false, undefined);
+
+    expect(onSubmitCallback).toBeCalledTimes(1);
+    expect(onSubmitCallback).toBeCalledWith('graham@grahamcox.co.uk', false);
+});
+
+it('Doesn\'t trigger the callback when the Redux Action indicates failure', async () => {
+    const {onSubmitCallback, enterEmail, submitForm, store} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(store.getActions()).toHaveLength(1);
+    store.getActions()[0].payload.callback(false, new Error());
+
+    expect(onSubmitCallback).toBeCalledTimes(0);
+});
+
+it('Renders an error when the Redux Action indicates failure', async () => {
+    const {element, enterEmail, submitForm, store} = setup();
+
+    enterEmail('graham@grahamcox.co.uk');
+    await submitForm();
+
+    expect(store.getActions()).toHaveLength(1);
+    store.getActions()[0].payload.callback(false, new Error());
+
+    expect(element.baseElement).toMatchSnapshot();
 });
