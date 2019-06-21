@@ -5,8 +5,6 @@ import {Formik} from "formik";
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import * as Yup from "yup";
 import {StringSchema} from "yup";
-import {useDispatch} from "react-redux";
-import {createUser} from "../../../authentication/createUser";
 
 /** The props that the Register area needs */
 type RegisterProps = {
@@ -19,7 +17,6 @@ type RegisterProps = {
  * @constructor
  */
 export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) => {
-    const dispatch = useDispatch();
     const { t } = useTranslation();
 
     const schema = Yup.object().shape({
@@ -38,7 +35,7 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
     return (
         <Formik initialValues={{email: email, name: '', password: '', password2: ''}}
                 validationSchema={schema}
-                onSubmit={(values) => dispatch(createUser(values.email, values.name, values.password))}>
+                onSubmit={(values) => console.log(values)}>
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur}) =>
                 <Form onSubmit={handleSubmit} error={!isValid}>
                     <Form.Field required>

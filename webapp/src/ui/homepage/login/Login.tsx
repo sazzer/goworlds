@@ -4,6 +4,9 @@ import {useTranslation} from "react-i18next";
 import * as Yup from "yup";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
+import {useDispatch} from "react-redux";
+import {authenticate} from "../../../authentication/authenticate";
+import {ErrorMessage} from "../../common/ErrorMessage";
 
 /** The props that the Login area needs */
 type LoginProps = {
@@ -17,6 +20,7 @@ type LoginProps = {
  */
 export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
 
@@ -29,6 +33,13 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
 
     const doSubmit = (email: string, password: string) => {
         setSubmitting(true);
+
+        dispatch(authenticate(email, password, (err) => {
+            setSubmitting(false);
+            if (err) {
+                setError('unexpected_error');
+            }
+        }));
     };
 
     return (
@@ -59,7 +70,8 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                                     value={values.password}
                                     error={touched.password && errors.password !== undefined}
                                     onChange={handleChange}
-                                    onBlur={handleBlur} />
+                                    onBlur={handleBlur}
+                                    autoFocus/>
                         <FormikErrorMessage name="password" />
                     </Form.Field>
                     <Button type="submit" primary>
@@ -68,6 +80,9 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                     <Button type="reset" negative onClick={onCancel}>
                         {t('loginArea.submit.cancel')}
                     </Button>
+                    <ErrorMessage errors={[
+                        error && t('loginArea.submit.errors.' + error)
+                    ]}/>
                 </Form>
             }
         </Formik>
