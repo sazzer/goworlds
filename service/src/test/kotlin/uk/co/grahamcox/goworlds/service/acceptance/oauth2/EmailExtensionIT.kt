@@ -43,7 +43,30 @@ class EmailExtensionIT : TokenTestBase() {
                 Executable { Assertions.assertEquals(HttpStatus.OK, response.statusCode) },
                 Executable { Assertions.assertNotNull(response.body!!["access_token"]) },
                 Executable { Assertions.assertEquals("Bearer", response.body!!["token_type"]) },
-                Executable { Assertions.assertNotNull(response.body!!["expires_in"]) }
+                Executable { Assertions.assertNotNull(response.body!!["expires_in"]) },
+                Executable { Assertions.assertNull(response.body!!["id_token"]) }
+        )
+    }
+
+    @Test
+    fun successfulAccessIdToken() {
+        val params = mapOf(
+                "grant_type" to listOf("tag:goworlds,2019:oauth2/grant_type/email_password"),
+                "email" to listOf(user.email),
+                "password" to listOf(user.password),
+                "scope" to listOf("openid")
+        )
+
+        val headers = mapOf("Authorization" to basicEncode("${client.id}:${client.secret}"))
+
+        val response = makeRequest(params, headers)
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(HttpStatus.OK, response.statusCode) },
+                Executable { Assertions.assertNotNull(response.body!!["access_token"]) },
+                Executable { Assertions.assertEquals("Bearer", response.body!!["token_type"]) },
+                Executable { Assertions.assertNotNull(response.body!!["expires_in"]) },
+                Executable { Assertions.assertNotNull(response.body!!["id_token"]) }
         )
     }
 

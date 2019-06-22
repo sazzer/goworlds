@@ -24,6 +24,7 @@ internal class JwtAccessTokenSerializerImplTest {
             HMACVerifier.newVerifier("secret"),
             ScopeRegistryImpl(OpenIDConnectScopes.values().toList()))
 
+    /** An Access Token */
     private val accessToken = AccessToken(
             id = AccessTokenId(UUID.fromString("00000000-0000-0000-0000-000000000000")),
             created = Instant.parse("2019-05-24T18:29:00Z"),

@@ -45,6 +45,11 @@ class OAuth2Config(context: GenericApplicationContext) {
                         ref()
                 )
             }
+            bean<IdTokenSerializer> {
+                val hmacSecret = env["goworlds.oauth2.idtoken.secret"]
+
+                IdTokenSerializerImpl(HMACSigner.newSHA512Signer(hmacSecret))
+            }
             bean {
                 OAuth2TokenController(
                         ref(),

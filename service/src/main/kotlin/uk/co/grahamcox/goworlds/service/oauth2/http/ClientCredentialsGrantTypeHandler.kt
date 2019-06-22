@@ -18,8 +18,9 @@ class ClientCredentialsGrantTypeHandler(
         private val userRetriever: UserRetriever,
         clock: Clock,
         accessTokenGenerator: AccessTokenGenerator,
-        accessTokenSerializer: AccessTokenSerializer
-) : AbstractGrantTypeHandler(clock, accessTokenGenerator, accessTokenSerializer) {
+        accessTokenSerializer: AccessTokenSerializer,
+        idTokenSerializer: IdTokenSerializer
+) : AbstractGrantTypeHandler(clock, accessTokenGenerator, accessTokenSerializer, idTokenSerializer) {
     companion object {
         /** The logger to use*/
         private val LOG = LoggerFactory.getLogger(ClientCredentialsGrantTypeHandler::class.java)

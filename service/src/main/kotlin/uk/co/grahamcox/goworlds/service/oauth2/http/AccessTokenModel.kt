@@ -19,5 +19,8 @@ data class AccessTokenModel(
         val scope: String? = null,
 
         @JsonProperty("state")
-        val state: String? = null
+        val state: String? = null,
+
+        @JsonProperty("id_token")
+        val idToken: String? = null
 )

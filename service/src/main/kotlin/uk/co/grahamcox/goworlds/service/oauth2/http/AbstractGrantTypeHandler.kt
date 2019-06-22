@@ -2,6 +2,7 @@ package uk.co.grahamcox.goworlds.service.oauth2.http
 
 import org.slf4j.LoggerFactory
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.oauth2.OpenIDConnectScopes
 import uk.co.grahamcox.goworlds.service.oauth2.Scope
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientData
 import uk.co.grahamcox.goworlds.service.oauth2.clients.ClientId
@@ -10,7 +11,6 @@ import uk.co.grahamcox.goworlds.service.users.UserData
 import uk.co.grahamcox.goworlds.service.users.UserId
 import java.time.Clock
 import java.time.Duration
-import java.time.Period
 
 /**
  * Abstract class for the Grant Type Handlers to extend that gives common functionality
@@ -18,7 +18,8 @@ import java.time.Period
 abstract class AbstractGrantTypeHandler(
         private val clock: Clock,
         private val accessTokenGenerator: AccessTokenGenerator,
-        private val accessTokenSerializer: AccessTokenSerializer
+        private val accessTokenSerializer: AccessTokenSerializer,
+        private val idTokenSerializer: IdTokenSerializer
 ) : GrantTypeHandler {
     companion object {
         /** The logger to use */
@@ -56,9 +57,9 @@ abstract class AbstractGrantTypeHandler(
      * @param scopes The Scopes that are requested
      * @return the access token that was produced
      */
-    protected fun buildAccessToken(user: Model<UserId, UserData>,
-                                   client: Model<ClientId, ClientData>,
-                                   scopes: Collection<Scope>): AccessTokenModel {
+    private fun buildAccessToken(user: Model<UserId, UserData>,
+                                 client: Model<ClientId, ClientData>,
+                                 scopes: Collection<Scope>): AccessTokenModel {
         // Generate an Access Token for the User, Client and Scopes
         val accessToken = accessTokenGenerator.generate(user, client, scopes)
         LOG.debug("Generated Access Token: {}", accessToken)
@@ -69,11 +70,18 @@ abstract class AbstractGrantTypeHandler(
 
         val serializedAccessToken = accessTokenSerializer.serialize(accessToken)
 
+        val idToken = if (scopes.contains(OpenIDConnectScopes.OPENID)) {
+            idTokenSerializer.serialize(user, client, accessToken)
+        } else {
+            null
+        }
+
         // And return it
         return AccessTokenModel(
                 accessToken = serializedAccessToken,
                 tokenType = "Bearer",
-                expiry = expiresIn
+                expiry = expiresIn,
+                idToken = idToken
         )
     }
 }
