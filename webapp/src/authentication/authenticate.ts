@@ -11,6 +11,7 @@ import {request} from "../api";
 import {put} from "redux-saga-test-plan/matchers";
 import {storeAccessToken} from "./accessToken";
 import jwtDecode from 'jwt-decode';
+import {storeCurrentUser} from "./currentUserId";
 
 /** Prefix for actions in this module */
 const MODULE_PREFIX = 'Authenticate/';
@@ -112,8 +113,10 @@ export function* authenticateSucceededSaga(action: ResolvedAsyncAction<Authentic
         const expiry = new Date(new Date().getTime() + (action.payload.expires_in * 1000));
         yield put(storeAccessToken(action.payload.access_token, expiry));
 
-        const idToken = jwtDecode(action.payload.id_token);
-        console.log(idToken);
+        const idToken = jwtDecode(action.payload.id_token) as any;
+        if (idToken.sub) {
+            yield put(storeCurrentUser(idToken.sub));
+        }
     }
 
     if (action.input) {
