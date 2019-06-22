@@ -1,15 +1,8 @@
-import {createReducer} from "redux-create-reducer";
 import {Action, buildAction, buildSaga} from "../redux";
 import {request} from "../api";
 
 /** Prefix for actions in this module */
 const MODULE_PREFIX = 'CheckEmailExists/';
-
-/** The shape of the state for this module */
-export interface State {}
-
-/** The initial state for this module */
-const INITIAL_STATE: State = {};
 
 //////// Action for checking if an email address exists
 
@@ -57,9 +50,6 @@ export function checkEmailExistsSaga(action: Action<CheckEmailExistsAction>) {
 }
 
 //////// The actual module definitions
-
-/** The reducers for this module */
-export const reducers = createReducer(INITIAL_STATE, {});
 
 /** The sagas for this module */
 export const sagas = [

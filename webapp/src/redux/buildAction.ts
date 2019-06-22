@@ -1,8 +1,12 @@
-/** The shape of an action */
-export interface Action<T> {
+/** Base for actions */
+export interface BaseAction {
     type: string,
+}
+
+/** The shape of an action */
+export interface Action<T> extends BaseAction {
     payload: T
-};
+}
 
 /**
  * Build a Redux Action for the given type and payload

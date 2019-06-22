@@ -1,7 +1,5 @@
-import {reducers as checkEmailExists} from "./checkEmailExists";
-import {reducers as authenticate} from "./authenticate";
+import {reducers as accessToken} from "./accessToken";
 
 export default {
-    checkEmailExists,
-    authenticate,
+    accessToken
 };

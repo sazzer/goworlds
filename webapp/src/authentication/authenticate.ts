@@ -1,4 +1,3 @@
-import {createReducer} from "redux-create-reducer";
 import {
     Action,
     asyncAction,
@@ -9,15 +8,11 @@ import {
     succeededAction
 } from "../redux";
 import {request} from "../api";
+import {put} from "redux-saga-test-plan/matchers";
+import {storeAccessToken} from "./accessToken";
 
 /** Prefix for actions in this module */
 const MODULE_PREFIX = 'Authenticate/';
-
-/** The shape of the state for this module */
-export interface State {}
-
-/** The initial state for this module */
-const INITIAL_STATE: State = {};
 
 //////// Action for authenticating to request an Access Token and ID Token
 
@@ -110,16 +105,18 @@ export function authenticateFailedSaga(action: ResolvedAsyncAction<AuthenticateA
  * Saga to trigger when Authentication succeeded
  * @param action the action to handle
  */
-export function authenticateSucceededSaga(action: ResolvedAsyncAction<AuthenticateAction, Error>) {
+export function* authenticateSucceededSaga(action: ResolvedAsyncAction<AuthenticateAction, AuthenticationServiceResponse>) : IterableIterator<any> {
+    if (action.payload) {
+        const expiry = new Date(new Date().getTime() + (action.payload.expires_in * 1000));
+        yield put(storeAccessToken(action.payload.access_token, expiry));
+    }
+
     if (action.input) {
         action.input.callback(undefined);
     }
 }
 
 //////// The actual module definitions
-
-/** The reducers for this module */
-export const reducers = createReducer(INITIAL_STATE, {});
 
 /** The sagas for this module */
 export const sagas = [
