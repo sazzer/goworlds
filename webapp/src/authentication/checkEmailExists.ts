@@ -1,8 +1,6 @@
 import {Action, buildAction, buildSaga} from "../redux";
 import {request} from "../api";
-
-/** Prefix for actions in this module */
-const MODULE_PREFIX = 'CheckEmailExists/';
+import {MODULE_PREFIX} from "./module";
 
 //////// Action for checking if an email address exists
 

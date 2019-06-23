@@ -5,7 +5,7 @@ it('Generates the correct action', () => {
     const action = storeAccessToken('token', expires);
 
     expect(action).toEqual({
-        type: 'AccessToken/store',
+        type: 'Authentication/storeAccessToken',
         payload: {
             token: 'token',
             expires
@@ -18,7 +18,7 @@ it('Updates the state correctly when handling the action', () => {
 
     const expires = new Date();
     const action = {
-        type: 'AccessToken/store',
+        type: 'Authentication/storeAccessToken',
         payload: {
             token: 'token',
             expires
@@ -40,7 +40,7 @@ it('Doesn\'t mutate the input state when handling the action', () => {
 
     const expires = new Date();
     const action = {
-        type: 'AccessToken/store',
+        type: 'Authentication/storeAccessToken',
         payload: {
             token: 'token',
             expires

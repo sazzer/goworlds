@@ -11,7 +11,7 @@ describe('checkEmailExists', () => {
         const callback = jest.fn();
 
         expect(testSubject.checkEmailExists('graham@grahamcox.co.uk', callback)).toEqual({
-            type: 'CheckEmailExists/checkEmailExists',
+            type: 'Authentication/checkEmailExists',
             payload: {
                 email: 'graham@grahamcox.co.uk',
                 callback,
@@ -26,7 +26,7 @@ describe('checkEmailExists', () => {
             });
 
             const action = {
-                type: 'CheckEmailExists/checkEmailExists',
+                type: 'Authentication/checkEmailExists',
                 payload: {
                     email: 'graham@grahamcox.co.uk',
                     callback: function(status, err) {
@@ -46,7 +46,7 @@ describe('checkEmailExists', () => {
             });
 
             const action = {
-                type: 'CheckEmailExists/checkEmailExists',
+                type: 'Authentication/checkEmailExists',
                 payload: {
                     email: 'graham@grahamcox.co.uk',
                     callback: function(status, err) {
@@ -64,7 +64,7 @@ describe('checkEmailExists', () => {
             mockAxios.onGet('/emails/graham%40grahamcox.co.uk').networkError();
 
             const action = {
-                type: 'CheckEmailExists/checkEmailExists',
+                type: 'Authentication/checkEmailExists',
                 payload: {
                     email: 'graham@grahamcox.co.uk',
                     callback: function(status, err) {

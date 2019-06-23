@@ -76,7 +76,7 @@ it('Triggers the correct Redux Action when submitted with an email', async () =>
 
     expect(store.getActions()).toHaveLength(1);
     expect(store.getActions()[0]).toMatchObject({
-        type: 'CheckEmailExists/checkEmailExists',
+        type: 'Authentication/checkEmailExists',
         payload: {
             email: 'graham@grahamcox.co.uk'
         }

@@ -12,9 +12,7 @@ import {put} from "redux-saga-test-plan/matchers";
 import {storeAccessToken} from "./accessToken";
 import jwtDecode from 'jwt-decode';
 import {storeCurrentUser} from "./currentUserId";
-
-/** Prefix for actions in this module */
-const MODULE_PREFIX = 'Authenticate/';
+import {MODULE_PREFIX} from "./module";
 
 //////// Action for authenticating to request an Access Token and ID Token
 

@@ -1,9 +1,7 @@
 import {createReducer} from "redux-create-reducer";
 import {Action, BaseAction, buildAction} from "../redux";
 import produce from "immer";
-
-/** Prefix for actions in this module */
-const MODULE_PREFIX = 'AccessToken/';
+import {MODULE_PREFIX} from "./module";
 
 /** The shape of an access token */
 export declare type Token = {
@@ -24,7 +22,7 @@ const INITIAL_STATE: State = {
 //////// Action for checking if an email address exists
 
 /** The action type for storing an access token */
-const STORE_ACCESS_TOKEN_ACTION = MODULE_PREFIX + 'store';
+const STORE_ACCESS_TOKEN_ACTION = MODULE_PREFIX + 'storeAccessToken';
 
 /** The shape of the action to store an access token */
 declare type StoreAccessTokenAction = {

@@ -87,7 +87,7 @@ it('Triggers the correct Redux Action when submitted with a password', async () 
 
     expect(store.getActions()).toHaveLength(1);
     expect(store.getActions()[0]).toMatchObject({
-        type: 'Authenticate/authenticate',
+        type: 'Authentication/authenticate',
         payload: {
             email: 'graham@grahamcox.co.uk',
             password: 'password'

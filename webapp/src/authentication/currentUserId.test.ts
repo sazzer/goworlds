@@ -4,7 +4,7 @@ it('Generates the correct action', () => {
     const action = storeCurrentUser('userId');
 
     expect(action).toEqual({
-        type: 'CurrentUser/store',
+        type: 'Authentication/storeCurrentUser',
         payload: {
             userId: 'userId'
         }
@@ -15,7 +15,7 @@ it('Updates the state correctly when handling the action', () => {
     const initialState = {userId: undefined};
 
     const action = {
-        type: 'CurrentUser/store',
+        type: 'Authentication/storeCurrentUser',
         payload: {
             userId: 'userId'
         }
@@ -32,7 +32,7 @@ it('Doesn\'t mutate the input state when handling the action', () => {
     const initialState = {userId: undefined};
 
     const action = {
-        type: 'CurrentUser/store',
+        type: 'Authentication/storeCurrentUser',
         payload: {
             userId: 'userId'
         }

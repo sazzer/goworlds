@@ -1,9 +1,7 @@
 import {createReducer} from "redux-create-reducer";
 import {Action, BaseAction, buildAction} from "../redux";
 import produce from "immer";
-
-/** Prefix for actions in this module */
-const MODULE_PREFIX = 'CurrentUser/';
+import {MODULE_PREFIX} from "./module";
 
 /** The shape of the state for this module */
 export declare type State = {
@@ -18,7 +16,7 @@ const INITIAL_STATE: State = {
 //////// Action for checking if an email address exists
 
 /** The action type for storing the current User ID */
-const STORE_CURRENT_USER_ACTION = MODULE_PREFIX + 'store';
+const STORE_CURRENT_USER_ACTION = MODULE_PREFIX + 'storeCurrentUser';
 
 /** The shape of the action to store the current User ID */
 declare type StoreCurrentUserAction = {
