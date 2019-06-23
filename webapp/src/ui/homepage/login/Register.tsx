@@ -1,10 +1,14 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import {Button, Form} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../../common/FormikErrorMessage";
 import * as Yup from "yup";
 import {StringSchema} from "yup";
+import {useDispatch} from "react-redux";
+import {register} from "../../../authentication/register";
+import {ErrorMessage} from "../../common/ErrorMessage";
+import {ProblemError} from "../../../api";
 
 /** The props that the Register area needs */
 type RegisterProps = {
@@ -17,7 +21,10 @@ type RegisterProps = {
  * @constructor
  */
 export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const dispatch = useDispatch();
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | undefined>(undefined);
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -32,12 +39,34 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                 schema.oneOf([password], t('loginArea.password2.errors.match'))),
     });
 
+    const doSubmit = (email: string, name: string, password: string) => {
+        setSubmitting(true);
+        setError(undefined);
+
+        dispatch(register(email, name, password, (err) => {
+            setSubmitting(false);
+            if (err) {
+                if (err instanceof ProblemError) {
+                    if (i18n.exists('loginArea.submit.errors.' + err.type)) {
+                        setError(err.type);
+                    } else {
+                        setError('unexpected_error');
+                    }
+                } else {
+                    setError('unexpected_error');
+                }
+            }
+        }));
+    };
+
     return (
         <Formik initialValues={{email: email, name: '', password: '', password2: ''}}
                 validationSchema={schema}
-                onSubmit={(values) => console.log(values)}>
+                validateOnBlur={false}
+                validateOnChange={true}
+                onSubmit={(values) => doSubmit(values.email, values.name, values.password)}>
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid}>
+                <Form onSubmit={handleSubmit} error={!isValid || error !== undefined} loading={submitting}>
                     <Form.Field required>
                         <label>
                             {t('loginArea.email.label')}
@@ -98,6 +127,9 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                     <Button type="reset" negative onClick={onCancel}>
                         {t('loginArea.submit.cancel')}
                     </Button>
+                    <ErrorMessage errors={[
+                        error && t('loginArea.submit.errors.' + error)
+                    ]}/>
                 </Form>
             }
         </Formik>

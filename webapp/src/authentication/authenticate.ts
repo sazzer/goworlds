@@ -7,7 +7,7 @@ import {
     ResolvedAsyncAction,
     succeededAction
 } from "../redux";
-import {request} from "../api";
+import {request, RequestError} from "../api";
 import {put} from "redux-saga-test-plan/matchers";
 import {storeAccessToken} from "./accessToken";
 import jwtDecode from 'jwt-decode';
@@ -63,6 +63,7 @@ export class OAuth2Error extends Error {
         this.errorCode = error;
     }
 }
+
 /**
  * Saga to authenticate a user
  * @param action the action to handle
@@ -84,8 +85,8 @@ export function* authenticateSaga(action: Action<AuthenticateAction>) : Iterable
 
             return response.body;
         } catch (err) {
-            if (err.response !== undefined && err.response.status === 400 && err.response.data !== undefined) {
-                throw new OAuth2Error(err.response.data.error);
+            if (err instanceof RequestError) {
+                throw new OAuth2Error(err.body.error);
             }
             throw err;
         }

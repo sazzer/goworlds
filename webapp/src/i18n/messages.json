@@ -41,7 +41,8 @@
       "cancel": "Cancel",
       "errors": {
         "unexpected_error": "An unexpected error occurred",
-        "access_denied": "Invalid password or account blocked"
+        "access_denied": "Invalid password or account blocked",
+        "tag:goworlds,2019:users/problems/duplicate-email-address": "Email Address is already registered"
       }
     }
   }

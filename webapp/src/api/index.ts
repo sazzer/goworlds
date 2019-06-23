@@ -1,5 +1,6 @@
 import uriParser from 'uri-template';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
+import contentTypeParser, {ParsedMediaType} from 'content-type';
 
 /** The Base URI for the API */
 const API_URI = process.env.REACT_APP_API_URI;
@@ -19,7 +20,64 @@ export type Request = {
 export type Response<T> = {
     status: number,
     body: T,
+    contentType: ParsedMediaType,
 };
+
+/**
+ * Error returned making an HTTP Request
+ */
+export class RequestError<T> extends Error {
+    /** The status code */
+    status: number;
+
+    /** The content type */
+    contentType: ParsedMediaType | undefined;
+
+    /** The response body */
+    body: T;
+
+    /**
+     * Construct the error
+     * @param status the status code
+     * @param contentType the content type
+     * @param body the body
+     */
+    constructor(status: number, contentType: ParsedMediaType | undefined, body: T) {
+        super('An error occurred making a request');
+        this.status = status;
+        this.contentType = contentType;
+        this.body = body;
+    }
+}
+
+/**
+ * Error indicating an RFC-7807 Response was received
+ */
+export class ProblemError extends Error {
+    /** The status code */
+    status: number;
+
+    /** The problem type */
+    type: string;
+
+    /** The extra details */
+    details: any;
+
+
+    /**
+     * Construct the error
+     * @param message The error message
+     * @param status The status code
+     * @param type The type
+     * @param details The details
+     */
+    constructor(message: string, status: number, type: string, details: any) {
+        super(message);
+        this.status = status;
+        this.type = type;
+        this.details = details;
+    }
+}
 
 /**
  * Actually make a request to the service
@@ -48,12 +106,28 @@ export async function request<T>(url: string, params: Request = {}) : Promise<Re
     try {
         const httpResponse: AxiosResponse = await axios(expandedUrl, fetchParams);
 
+        const contentTypeHeader = (httpResponse.headers || {})['content-type'];
+        const contentType = contentTypeParser.parse(contentTypeHeader);
+
         return {
             status: httpResponse.status,
             body: httpResponse.data,
+            contentType,
         }
     } catch (e) {
         console.log('Error making HTTP request: %s', url, e);
-        throw e;
+
+        if (e.response) {
+            const contentTypeHeader = e.response.headers['content-type'];
+            const contentType = contentTypeHeader && contentTypeParser.parse(contentTypeHeader);
+
+            if (contentType.type === 'application/problem+json') {
+                throw new ProblemError(e.response.data.title, e.response.status, e.response.data.type, e.response.data);
+            } else {
+                throw new RequestError(e.response.status, contentType, e.response.data);
+            }
+        } else {
+            throw e;
+        }
     }
 }
