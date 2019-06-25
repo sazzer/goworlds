@@ -32,7 +32,7 @@ describe('authenticateSaga', () => {
 
             expect(config.data).toEqual(expectedData);
             expect(config.auth).toEqual({
-                username: '46F02F12-C566-4A23-BE53-801D3313C3A8',
+                username: process.env.REACT_APP_API_CLIENTID,
                 password: ''
             })
 
