@@ -37,6 +37,11 @@ build-webapp:
 
   script:
     - yarn test
+    - yarn build
+
+  artifacts:
+    paths:
+      - webapp/build
 
   cache:
     key: goworlds-webapp
@@ -60,3 +65,22 @@ build-service-container:
     - docker build -t $IMAGE_TAG:latest --build-arg JAR_FILE=target/goworlds-service.jar .
   after_script:
     - docker push $IMAGE_TAG:latest
+
+build-webapp-container:
+  stage: docker
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-webapp
+
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd webapp
+    - docker build -t $IMAGE_TAG:latest .
+  after_script:
+    - docker push $IMAGE_TAG:latest
+

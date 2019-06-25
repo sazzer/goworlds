@@ -30,8 +30,8 @@ services:
             - "127.0.0.1:38080:8080"
         networks:
             - goworlds-dev
-    goworlds-ui:
-        image: uk.co.grahamcox.goworlds/goworlds-ui:latest
+    goworlds-webapp:
+        image: uk.co.grahamcox.goworlds/goworlds-webapp:latest
         environment:
             API_URI: http://localhost:38080
             API_CLIENTID: 46F02F12-C566-4A23-BE53-801D3313C3A8
