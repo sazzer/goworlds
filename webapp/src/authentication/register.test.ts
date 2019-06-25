@@ -24,10 +24,20 @@ it('Generates the correct action', () => {
 
 describe('registerSaga', () => {
     it('Acts correctly when the registration succeeds', () => {
-        mockAxios.onPost('/users').reply(200, {
-            response: 'here' // The actual response is ignored
-        }, {
-            'content-type': 'application/json'
+        mockAxios.onPost('/users').reply((config) => {
+            expect(JSON.parse(config.data)).toEqual({
+                email: 'graham@grahamcox.co.uk',
+                name: 'Graham',
+                password: 'password',
+            });
+
+            return [
+                200, {
+                    response: 'here' // The actual response is ignored
+                }, {
+                    'content-type': 'application/json'
+                }
+            ]
         });
 
         const callback = jest.fn();
