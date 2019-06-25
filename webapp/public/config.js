@@ -1,0 +1,2 @@
+window.GOWORLDS_CONFIG = {
+};

@@ -1,0 +1,5 @@
+window.GOWORLDS_CONFIG = {
+    API_URI: "$API_URI",
+    API_CLIENTID: "$API_CLIENTID"
+};
+

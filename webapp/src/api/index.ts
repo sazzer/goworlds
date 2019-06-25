@@ -1,9 +1,10 @@
 import uriParser from 'uri-template';
 import axios, {AxiosRequestConfig, AxiosResponse, Method} from 'axios';
 import contentTypeParser, {ParsedMediaType} from 'content-type';
+import {getConfig} from "../config";
 
 /** The Base URI for the API */
-const API_URI = process.env.REACT_APP_API_URI;
+const API_URI = process.env.REACT_APP_API_URI || getConfig('API_URI');
 /**
  * The type of a Request to make
  */
@@ -11,7 +12,7 @@ export type Request = {
     method?: Method,
     urlParams?: any,
     body?: any,
-    clientId?: string,
+    clientId? : string | undefined,
 };
 
 /**

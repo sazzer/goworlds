@@ -13,6 +13,7 @@ import {storeAccessToken} from "./accessToken";
 import jwtDecode from 'jwt-decode';
 import {storeCurrentUser} from "./currentUserId";
 import {MODULE_PREFIX} from "./module";
+import {getConfig} from "../config";
 
 //////// Action for authenticating to request an Access Token and ID Token
 
@@ -80,7 +81,7 @@ export function* authenticateSaga(action: Action<AuthenticateAction>) : Iterable
             const response = await request<AuthenticationServiceResponse>('/oauth2/token', {
                 method: 'POST',
                 body: requestBody,
-                clientId: process.env.REACT_APP_API_CLIENTID,
+                clientId: process.env.REACT_APP_API_CLIENTID || getConfig('API_CLIENTID'),
             });
 
             return response.body;
