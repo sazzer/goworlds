@@ -59,6 +59,9 @@ build-service-container:
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
 
+  dependencies:
+    - build-service
+
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -77,6 +80,9 @@ build-webapp-container:
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-webapp
 
+  dependencies:
+    - build-webapp
+
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -93,6 +99,8 @@ run-e2e-tests:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
+
+  dependencies: []
 
   before_script:
     # Install Docker Compose
@@ -111,4 +119,11 @@ run-e2e-tests:
   script:
     - cd e2e
     - docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest .
+    - mkdir -p output
     - docker-compose up --abort-on-container-exit --exit-code-from goworlds-e2e
+
+  artifacts:
+    name: e2e-outputs
+    when: always
+    paths:
+      - e2e/output

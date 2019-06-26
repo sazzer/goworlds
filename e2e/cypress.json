@@ -1,3 +1,7 @@
 {
-  "baseUrl": "http://localhost:38000"
+  "baseUrl": "http://localhost:38000",
+
+  "screenshotsFolder": "output/screenshots",
+  "videosFolder": "output/videos",
+  "trashAssetsBeforeRuns": true
 }

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
     goworlds-postgres:
         image: postgres:10.6-alpine
@@ -28,6 +28,10 @@ services:
         environment:
             CYPRESS_baseUrl: http://goworlds-webapp
             CYPRESS_SERVICE_URI: http://goworlds-service:8080
+        volumes:
+            - type: bind
+              source: ./output
+              target: /goworlds/e2e/output
         networks:
             - goworlds-e2e
 networks:
