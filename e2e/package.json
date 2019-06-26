@@ -8,6 +8,7 @@
     "cypress": "^3.3.1"
   },
   "scripts": {
-    "open": "cypress open"
+    "open": "cypress open",
+    "docker": "docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest ."
   }
 }
