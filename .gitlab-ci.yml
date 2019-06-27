@@ -113,14 +113,18 @@ run-e2e-tests:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest
     - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-webapp:latest
+    - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build || true
     - docker tag $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest uk.co.grahamcox.goworlds/goworlds-service:latest
     - docker tag $CI_REGISTRY/sazzer/goworlds/goworlds-webapp:latest uk.co.grahamcox.goworlds/goworlds-webapp:latest
 
   script:
     - cd e2e
-    - docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest .
+    - docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest -t $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build .
     - mkdir -p output
     - docker-compose up --abort-on-container-exit --exit-code-from goworlds-e2e
+
+  after_script:
+      - docker push $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build
 
   artifacts:
     name: e2e-outputs
