@@ -66,8 +66,11 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                 validateOnChange={true}
                 onSubmit={(values) => doSubmit(values.email, values.name, values.password)}>
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid || error !== undefined} loading={submitting}>
-                    <Form.Field required>
+                <Form onSubmit={handleSubmit}
+                      error={!isValid || error !== undefined}
+                      loading={submitting}
+                      data-test="Register">
+                    <Form.Field required data-test="email">
                         <label>
                             {t('loginArea.email.label')}
                         </label>
@@ -78,7 +81,7 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                                     value={values.email}
                                     readOnly />
                     </Form.Field>
-                    <Form.Field required>
+                    <Form.Field required data-test="name">
                         <label>
                             {t('loginArea.name.label')}
                         </label>
@@ -93,7 +96,7 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                                     onBlur={handleBlur} />
                         <FormikErrorMessage name="name" />
                     </Form.Field>
-                    <Form.Field required>
+                    <Form.Field required data-test="password">
                         <label>
                             {t('loginArea.password.label')}
                         </label>
@@ -107,7 +110,7 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                                     onBlur={handleBlur} />
                         <FormikErrorMessage name="password" />
                     </Form.Field>
-                    <Form.Field required>
+                    <Form.Field required data-test="password2">
                         <label>
                             {t('loginArea.password2.label')}
                         </label>

@@ -48,8 +48,11 @@ export const EmailEntry: FunctionComponent<EmailEntryProps> = ({onSubmit}) => {
                 validateOnBlur={false}
                 onSubmit={(values) => doSubmit(values.email)}>
             {({values, isValid, errors, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid || error !== undefined} loading={submitting}>
-                    <Form.Field required>
+                <Form onSubmit={handleSubmit}
+                      error={!isValid || error !== undefined}
+                      loading={submitting}
+                      data-test="EmailEntry">
+                    <Form.Field required data-test="email">
                         <label>
                             {t('loginArea.email.label')}
                         </label>

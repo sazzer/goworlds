@@ -5,9 +5,11 @@ exports[`Initially renders correctly 1`] = `
   <div>
     <form
       class="ui error form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -30,6 +32,7 @@ exports[`Initially renders correctly 1`] = `
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -74,9 +77,11 @@ exports[`Renders an error if submitted without a password 1`] = `
   <div>
     <form
       class="ui error form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -99,6 +104,7 @@ exports[`Renders an error if submitted without a password 1`] = `
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -148,9 +154,11 @@ exports[`Renders as loading if submitted with a password 1`] = `
   <div>
     <form
       class="ui loading form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -173,6 +181,7 @@ exports[`Renders as loading if submitted with a password 1`] = `
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -217,9 +226,11 @@ exports[`Renders correctly after entering a password 1`] = `
   <div>
     <form
       class="ui form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -242,6 +253,7 @@ exports[`Renders correctly after entering a password 1`] = `
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -286,9 +298,11 @@ exports[`Updates correctly when the callback indicates an access_denied error 1`
   <div>
     <form
       class="ui error form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -311,6 +325,7 @@ exports[`Updates correctly when the callback indicates an access_denied error 1`
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -357,9 +372,11 @@ exports[`Updates correctly when the callback indicates an unexpected error 1`] =
   <div>
     <form
       class="ui error form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -382,6 +399,7 @@ exports[`Updates correctly when the callback indicates an unexpected error 1`] =
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password
@@ -428,9 +446,11 @@ exports[`Updates correctly when the callback indicates success 1`] = `
   <div>
     <form
       class="ui form"
+      data-test="Login"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -453,6 +473,7 @@ exports[`Updates correctly when the callback indicates success 1`] = `
       </div>
       <div
         class="required field"
+        data-test="password"
       >
         <label>
           Password

@@ -52,8 +52,11 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                 validationSchema={schema}
                 onSubmit={(values) => doSubmit(values.email, values.password)}>
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur}) =>
-                <Form onSubmit={handleSubmit} error={!isValid || error !== undefined} loading={submitting}>
-                    <Form.Field required>
+                <Form onSubmit={handleSubmit}
+                      error={!isValid || error !== undefined}
+                      loading={submitting}
+                      data-test="Login">
+                    <Form.Field required data-test="email">
                         <label>
                             {t('loginArea.email.label')}
                         </label>
@@ -64,7 +67,7 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                                     value={values.email}
                                     readOnly />
                     </Form.Field>
-                    <Form.Field required>
+                    <Form.Field required data-test="password">
                         <label>
                             {t('loginArea.password.label')}
                         </label>
