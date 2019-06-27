@@ -3,12 +3,5 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "cypress": "^3.3.1"
-  },
-  "scripts": {
-    "open": "cypress open",
-    "docker": "docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest ."
-  }
+  "private": true
 }
