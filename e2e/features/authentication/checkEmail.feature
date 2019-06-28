@@ -1,0 +1,11 @@
+Feature: Authentication: Checking Email Addresses
+
+  Scenario: An error is displayed if no email address is entered
+    Given I load the home page
+    When I try to authenticate with an email address of ""
+    Then I get an error entering the email address of "Please enter an Email Address"
+
+  Scenario: An error is displayed if an invalid email address is entered
+    Given I load the home page
+    When I try to authenticate with an email address of "invalid"
+    Then I get an error entering the email address of "Please enter a valid Email Address"

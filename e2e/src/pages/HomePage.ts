@@ -1,5 +1,6 @@
 import {BasePage} from "./BasePage";
 import {By, WebElement} from "selenium-webdriver";
+import {EmailEntryModel} from "./authentication/EmailEntryModel";
 
 /**
  * Page Model that represents the home page
@@ -13,10 +14,22 @@ export class HomePage extends BasePage {
         super(webElement);
     }
 
+    /**
+     * Get the title of the page
+     */
     async getPageTitle() : Promise<String> {
         const titleElement = await this.webElement.findElement(By.css('div.ui.fluid.inverted.top.fixed.menu > div'));
 
         return await titleElement.getText();
+    }
+
+    /**
+     * Get the form for entering an email address
+     */
+    async getEmailEntryModel() : Promise<EmailEntryModel> {
+        const emailEntryForm = await this.webElement.findElement(By.css('[data-test="EmailEntry"]'));
+
+        return new EmailEntryModel(emailEntryForm);
     }
 }
 
