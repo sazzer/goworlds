@@ -1,4 +1,4 @@
-import {AfterAll, BeforeAll} from 'cucumber';
+import {After, AfterAll, BeforeAll} from 'cucumber';
 import {Builder, By, ThenableWebDriver, WebElement} from "selenium-webdriver";
 import {BasePage} from "./pages/BasePage";
 
@@ -19,6 +19,10 @@ AfterAll(async () => {
     await driver.quit();
 });
 
+After(async function () {
+    const screenshot = await driver.takeScreenshot();
+    this.attach(screenshot, 'image/png');
+});
 
 /**
  * Open the web browser to the given URL
