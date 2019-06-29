@@ -24,3 +24,31 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
 
     throw new Error('Failed to find element after timeout');
 }
+
+
+/**
+ * Call the given function on repeat until it returns true
+ * @param fn the function to call
+ * @param count the number of times to repeat
+ * @param wait the wait between repeats
+ * @return the result of the function
+ */
+export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number = 10, wait: number = 1000): Promise<boolean> {
+    for (let i = 0; i < count; ++i) {
+        try {
+            const result = await fn();
+            if (result) {
+                return result;
+            }
+        } catch (e) {
+            if (e instanceof NoSuchElementError && i < count) {
+                // Wait and retry
+                await new Promise((resolve) => setTimeout(resolve, wait));
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    return false;
+}
