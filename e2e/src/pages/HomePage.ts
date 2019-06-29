@@ -3,6 +3,7 @@ import {By, WebElement} from "selenium-webdriver";
 import {EmailEntryModel} from "./authentication/EmailEntryModel";
 import {UserRegistrationModel} from "./authentication/UserRegistrationModel";
 import {waitUntilAvailable} from "./selenium/waitUtils";
+import {LoginModel} from "./authentication/LoginModel";
 
 /**
  * Page Model that represents the home page
@@ -42,6 +43,17 @@ export class HomePage extends BasePage {
             const userRegistrationForm = await this.webElement.findElement(By.css('[data-test="Register"]'));
 
             return new UserRegistrationModel(userRegistrationForm);
+        });
+    }
+
+    /**
+     * Get the form for logging in to an existing user
+     */
+    async getLoginModel() : Promise<LoginModel> {
+        return waitUntilAvailable(async () => {
+            const loginForm = await this.webElement.findElement(By.css('[data-test="Login"]'));
+
+            return new LoginModel(loginForm);
         });
     }
 }
