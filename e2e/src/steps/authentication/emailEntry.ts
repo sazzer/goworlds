@@ -18,10 +18,3 @@ Then('I get an error entering the email address of {string}', async (error: stri
     chai.expect(await emailEntryModel.isFieldError('email')).eq(true);
     chai.expect(await emailEntryModel.getFieldErrorText('email')).eq(error);
 });
-
-Then('the User Registration form is displayed', async () => {
-    const homePageModel = await getPageModel(homePage);
-    const registrationModel = await homePageModel.getUserRegistrationModel();
-
-    chai.expect(await registrationModel.isVisible()).eq(true);
-});

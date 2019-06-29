@@ -10,6 +10,13 @@ FIELD_MAPPING.set('Name', 'name');
 FIELD_MAPPING.set('Password', 'password');
 FIELD_MAPPING.set('Re-enter Password', 'password2');
 
+Then('the User Registration form is displayed', async () => {
+    const homePageModel = await getPageModel(homePage);
+    const registrationModel = await homePageModel.getUserRegistrationModel();
+
+    chai.expect(await registrationModel.isVisible()).eq(true);
+});
+
 When('I try to register a user with details:', async (dataTable: TableDefinition) => {
     const homePageModel = await getPageModel(homePage);
     const registrationModel = await homePageModel.getUserRegistrationModel();
