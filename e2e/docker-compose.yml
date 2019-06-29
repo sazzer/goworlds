@@ -8,6 +8,11 @@ services:
             POSTGRES_PASSWORD: goworlds
         networks:
             - goworlds-e2e
+    goworlds-selenium-chrome:
+        image: selenium/standalone-chrome
+        networks:
+            - goworlds-e2e
+
     goworlds-service:
         image: uk.co.grahamcox.goworlds/goworlds-service:latest
         environment:
@@ -19,21 +24,24 @@ services:
     goworlds-webapp:
         image: uk.co.grahamcox.goworlds/goworlds-webapp:latest
         environment:
-            API_URI: http://localhost:38080
+            API_URI: http://goworlds-service:8080
             API_CLIENTID: 46F02F12-C566-4A23-BE53-801D3313C3A8
         networks:
             - goworlds-e2e
+
     goworlds-e2e:
         image: uk.co.grahamcox.goworlds/goworlds-e2e:latest
         environment:
-            CYPRESS_baseUrl: http://goworlds-webapp
-            CYPRESS_SERVICE_URI: http://goworlds-service:8080
+            SERVICE_URI: http://goworlds-service:8080
+            WEBAPP_URL: http://goworlds-webapp
+            SELENIUM_REMOTE_URL: http://goworlds-selenium-chrome:4444/wd/hub
         volumes:
             - type: bind
               source: ./output
               target: /goworlds/e2e/output
         networks:
             - goworlds-e2e
+
 networks:
     goworlds-e2e:
 

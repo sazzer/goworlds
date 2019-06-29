@@ -1,5 +1,5 @@
 import {After, AfterAll, BeforeAll} from 'cucumber';
-import {Builder, By, ThenableWebDriver, WebElement} from "selenium-webdriver";
+import {Builder, By, logging, ThenableWebDriver, WebElement} from "selenium-webdriver";
 import {BasePage} from "./pages/BasePage";
 
 /** The actual web driver */
@@ -22,6 +22,12 @@ AfterAll(async () => {
 After(async function () {
     const screenshot = await driver.takeScreenshot();
     this.attach(screenshot, 'image/png');
+
+    const logEntries = await driver.manage().logs().get(logging.Type.BROWSER);
+
+    const log = logEntries.map(entry => `[${entry.level.name}] ${entry.timestamp} - ${entry.message}`)
+        .join('\n');
+    this.attach(log, 'text/plain');
 });
 
 /**

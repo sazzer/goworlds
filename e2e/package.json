@@ -24,6 +24,7 @@
     "cucumber": "run-s -c -n cucumber:pre cucumber:run cucumber:report",
     "cucumber:pre": "mkdirp output/report",
     "cucumber:run": "cucumber-js features --require-module ts-node/register --require-module dotenv/config --require 'src/steps/**/*.ts' -f node_modules/cucumber-pretty -f json:output/report/cucumber_report.json",
-    "cucumber:report": "node ./report.js"
+    "cucumber:report": "node ./report.js",
+    "docker": "docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest ."
   }
 }
