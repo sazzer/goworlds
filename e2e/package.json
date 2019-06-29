@@ -21,7 +21,7 @@
     "typescript": "^3.5.2"
   },
   "scripts": {
-    "cucumber": "run-s cucumber:pre cucumber:run cucumber:report",
+    "cucumber": "run-s -c -n cucumber:pre cucumber:run cucumber:report",
     "cucumber:pre": "mkdirp output/report",
     "cucumber:run": "cucumber-js features --require-module ts-node/register --require-module dotenv/config --require 'src/steps/**/*.ts' -f node_modules/cucumber-pretty -f json:output/report/cucumber_report.json",
     "cucumber:report": "node ./report.js"
