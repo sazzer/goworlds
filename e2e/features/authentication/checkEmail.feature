@@ -9,3 +9,8 @@ Feature: Authentication: Checking Email Addresses
     Given I load the home page
     When I try to authenticate with an email address of "invalid"
     Then I get an error entering the email address of "Please enter a valid Email Address"
+
+  Scenario: The Register User is displayed if an unknown email address is entered
+    Given I load the home page
+    When I try to authenticate with an email address of "graham@grahamcox.co.uk"
+    Then the User Registration form is displayed

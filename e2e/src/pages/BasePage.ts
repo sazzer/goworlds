@@ -1,4 +1,5 @@
-import {WebElement} from "selenium-webdriver";
+import {error, WebElement} from "selenium-webdriver";
+import {waitUntilAvailable} from "./selenium/waitUtils";
 
 /**
  * Base class for page models
@@ -15,4 +16,12 @@ export class BasePage {
         this.webElement = webElement;
     }
 
+    /**
+     * Check if this page model is currently visible
+     */
+    async isVisible() : Promise<boolean> {
+        return waitUntilAvailable(async () => {
+            return await this.webElement.isDisplayed();
+        });
+    }
 }
