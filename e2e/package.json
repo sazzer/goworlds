@@ -8,6 +8,7 @@
     "@types/chai": "^4.1.7",
     "@types/cucumber": "^4.0.6",
     "@types/node": "^12.0.10",
+    "@types/pg": "^7.4.14",
     "@types/selenium-webdriver": "^4.0.0",
     "chai": "^4.2.0",
     "cucumber": "^5.1.0",
@@ -16,6 +17,7 @@
     "dotenv": "^8.0.0",
     "mkdirp": "^0.5.1",
     "npm-run-all": "^4.1.5",
+    "pg": "^7.11.0",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2"
@@ -23,7 +25,7 @@
   "scripts": {
     "cucumber": "run-s -c -n cucumber:pre cucumber:run cucumber:report",
     "cucumber:pre": "mkdirp output/report",
-    "cucumber:run": "cucumber-js features --require-module ts-node/register --require-module dotenv/config --require 'src/steps/**/*.ts' -f node_modules/cucumber-pretty -f json:output/report/cucumber_report.json",
+    "cucumber:run": "cucumber-js features --require-module ts-node/register --require-module dotenv/config --require 'src/**/*.ts' -f node_modules/cucumber-pretty -f json:output/report/cucumber_report.json",
     "cucumber:report": "node ./report.js",
     "docker": "docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest ."
   }

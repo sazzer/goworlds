@@ -34,6 +34,7 @@ services:
         environment:
             SERVICE_URI: http://goworlds-service:8080
             WEBAPP_URL: http://goworlds-webapp
+            DATABASE_URI: postgresql://goworlds:goworlds@goworlds-postgres:5432/goworlds
             SELENIUM_REMOTE_URL: http://goworlds-selenium-chrome:4444/wd/hub
         volumes:
             - type: bind
