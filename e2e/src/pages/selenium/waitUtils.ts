@@ -43,11 +43,12 @@ export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number
         } catch (e) {
             if (e instanceof NoSuchElementError && i < count) {
                 // Wait and retry
-                await new Promise((resolve) => setTimeout(resolve, wait));
             } else {
                 throw e;
             }
         }
+
+        await new Promise((resolve) => setTimeout(resolve, wait));
     }
 
     return false;

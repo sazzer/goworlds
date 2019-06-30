@@ -130,7 +130,7 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                     <Button type="reset" negative onClick={onCancel}>
                         {t('loginArea.submit.cancel')}
                     </Button>
-                    <ErrorMessage errors={[
+                    <ErrorMessage testName="RegisterErrors" errors={[
                         error && t('loginArea.submit.errors.' + error)
                     ]}/>
                 </Form>

@@ -59,3 +59,10 @@ Then('I get errors registering a user:', async (dataTable: TableDefinition) => {
 
     await registrationModel.submitForm();
 });
+
+Then('I get an error registering a user of {string}', async (error: string) => {
+    const homePageModel = await getPageModel(homePage);
+    const registrationModel = await homePageModel.getUserRegistrationModel();
+
+    chai.expect(await registrationModel.getError()).eq(error);
+});

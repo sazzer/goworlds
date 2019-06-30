@@ -21,3 +21,12 @@ Feature: Authentication: Registering a new user
       | Graham |          | password          |                          | Please enter a password | Passwords do not match       | Password not populated          |
       | Graham | password |                   |                          |                         | Please re-enter the password | Re-enter Password not populated |
       | Graham | password | different         |                          |                         | Passwords do not match       | Passwords differ                |
+
+  Scenario: An error occurs when registering a duplicate email address
+    Given a user exists with details:
+      | Email Address | graham@grahamcox.co.uk |
+    When I try to register a user with details:
+      | Name              | Graham   |
+      | Password          | password |
+      | Re-enter Password | password |
+    Then I get an error registering a user of "Email Address is already registered"
