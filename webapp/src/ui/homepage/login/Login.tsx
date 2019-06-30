@@ -88,7 +88,7 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                     <Button type="reset" negative onClick={onCancel}>
                         {t('loginArea.submit.cancel')}
                     </Button>
-                    <ErrorMessage errors={[
+                    <ErrorMessage testName="LoginErrors" errors={[
                         error && t('loginArea.submit.errors.' + error)
                     ]}/>
                 </Form>

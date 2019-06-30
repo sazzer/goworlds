@@ -2,7 +2,7 @@ Feature: Authentication: Registering a new user
 
   Background:
     Given I load the home page
-    When I try to authenticate with an email address of "graham@grahamcox.co.uk"
+    And I try to authenticate with an email address of "graham@grahamcox.co.uk"
 
   Scenario Outline: Appropriate errors are displayed when the form is not filled out correctly: <Comment>
     When I try to register a user with details:
