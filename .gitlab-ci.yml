@@ -1,6 +1,7 @@
 stages:
   - build
   - docker
+  - e2e
 
 build-service:
   stage: build
@@ -58,6 +59,9 @@ build-service-container:
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
 
+  dependencies:
+    - build-service
+
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -76,6 +80,9 @@ build-webapp-container:
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-webapp
 
+  dependencies:
+    - build-webapp
+
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -84,3 +91,43 @@ build-webapp-container:
   after_script:
     - docker push $IMAGE_TAG:latest
 
+run-e2e-tests:
+  stage: e2e
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+
+  dependencies: []
+
+  before_script:
+    # Install Docker Compose
+    - apk update
+    - apk upgrade
+    - apk add python python-dev py-pip build-base libffi-dev openssl-dev
+    - pip install docker-compose
+
+    # Grab the Docker Images to work with
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest
+    - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-webapp:latest
+    - docker pull $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build || true
+    - docker tag $CI_REGISTRY/sazzer/goworlds/goworlds-service:latest uk.co.grahamcox.goworlds/goworlds-service:latest
+    - docker tag $CI_REGISTRY/sazzer/goworlds/goworlds-webapp:latest uk.co.grahamcox.goworlds/goworlds-webapp:latest
+
+  script:
+    - cd e2e
+    - docker build -t uk.co.grahamcox.goworlds/goworlds-e2e:latest -t $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build .
+    - mkdir -p output
+    - docker-compose up --abort-on-container-exit --exit-code-from goworlds-e2e
+
+  after_script:
+      - docker push $CI_REGISTRY/sazzer/goworlds/goworlds-e2e:build
+
+  artifacts:
+    name: e2e-outputs
+    when: always
+    paths:
+      - e2e/output

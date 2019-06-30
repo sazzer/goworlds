@@ -16,7 +16,7 @@ export const HomePage: FunctionComponent<HomePageProps> = () => {
     const { t } = useTranslation();
 
     return (
-        <Grid>
+        <Grid data-test="HomePage">
             <Grid.Column width={12}>
                 <Segment raised compact>
                     <Header>

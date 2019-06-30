@@ -1,0 +1,49 @@
+version: '3.7'
+services:
+    goworlds-postgres:
+        image: postgres:10.6-alpine
+        environment:
+            POSTGRES_DB: goworlds
+            POSTGRES_USER: goworlds
+            POSTGRES_PASSWORD: goworlds
+        networks:
+            - goworlds-e2e
+    goworlds-selenium-chrome:
+        image: selenium/standalone-chrome
+        networks:
+            - goworlds-e2e
+
+    goworlds-service:
+        image: uk.co.grahamcox.goworlds/goworlds-service:latest
+        environment:
+            PORT: 8080
+            DATABASE_URI: jdbc:postgresql://goworlds-postgres:5432/goworlds?user=goworlds&password=goworlds
+            DOCKERIZE_WAIT: -wait tcp://goworlds-postgres:5432
+        networks:
+            - goworlds-e2e
+    goworlds-webapp:
+        image: uk.co.grahamcox.goworlds/goworlds-webapp:latest
+        environment:
+            API_URI: http://goworlds-service:8080
+            API_CLIENTID: 46F02F12-C566-4A23-BE53-801D3313C3A8
+        networks:
+            - goworlds-e2e
+
+    goworlds-e2e:
+        image: uk.co.grahamcox.goworlds/goworlds-e2e:latest
+        environment:
+            SERVICE_URI: http://goworlds-service:8080
+            WEBAPP_URL: http://goworlds-webapp
+            DATABASE_URI: postgresql://goworlds:goworlds@goworlds-postgres:5432/goworlds
+            SELENIUM_REMOTE_URL: http://goworlds-selenium-chrome:4444/wd/hub
+        volumes:
+            - type: bind
+              source: ./output
+              target: /goworlds/e2e/output
+        networks:
+            - goworlds-e2e
+
+networks:
+    goworlds-e2e:
+
+

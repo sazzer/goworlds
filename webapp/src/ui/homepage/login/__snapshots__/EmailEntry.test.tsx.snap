@@ -5,9 +5,11 @@ exports[`Initially renders correctly 1`] = `
   <div>
     <form
       class="ui error form"
+      data-test="EmailEntry"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -46,9 +48,11 @@ exports[`Renders an error if submitted without an email 1`] = `
   <div>
     <form
       class="ui error form"
+      data-test="EmailEntry"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -92,9 +96,11 @@ exports[`Renders an error when the Redux Action indicates failure 1`] = `
   <div>
     <form
       class="ui error form"
+      data-test="EmailEntry"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -135,9 +141,11 @@ exports[`Renders as loading if submitted with an email 1`] = `
   <div>
     <form
       class="ui loading form"
+      data-test="EmailEntry"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
@@ -176,9 +184,11 @@ exports[`Renders correctly after entering an email address 1`] = `
   <div>
     <form
       class="ui form"
+      data-test="EmailEntry"
     >
       <div
         class="required field"
+        data-test="email"
       >
         <label>
           Email Address
