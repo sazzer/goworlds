@@ -56,7 +56,7 @@ exports[`Initially renders correctly 1`] = `
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -134,7 +134,7 @@ exports[`Renders an error if submitted without a password 1`] = `
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -207,7 +207,7 @@ exports[`Renders as loading if submitted with a password 1`] = `
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -280,7 +280,7 @@ exports[`Renders correctly after entering a password 1`] = `
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -353,7 +353,7 @@ exports[`Updates correctly when the callback indicates an access_denied error 1`
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -428,7 +428,7 @@ exports[`Updates correctly when the callback indicates an unexpected error 1`] =
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"
@@ -503,7 +503,7 @@ exports[`Updates correctly when the callback indicates success 1`] = `
         class="ui primary button"
         type="submit"
       >
-        Register
+        Login
       </button>
       <button
         class="ui negative button"

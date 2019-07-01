@@ -83,7 +83,7 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                         <FormikErrorMessage name="password" />
                     </Form.Field>
                     <Button type="submit" primary>
-                        {t('loginArea.submit.register')}
+                        {t('loginArea.submit.login')}
                     </Button>
                     <Button type="reset" negative onClick={onCancel}>
                         {t('loginArea.submit.cancel')}

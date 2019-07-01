@@ -22,7 +22,7 @@ function setup({email} = {email: 'graham@grahamcox.co.uk'}) {
     };
 
     const submitForm = () => new Promise(resolve => {
-        fireEvent.click(element.getByText('Register'));
+        fireEvent.click(element.getByText('Login'));
         setImmediate(resolve);
     });
 
