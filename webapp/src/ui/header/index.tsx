@@ -2,6 +2,7 @@ import React, {FunctionComponent} from 'react';
 import {Menu} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {UserMenu} from "./UserMenu";
+import {Authenticated} from "../common/Authenticated";
 
 /** The props that a HeaderBar needs */
 type HeaderBarProps = {};
@@ -19,7 +20,9 @@ export const HeaderBar: FunctionComponent<HeaderBarProps> = () => {
                 {t('page.header')}
             </Menu.Item>
 
-            <UserMenu />
+            <Authenticated>
+                <UserMenu />
+            </Authenticated>
         </Menu>
     );
 };

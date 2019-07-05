@@ -3,6 +3,7 @@ import {Container} from "semantic-ui-react";
 import {HeaderBar} from "./header";
 import {Body} from './body';
 import {HomePage} from './homepage';
+import {Unauthenticated} from "./common/Authenticated";
 
 /** The props that an App needs */
 type AppProps = {};
@@ -16,7 +17,9 @@ export const App: FunctionComponent<AppProps> = () => {
         <Container fluid>
             <HeaderBar/>
             <Body>
-                <HomePage />
+                <Unauthenticated>
+                    <HomePage />
+                </Unauthenticated>
             </Body>
         </Container>
     );

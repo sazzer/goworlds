@@ -25,20 +25,6 @@ function setup(state: any) {
     }
 }
 
-it('Initially renders correctly', () => {
-    const {element, store} = setup({
-        currentUserId: {
-            userId: undefined,
-        },
-        users: {
-            users: []
-        }
-    });
-
-    expect(element.baseElement).toMatchSnapshot();
-    expect(store.getActions()).toHaveLength(0);
-});
-
 it('Renders correctly when a user ID is available but not yet loaded', () => {
     const {element, store} = setup({
         currentUserId: {

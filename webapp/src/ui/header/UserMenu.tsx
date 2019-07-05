@@ -11,7 +11,7 @@ import {logout} from "../../authentication/logout";
 type UserMenuProps = {};
 
 /**
- * The main header bar for the application
+ * The User menu in the application
  * @constructor
  */
 export const UserMenu: FunctionComponent<UserMenuProps> = () => {
@@ -20,30 +20,26 @@ export const UserMenu: FunctionComponent<UserMenuProps> = () => {
     const currentUserId = useSelector(selectCurrentUserId);
     const currentUser : User | undefined = useSelector(selectUserById(currentUserId), shallowEqual);
 
-    if (currentUserId) {
-        if (currentUser === undefined) {
-            dispatch(loadUser(currentUserId));
-        }
-
-        return (
-            <Menu.Menu position="right">
-                <Dropdown item text={currentUser === undefined ? '' : currentUser.name} loading={currentUser === undefined}>
-                    <Dropdown.Menu>
-                        <Link to="/profile" className="ui item">
-                            <Icon name="edit" />
-                            {t('userMenu.editProfile')}
-                        </Link>
-                        <Dropdown.Divider />
-                        <div className="ui item" onClick={() => dispatch(logout())}>
-                            <Icon name="log out" />
-                            {t('userMenu.logOut')}
-                        </div>
-                    </Dropdown.Menu>
-                </Dropdown>
-
-            </Menu.Menu>
-        );
+    if (currentUser === undefined) {
+        dispatch(loadUser(currentUserId));
     }
 
-    return <></>;
+    return (
+        <Menu.Menu position="right">
+            <Dropdown item text={currentUser === undefined ? '' : currentUser.name} loading={currentUser === undefined}>
+                <Dropdown.Menu>
+                    <Link to="/profile" className="ui item">
+                        <Icon name="edit" />
+                        {t('userMenu.editProfile')}
+                    </Link>
+                    <Dropdown.Divider />
+                    <div className="ui item" onClick={() => dispatch(logout())}>
+                        <Icon name="log out" />
+                        {t('userMenu.logOut')}
+                    </div>
+                </Dropdown.Menu>
+            </Dropdown>
+
+        </Menu.Menu>
+    );
 };

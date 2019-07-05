@@ -11,7 +11,7 @@ exports[`renders without crashing 1`] = `
       >
         Application Name
       </div>
-      Mock User Menu
+      Mock Authenticated
     </div>
   </div>
 </body>

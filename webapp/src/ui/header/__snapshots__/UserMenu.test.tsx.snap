@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Initially renders correctly 1`] = `
-<body>
-  <div />
-</body>
-`;
-
 exports[`Renders correctly when a user ID is available and loaded 1`] = `
 <body>
   <div>

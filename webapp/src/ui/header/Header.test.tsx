@@ -1,11 +1,11 @@
 import React from 'react';
-import {HeaderBar} from "./index";
-import {render} from "@testing-library/react";
+import {HeaderBar} from './index';
+import {render} from '@testing-library/react';
 
-jest.mock('./UserMenu', () => {
-    const UserMenu = jest.fn(() => 'Mock User Menu');
+jest.mock('../common/Authenticated', () => {
+    const Authenticated = jest.fn(() => 'Mock Authenticated');
     return {
-        UserMenu,
+        Authenticated,
     };
 });
 
