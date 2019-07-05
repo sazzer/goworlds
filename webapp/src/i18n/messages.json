@@ -45,5 +45,9 @@
         "tag:goworlds,2019:users/problems/duplicate-email-address": "Email Address is already registered"
       }
     }
+  },
+  "userMenu": {
+    "editProfile": "Edit Profile",
+    "logOut": "Log Out"
   }
 }

@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Initially renders correctly 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`Renders correctly when a user ID is available and loaded 1`] = `
+<body>
+  <div>
+    <div
+      class="right menu"
+    >
+      <div
+        aria-busy="false"
+        aria-expanded="false"
+        class="ui item dropdown"
+        role="listbox"
+        tabindex="0"
+      >
+        <div
+          aria-live="polite"
+          class="text"
+          role="alert"
+        >
+          Graham
+        </div>
+        <i
+          aria-hidden="true"
+          class="dropdown icon"
+        />
+        <div
+          class="menu transition"
+        >
+          <div
+            class="item"
+            role="option"
+          >
+            <i
+              aria-hidden="true"
+              class="edit icon"
+            />
+            <span
+              class="text"
+            >
+              Edit Profile
+            </span>
+          </div>
+          <div
+            class="divider"
+          />
+          <div
+            class="item"
+            role="option"
+          >
+            <i
+              aria-hidden="true"
+              class="log out icon"
+            />
+            <span
+              class="text"
+            >
+              Log Out
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Renders correctly when a user ID is available but not yet loaded 1`] = `
+<body>
+  <div>
+    <div
+      class="right menu"
+    >
+      <div
+        aria-busy="true"
+        aria-expanded="false"
+        class="ui loading item dropdown"
+        role="listbox"
+        tabindex="0"
+      >
+        <div
+          aria-live="polite"
+          class="text"
+          role="alert"
+        />
+        <i
+          aria-hidden="true"
+          class="dropdown icon"
+        />
+        <div
+          class="menu transition"
+        >
+          <div
+            class="item"
+            role="option"
+          >
+            <i
+              aria-hidden="true"
+              class="edit icon"
+            />
+            <span
+              class="text"
+            >
+              Edit Profile
+            </span>
+          </div>
+          <div
+            class="divider"
+          />
+          <div
+            class="item"
+            role="option"
+          >
+            <i
+              aria-hidden="true"
+              class="log out icon"
+            />
+            <span
+              class="text"
+            >
+              Log Out
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

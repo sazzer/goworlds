@@ -1,6 +1,7 @@
 import React, {FunctionComponent} from 'react';
 import {Menu} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
+import {UserMenu} from "./UserMenu";
 
 /** The props that a HeaderBar needs */
 type HeaderBarProps = {};
@@ -17,6 +18,8 @@ export const HeaderBar: FunctionComponent<HeaderBarProps> = () => {
             <Menu.Item header>
                 {t('page.header')}
             </Menu.Item>
+
+            <UserMenu />
         </Menu>
     );
 };

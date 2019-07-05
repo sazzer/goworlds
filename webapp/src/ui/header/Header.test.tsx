@@ -2,6 +2,12 @@ import React from 'react';
 import {HeaderBar} from "./index";
 import {render} from "@testing-library/react";
 
+jest.mock('./UserMenu', () => {
+    const UserMenu = jest.fn(() => 'Mock User Menu');
+    return {
+        UserMenu,
+    };
+});
 
 /** Set up the component to test */
 function setup() {

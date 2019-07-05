@@ -1,5 +1,5 @@
 import {createReducer} from "redux-create-reducer";
-import {Action, BaseAction, buildAction} from "../redux";
+import {Action, BaseAction, buildAction, buildSelector} from "../redux";
 import produce from "immer";
 import {MODULE_PREFIX} from "./module";
 
@@ -44,6 +44,9 @@ export function storeCurrentUserReducer(state: State, action: Action<StoreCurren
         draft.userId = action.payload.userId;
     });
 }
+
+/** Selector to get the current User ID */
+export const selectCurrentUserId = buildSelector(['currentUserId', 'userId']);
 
 //////// The actual module definitions
 

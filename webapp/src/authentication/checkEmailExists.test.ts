@@ -29,7 +29,7 @@ describe('checkEmailExistsSaga', () => {
             type: 'Authentication/checkEmailExists',
             payload: {
                 email: 'graham@grahamcox.co.uk',
-                callback: function(status, err) {
+                callback: function(status: boolean, err: any) {
                     expect(status).toEqual(true);
                     expect(err).toBeUndefined();
                     done();
@@ -51,7 +51,7 @@ describe('checkEmailExistsSaga', () => {
             type: 'Authentication/checkEmailExists',
             payload: {
                 email: 'graham@grahamcox.co.uk',
-                callback: function(status, err) {
+                callback: function(status: boolean, err: any) {
                     expect(status).toEqual(false);
                     expect(err).toBeUndefined();
                     done();
@@ -73,7 +73,8 @@ describe('checkEmailExistsSaga', () => {
             type: 'Authentication/checkEmailExists',
             payload: {
                 email: 'graham@grahamcox.co.uk',
-                callback: function(status, err) {
+                callback: function(status: boolean, err: any) {
+                    expect(err).not.toBeUndefined();
                     expect(err.toString()).toEqual('Error: An error occurred making a request');
                     done();
                 },
@@ -90,7 +91,7 @@ describe('checkEmailExistsSaga', () => {
             type: 'Authentication/checkEmailExists',
             payload: {
                 email: 'graham@grahamcox.co.uk',
-                callback: function(status, err) {
+                callback: function(status: boolean, err: any) {
                     expect(err.toString()).toEqual('Error: Network Error');
                     done();
                 },
