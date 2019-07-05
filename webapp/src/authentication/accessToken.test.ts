@@ -13,9 +13,7 @@ it('Generates the correct action', () => {
     });
 });
 
-it('Updates the state correctly when handling the action', () => {
-    const initialState = {token: undefined};
-
+describe('Authentication/storeAccessToken', () => {
     const expires = new Date();
     const action = {
         type: 'Authentication/storeAccessToken',
@@ -25,31 +23,65 @@ it('Updates the state correctly when handling the action', () => {
         }
     };
 
-    const updated = reducers(initialState, action);
+    const initialState = {token: undefined};
 
-    expect(updated).toEqual({
-        token: {
-            token: 'token',
-            expires
-        }
+    it('Updates the state correctly when handling the action', () => {
+
+        const updated = reducers(initialState, action);
+
+        expect(updated).toEqual({
+            token: {
+                token: 'token',
+                expires
+            }
+        });
+    });
+
+    it('Doesn\'t mutate the input state when handling the action', () => {
+        reducers(initialState, action);
+
+        expect(initialState).toEqual({
+            token: undefined
+        });
     });
 });
 
-it('Doesn\'t mutate the input state when handling the action', () => {
-    const initialState = {token: undefined};
+describe('Authentication/logout', () => {
+    const action = {
+        type: 'Authentication/logout',
+        payload: {}
+    };
 
     const expires = new Date();
-    const action = {
-        type: 'Authentication/storeAccessToken',
-        payload: {
+    const initialState = {
+        token: {
             token: 'token',
-            expires
+            expires,
         }
     };
 
-    const updated = reducers(initialState, action);
+    it('Updates the state correctly when handling the action', () => {
 
-    expect(initialState).toEqual({
-        token: undefined
+        const action = {
+            type: 'Authentication/logout',
+            payload: {}
+        };
+
+        const updated = reducers(initialState, action);
+
+        expect(updated).toEqual({
+            token: undefined
+        });
+    });
+
+    it('Doesn\'t mutate the input state when handling the action', () => {
+        reducers(initialState, action);
+
+        expect(initialState).toEqual({
+            token: {
+                token: 'token',
+                expires,
+            }
+        });
     });
 });

@@ -2,6 +2,7 @@ import {createReducer} from "redux-create-reducer";
 import {Action, BaseAction, buildAction, buildSelector} from "../redux";
 import produce from "immer";
 import {MODULE_PREFIX} from "./module";
+import {LOGOUT_ACTION} from "./logout";
 
 /** The shape of the state for this module */
 export declare type State = {
@@ -45,6 +46,16 @@ export function storeCurrentUserReducer(state: State, action: Action<StoreCurren
     });
 }
 
+/**
+ * Reducer for clearing the current User ID
+ * @param state the state to update
+ */
+export function clearCurrentUserReducer(state: State) : State {
+    return produce(state, (draft: State) => {
+        delete draft.userId;
+    });
+}
+
 /** Selector to get the current User ID */
 export const selectCurrentUserId = buildSelector(['currentUserId', 'userId']);
 
@@ -52,5 +63,6 @@ export const selectCurrentUserId = buildSelector(['currentUserId', 'userId']);
 
 /** The reducers for this module */
 export const reducers = createReducer(INITIAL_STATE, {
-    [STORE_CURRENT_USER_ACTION] : storeCurrentUserReducer as ((state: State, action: BaseAction) => State)
+    [STORE_CURRENT_USER_ACTION] : storeCurrentUserReducer as ((state: State, action: BaseAction) => State),
+    [LOGOUT_ACTION] : clearCurrentUserReducer,
 });

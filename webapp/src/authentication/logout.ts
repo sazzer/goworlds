@@ -4,7 +4,7 @@ import {Action, buildAction} from "../redux";
 //////// Action for logging out
 
 /** The action type for logging out */
-const LOGOUT_ACTION = MODULE_PREFIX + 'logout';
+export const LOGOUT_ACTION = MODULE_PREFIX + 'logout';
 
 /** The shape of the action to log out */
 declare type LogoutAction = {};

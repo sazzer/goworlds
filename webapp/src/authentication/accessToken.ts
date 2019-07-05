@@ -2,6 +2,7 @@ import {createReducer} from "redux-create-reducer";
 import {Action, BaseAction, buildAction} from "../redux";
 import produce from "immer";
 import {MODULE_PREFIX} from "./module";
+import {LOGOUT_ACTION} from "./logout";
 
 /** The shape of an access token */
 export declare type Token = {
@@ -54,9 +55,20 @@ export function storeAccessTokenReducer(state: State, action: Action<StoreAccess
     });
 }
 
+/**
+ * Reducer for clearing the access token
+ * @param state the state to update
+ */
+export function clearAccessTokenReducer(state: State) : State {
+    return produce(state, (draft: State) => {
+        delete draft.token;
+    });
+}
+
 //////// The actual module definitions
 
 /** The reducers for this module */
 export const reducers = createReducer(INITIAL_STATE, {
-    [STORE_ACCESS_TOKEN_ACTION] : storeAccessTokenReducer as ((state: State, action: BaseAction) => State)
+    [STORE_ACCESS_TOKEN_ACTION] : storeAccessTokenReducer as ((state: State, action: BaseAction) => State),
+    [LOGOUT_ACTION] : clearAccessTokenReducer,
 });
