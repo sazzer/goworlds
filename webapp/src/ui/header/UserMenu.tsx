@@ -1,10 +1,11 @@
 /** The props that a HeaderBar needs */
 import React, {FunctionComponent} from "react";
 import {useTranslation} from "react-i18next";
-import {Dropdown, Menu} from "semantic-ui-react";
+import {Dropdown, Icon, Menu} from "semantic-ui-react";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
 import {selectUserById, User, loadUser} from "../../users/users";
+import {Link} from "react-router-dom";
 
 type UserMenuProps = {};
 
@@ -27,7 +28,10 @@ export const UserMenu: FunctionComponent<UserMenuProps> = () => {
             <Menu.Menu position="right">
                 <Dropdown item text={currentUser === undefined ? '' : currentUser.name} loading={currentUser === undefined}>
                     <Dropdown.Menu>
-                        <Dropdown.Item icon='edit' text={t('userMenu.editProfile')} />
+                        <Link to="/profile" className="ui item">
+                            <Icon name="edit" />
+                            {t('userMenu.editProfile')}
+                        </Link>
                         <Dropdown.Divider />
                         <Dropdown.Item icon='log out' text={t('userMenu.logOut')} />
                     </Dropdown.Menu>

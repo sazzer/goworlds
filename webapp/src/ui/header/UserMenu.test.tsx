@@ -3,12 +3,13 @@ import {render} from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import {Provider} from 'react-redux';
 import {UserMenu} from './UserMenu';
+import {MemoryRouter} from "react-router";
 
 function setup(state: any) {
     const mockStoreCreator = configureStore();
     const store = mockStoreCreator(state);
 
-    const element = render(<Provider store={store}><UserMenu /></Provider>);
+    const element = render(<Provider store={store}><MemoryRouter><UserMenu /></MemoryRouter></Provider>);
 
     return {
         store,

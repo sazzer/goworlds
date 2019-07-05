@@ -33,20 +33,16 @@ exports[`Renders correctly when a user ID is available and loaded 1`] = `
         <div
           class="menu transition"
         >
-          <div
-            class="item"
-            role="option"
+          <a
+            class="ui item"
+            href="/profile"
           >
             <i
               aria-hidden="true"
               class="edit icon"
             />
-            <span
-              class="text"
-            >
-              Edit Profile
-            </span>
-          </div>
+            Edit Profile
+          </a>
           <div
             class="divider"
           />
@@ -96,20 +92,16 @@ exports[`Renders correctly when a user ID is available but not yet loaded 1`] = 
         <div
           class="menu transition"
         >
-          <div
-            class="item"
-            role="option"
+          <a
+            class="ui item"
+            href="/profile"
           >
             <i
               aria-hidden="true"
               class="edit icon"
             />
-            <span
-              class="text"
-            >
-              Edit Profile
-            </span>
-          </div>
+            Edit Profile
+          </a>
           <div
             class="divider"
           />
