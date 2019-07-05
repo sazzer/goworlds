@@ -47,18 +47,13 @@ exports[`Renders correctly when a user ID is available and loaded 1`] = `
             class="divider"
           />
           <div
-            class="item"
-            role="option"
+            class="ui item"
           >
             <i
               aria-hidden="true"
               class="log out icon"
             />
-            <span
-              class="text"
-            >
-              Log Out
-            </span>
+            Log Out
           </div>
         </div>
       </div>
@@ -106,18 +101,13 @@ exports[`Renders correctly when a user ID is available but not yet loaded 1`] = 
             class="divider"
           />
           <div
-            class="item"
-            role="option"
+            class="ui item"
           >
             <i
               aria-hidden="true"
               class="log out icon"
             />
-            <span
-              class="text"
-            >
-              Log Out
-            </span>
+            Log Out
           </div>
         </div>
       </div>

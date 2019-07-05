@@ -6,6 +6,7 @@ import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
 import {selectUserById, User, loadUser} from "../../users/users";
 import {Link} from "react-router-dom";
+import {logout} from "../../authentication/logout";
 
 type UserMenuProps = {};
 
@@ -33,7 +34,10 @@ export const UserMenu: FunctionComponent<UserMenuProps> = () => {
                             {t('userMenu.editProfile')}
                         </Link>
                         <Dropdown.Divider />
-                        <Dropdown.Item icon='log out' text={t('userMenu.logOut')} />
+                        <div className="ui item" onClick={() => dispatch(logout())}>
+                            <Icon name="log out" />
+                            {t('userMenu.logOut')}
+                        </div>
                     </Dropdown.Menu>
                 </Dropdown>
 
