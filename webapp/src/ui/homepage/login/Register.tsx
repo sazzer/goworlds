@@ -55,6 +55,9 @@ export const Register: FunctionComponent<RegisterProps> = ({email, onCancel}) =>
                 } else {
                     setError('unexpected_error');
                 }
+            } else {
+                // Act as if we were cancelled to reset the state
+                onCancel();
             }
         }));
     };

@@ -43,6 +43,9 @@ export const Login: FunctionComponent<LoginProps> = ({email, onCancel}) => {
                 } else {
                     setError('unexpected_error');
                 }
+            } else {
+                // Act as if we were cancelled to reset the state
+                onCancel();
             }
         }));
     };
