@@ -29,3 +29,21 @@ export const Unauthenticated: FunctionComponent<PropsWithChildren<any>> = ({chil
         return children;
     }
 };
+
+/**
+ * Shape of the props that the IsAuthenticated component takes
+ */
+export declare type IsAuthenticatedProps = {
+    render: (auth: boolean) => any | null,
+};
+
+/**
+ * Component to allow us to conditionally render based on whether we're authenticated or not
+ * @param render Render Prop for rendering the child component
+ * @constructor
+ */
+export const IsAuthenticated: FunctionComponent<IsAuthenticatedProps> = ({render}) => {
+    const currentUserId = useSelector(selectCurrentUserId);
+
+    return render(currentUserId !== undefined);
+};

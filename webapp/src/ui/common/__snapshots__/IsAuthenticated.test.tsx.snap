@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders correctly when authenticated 1`] = `
+<body>
+  <div>
+    Hello: true
+  </div>
+</body>
+`;
+
+exports[`Renders correctly when not authenticated 1`] = `
+<body>
+  <div>
+    Hello: false
+  </div>
+</body>
+`;

@@ -3,7 +3,8 @@ import {Container} from "semantic-ui-react";
 import {HeaderBar} from "./header";
 import {Body} from './body';
 import {HomePage} from './homepage';
-import {Unauthenticated} from "./common/Authenticated";
+import {IsAuthenticated} from "./common/Authenticated";
+import {Route, Switch} from "react-router";
 
 /** The props that an App needs */
 type AppProps = {};
@@ -17,9 +18,14 @@ export const App: FunctionComponent<AppProps> = () => {
         <Container fluid>
             <HeaderBar/>
             <Body>
-                <Unauthenticated>
-                    <HomePage />
-                </Unauthenticated>
+                <IsAuthenticated render={auth => (
+                    <Switch>
+                        {!auth && <Route render={() => <HomePage/>} />}
+
+                        {auth && <Route path="/profile" render={() => "Profile"} />}
+                        {auth && <Route render={() => "Hello"} />}
+                    </Switch>
+                )}/>
             </Body>
         </Container>
     );
