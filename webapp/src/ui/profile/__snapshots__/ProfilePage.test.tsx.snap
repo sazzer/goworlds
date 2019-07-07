@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Rendering the page When the user is loaded renders the password tab 1`] = `
+<body>
+  <div>
+    <div
+      class="ui container"
+    >
+      ProfileBreadcrumbs: Graham
+      ProfileHeader: Graham
+      <div
+        class="ui grid"
+      >
+        <div
+          class="four wide column"
+        >
+          <div
+            class="ui fluid pointing vertical menu"
+          >
+            <a
+              class="item"
+              href="/profile"
+            >
+              Profile
+            </a>
+            <a
+              aria-current="page"
+              class="item active"
+              href="/profile/password"
+            >
+              Change Password
+            </a>
+          </div>
+        </div>
+        <div
+          class="stretched twelve wide column"
+        >
+          Profile Page Here
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Rendering the page When the user is loaded renders the profile tab 1`] = `
+<body>
+  <div>
+    <div
+      class="ui container"
+    >
+      ProfileBreadcrumbs: Graham
+      ProfileHeader: Graham
+      <div
+        class="ui grid"
+      >
+        <div
+          class="four wide column"
+        >
+          <div
+            class="ui fluid pointing vertical menu"
+          >
+            <a
+              aria-current="page"
+              class="item active"
+              href="/profile"
+            >
+              Profile
+            </a>
+            <a
+              class="item"
+              href="/profile/password"
+            >
+              Change Password
+            </a>
+          </div>
+        </div>
+        <div
+          class="stretched twelve wide column"
+        >
+          Profile Page Here
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Rendering the page When the user is still loading renders the password tab 1`] = `
+<body>
+  <div>
+    <div
+      class="ui container"
+    >
+      ProfileBreadcrumbs: Loading...
+      ProfileHeader: Loading...
+      <div
+        class="ui grid"
+      >
+        <div
+          class="four wide column"
+        >
+          <div
+            class="ui fluid pointing vertical menu"
+          >
+            <a
+              class="item"
+              href="/profile"
+            >
+              Profile
+            </a>
+            <a
+              aria-current="page"
+              class="item active"
+              href="/profile/password"
+            >
+              Change Password
+            </a>
+          </div>
+        </div>
+        <div
+          class="stretched twelve wide column"
+        >
+          <div
+            class="ui active loader"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;
+
+exports[`Rendering the page When the user is still loading renders the profile tab 1`] = `
+<body>
+  <div>
+    <div
+      class="ui container"
+    >
+      ProfileBreadcrumbs: Loading...
+      ProfileHeader: Loading...
+      <div
+        class="ui grid"
+      >
+        <div
+          class="four wide column"
+        >
+          <div
+            class="ui fluid pointing vertical menu"
+          >
+            <a
+              aria-current="page"
+              class="item active"
+              href="/profile"
+            >
+              Profile
+            </a>
+            <a
+              class="item"
+              href="/profile/password"
+            >
+              Change Password
+            </a>
+          </div>
+        </div>
+        <div
+          class="stretched twelve wide column"
+        >
+          <div
+            class="ui active loader"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+`;

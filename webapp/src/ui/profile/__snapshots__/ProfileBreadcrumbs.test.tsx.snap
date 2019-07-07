@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<body>
+  <div>
+    <div
+      class="ui breadcrumb"
+    >
+      <div
+        class="section"
+      >
+        <a
+          href="/"
+        >
+          Home
+        </a>
+      </div>
+      <div
+        class="divider"
+      >
+        /
+      </div>
+      <div
+        class="active section"
+      >
+        Profile: 
+        <a
+          href="/profile"
+        >
+          Username
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+`;

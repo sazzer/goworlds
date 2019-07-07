@@ -5,6 +5,7 @@ import {Body} from './body';
 import {HomePage} from './homepage';
 import {IsAuthenticated} from "./common/Authenticated";
 import {Route, Switch} from "react-router";
+import {ProfilePage} from "./profile";
 
 /** The props that an App needs */
 type AppProps = {};
@@ -22,7 +23,7 @@ export const App: FunctionComponent<AppProps> = () => {
                     <Switch>
                         {!auth && <Route render={() => <HomePage/>} />}
 
-                        {auth && <Route path="/profile" render={() => "Profile"} />}
+                        {auth && <Route path="/profile" render={() => <ProfilePage/>} />}
                         {auth && <Route render={() => "Hello"} />}
                     </Switch>
                 )}/>

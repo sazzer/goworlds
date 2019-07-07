@@ -49,5 +49,16 @@
   "userMenu": {
     "editProfile": "Edit Profile",
     "logOut": "Log Out"
+  },
+  "profile": {
+    "loading": "Loading...",
+    "breadcrumbs": {
+      "home": "Home",
+      "profile": "Profile: <1>{{name}}</1>"
+    },
+    "menu": {
+      "profile": "Profile",
+      "password": "Change Password"
+    }
   }
 }
