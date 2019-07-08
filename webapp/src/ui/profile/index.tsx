@@ -8,6 +8,7 @@ import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
 import {loadUser, selectUserById, User} from "../../users/users";
 import {ProfileForm} from "./ProfileForm";
+import {PasswordForm} from "./PasswordForm";
 
 /**
  * The Profile Page
@@ -41,7 +42,7 @@ export const ProfilePage : FunctionComponent<any> = () => {
                 <Grid.Column stretched width={12}>
                     { currentUser === undefined && <Loader active /> }
                     { currentUser !== undefined && <Route path='/profile' exact render={() => <ProfileForm user={currentUser} />} />}
-                    { currentUser !== undefined && <Route path='/profile/password' exact render={() => "Change Password"} />}
+                    { currentUser !== undefined && <Route path='/profile/password' exact render={() => <PasswordForm user={currentUser} />} />}
                 </Grid.Column>
             </Grid>
         </Container>

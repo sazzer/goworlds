@@ -81,6 +81,27 @@
       "errors": {
 
       }
+    },
+    "password": {
+      "password": {
+        "label": "New Password",
+        "placeholder": "Enter Password",
+        "errors": {
+          "required": "Please enter a password"
+        }
+      },
+      "password2": {
+        "label": "Re-enter New Password",
+        "placeholder": "Enter Password",
+        "errors": {
+          "required": "Please re-enter the password",
+          "match": "Passwords do not match"
+        }
+      },
+      "submit": "Change Password",
+      "errors": {
+
+      }
     }
   }
 }

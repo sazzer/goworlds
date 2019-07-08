@@ -26,6 +26,13 @@ jest.mock('./ProfileForm', () => {
     };
 });
 
+jest.mock('./PasswordForm', () => {
+    const PasswordForm = jest.fn((props) => 'PasswordForm: ' + JSON.stringify(props));
+    return {
+        PasswordForm,
+    };
+});
+
 /** Set up the component to test */
 function setup({state, location} : {state: any, location: string}) {
     const mockStoreCreator = configureStore();

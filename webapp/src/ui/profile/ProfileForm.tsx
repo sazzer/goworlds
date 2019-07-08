@@ -55,7 +55,7 @@ export const ProfileForm: FunctionComponent<ProfileFormProps> = ({user}) => {
                                     error={touched.email && errors.email !== undefined}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                        />
+                                    autoFocus/>
                         <FormikErrorMessage name="email" />
                     </Form.Field>
                     <Form.Field required data-test="name">
@@ -69,8 +69,7 @@ export const ProfileForm: FunctionComponent<ProfileFormProps> = ({user}) => {
                                     value={values.name}
                                     error={touched.name && errors.name !== undefined}
                                     onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    autoFocus/>
+                                    onBlur={handleBlur}/>
                         <FormikErrorMessage name="name" />
                     </Form.Field>
                     <Button type="submit" primary disabled={!dirty}>
