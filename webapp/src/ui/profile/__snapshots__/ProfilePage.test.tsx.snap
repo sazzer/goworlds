@@ -6,8 +6,8 @@ exports[`Rendering the page When the user is loaded renders the password tab 1`]
     <div
       class="ui container"
     >
-      ProfileBreadcrumbs: Graham
-      ProfileHeader: Graham
+      ProfileBreadcrumbs: {"user":{"id":"abc123","name":"Graham","email":"graham@grahamcox.co.uk","created":"now","updated":"now"}}
+      ProfileHeader: {"user":{"id":"abc123","name":"Graham","email":"graham@grahamcox.co.uk","created":"now","updated":"now"}}
       <div
         class="ui grid"
       >
@@ -35,7 +35,7 @@ exports[`Rendering the page When the user is loaded renders the password tab 1`]
         <div
           class="stretched twelve wide column"
         >
-          Profile Page Here
+          Change Password
         </div>
       </div>
     </div>
@@ -49,8 +49,8 @@ exports[`Rendering the page When the user is loaded renders the profile tab 1`] 
     <div
       class="ui container"
     >
-      ProfileBreadcrumbs: Graham
-      ProfileHeader: Graham
+      ProfileBreadcrumbs: {"user":{"id":"abc123","name":"Graham","email":"graham@grahamcox.co.uk","created":"now","updated":"now"}}
+      ProfileHeader: {"user":{"id":"abc123","name":"Graham","email":"graham@grahamcox.co.uk","created":"now","updated":"now"}}
       <div
         class="ui grid"
       >
@@ -78,7 +78,7 @@ exports[`Rendering the page When the user is loaded renders the profile tab 1`] 
         <div
           class="stretched twelve wide column"
         >
-          Profile Page Here
+          ProfileForm: {"user":{"id":"abc123","name":"Graham","email":"graham@grahamcox.co.uk","created":"now","updated":"now"}}
         </div>
       </div>
     </div>
@@ -92,8 +92,8 @@ exports[`Rendering the page When the user is still loading renders the password 
     <div
       class="ui container"
     >
-      ProfileBreadcrumbs: Loading...
-      ProfileHeader: Loading...
+      ProfileBreadcrumbs: {"user":{"name":"Loading..."}}
+      ProfileHeader: {"user":{"name":"Loading..."}}
       <div
         class="ui grid"
       >
@@ -137,8 +137,8 @@ exports[`Rendering the page When the user is still loading renders the profile t
     <div
       class="ui container"
     >
-      ProfileBreadcrumbs: Loading...
-      ProfileHeader: Loading...
+      ProfileBreadcrumbs: {"user":{"name":"Loading..."}}
+      ProfileHeader: {"user":{"name":"Loading..."}}
       <div
         class="ui grid"
       >

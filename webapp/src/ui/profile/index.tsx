@@ -2,11 +2,12 @@ import React, {FunctionComponent} from 'react';
 import {Container, Grid, Loader, Menu} from "semantic-ui-react";
 import {ProfileBreadcrumbs} from "./ProfileBreadcrumbs";
 import {ProfileHeader} from "./ProfileHeader";
-import {NavLink} from "react-router-dom";
+import {NavLink, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
 import {loadUser, selectUserById, User} from "../../users/users";
+import {ProfileForm} from "./ProfileForm";
 
 /**
  * The Profile Page
@@ -39,7 +40,8 @@ export const ProfilePage : FunctionComponent<any> = () => {
                 </Grid.Column>
                 <Grid.Column stretched width={12}>
                     { currentUser === undefined && <Loader active /> }
-                    { currentUser !== undefined && "Profile Page Here" }
+                    { currentUser !== undefined && <Route path='/profile' exact render={() => <ProfileForm user={currentUser} />} />}
+                    { currentUser !== undefined && <Route path='/profile/password' exact render={() => "Change Password"} />}
                 </Grid.Column>
             </Grid>
         </Container>

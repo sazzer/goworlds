@@ -1,21 +1,28 @@
 import React from 'react';
 import configureStore from 'redux-mock-store';
 import {render} from '@testing-library/react';
-import {MemoryRouter, StaticRouter} from "react-router";
+import {StaticRouter} from "react-router";
 import {ProfilePage} from './index';
 import {Provider} from "react-redux";
 
 jest.mock('./ProfileHeader', () => {
-    const ProfileHeader = jest.fn(({user}) => 'ProfileHeader: ' + user.name);
+    const ProfileHeader = jest.fn((props) => 'ProfileHeader: ' + JSON.stringify(props));
     return {
         ProfileHeader,
     };
 });
 
 jest.mock('./ProfileBreadcrumbs', () => {
-    const ProfileBreadcrumbs = jest.fn(({user}) => 'ProfileBreadcrumbs: ' + user.name);
+    const ProfileBreadcrumbs = jest.fn((props) => 'ProfileBreadcrumbs: ' + JSON.stringify(props));
     return {
         ProfileBreadcrumbs,
+    };
+});
+
+jest.mock('./ProfileForm', () => {
+    const ProfileForm = jest.fn((props) => 'ProfileForm: ' + JSON.stringify(props));
+    return {
+        ProfileForm,
     };
 });
 

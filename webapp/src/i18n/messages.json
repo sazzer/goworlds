@@ -59,6 +59,28 @@
     "menu": {
       "profile": "Profile",
       "password": "Change Password"
+    },
+    "form": {
+      "email": {
+        "label": "Email Address",
+        "placeholder": "Enter Email Address",
+        "errors": {
+          "required": "Please enter an Email Address",
+          "email": "Please enter a valid Email Address"
+        }
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter Name",
+        "errors": {
+          "required": "Please enter a user name"
+        }
+      },
+      "submit": "Save Changes",
+      "reset": "Reset Changes",
+      "errors": {
+
+      }
     }
   }
 }
