@@ -8,7 +8,6 @@ import org.junit.jupiter.api.function.Executable
 import org.springframework.http.*
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
 import uk.co.grahamcox.goworlds.service.users.dao.UserSeed
-import java.net.URI
 
 /**
  * Acceptance tests for creating a user
@@ -126,7 +125,7 @@ class CreateUserIT : IntegrationTestBase() {
                 Executable { Assertions.assertTrue(response.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_JSON)) },
                 Executable { Assertions.assertEquals("Graham", response.body?.get("name")) },
                 Executable { Assertions.assertEquals("graham@grahamcox.co.uk", response.body?.get("email")) },
-                Executable { Assertions.assertEquals(response.body?.get("self"), response.headers.getFirst(HttpHeaders.CONTENT_LOCATION)) }
+                Executable { Assertions.assertEquals("/users/${response.body?.get("id")}", response.headers.getFirst(HttpHeaders.CONTENT_LOCATION)) }
         )
     }
 
@@ -143,8 +142,8 @@ class CreateUserIT : IntegrationTestBase() {
                 Executable { Assertions.assertTrue(created.headers.contentType!!.isCompatibleWith(MediaType.APPLICATION_JSON)) }
         )
 
-        val uri = URI(created.body!!["self"].toString())
-        val retrieved = restTemplate.getForEntity(uri, Map::class.java)
+        val id = created.body!!["id"].toString()
+        val retrieved = restTemplate.getForEntity("/users/${id}", Map::class.java)
 
         Assertions.assertEquals(retrieved.body, created.body)
 

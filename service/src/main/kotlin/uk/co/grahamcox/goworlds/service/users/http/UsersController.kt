@@ -197,7 +197,7 @@ class UsersController(
      */
     private fun buildUserModel(user: Model<UserId, UserData>): UserModel {
         return UserModel(
-                self = UsersController::getUserById.buildUri(user.identity.id.id.toString()),
+                id = user.identity.id.id.toString(),
                 created = user.identity.created,
                 updated = user.identity.updated,
                 name = user.data.name,
@@ -215,7 +215,7 @@ class UsersController(
         return ResponseEntity.ok()
                 .eTag("\"" + user.identity.version + "\"")
                 .lastModified(user.identity.updated)
-                .header(HttpHeaders.CONTENT_LOCATION, userModel.self.toString())
+                .header(HttpHeaders.CONTENT_LOCATION, UsersController::getUserById.buildUri(user.identity.id.id.toString()).toString())
                 .header("Accept-Patch", "application/merge-patch+json")
                 .body(userModel)
     }

@@ -42,6 +42,7 @@ describe('loadUserSaga', () => {
         it('Acts correctly if the user is cached', () => {
             mockAxios.onGet('/users/abc123').reply((config) => {
                 return [200, {
+                    id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
                     name: 'Graham'
                 }, {
@@ -92,6 +93,7 @@ describe('loadUserSaga', () => {
         it('Acts correctly if the user is not cached', () => {
             mockAxios.onGet('/users/abc123').reply((config) => {
                 return [200, {
+                    id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
                     name: 'Graham'
                 }, {
@@ -181,6 +183,7 @@ describe('loadUserSaga', () => {
         it('Acts correctly if the user is not cached', () => {
             mockAxios.onGet('/users/abc123').reply((config) => {
                 return [200, {
+                    id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
                     name: 'Graham'
                 }, {

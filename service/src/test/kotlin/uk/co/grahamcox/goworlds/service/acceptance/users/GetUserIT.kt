@@ -55,7 +55,7 @@ class GetUserIT : IntegrationTestBase() {
                 Executable { Assertions.assertEquals(""""${user.version}"""", response.headers.eTag) },
                 Executable { Assertions.assertEquals("""/users/${user.id}""", response.headers.getFirst(HttpHeaders.CONTENT_LOCATION)) },
                 Executable { assertJson("""{
-                    "self": "/users/${user.id}",
+                    "id": "${user.id}",
                     "created": "${user.created}",
                     "updated": "${user.updated}",
                     "name": "${user.name}",

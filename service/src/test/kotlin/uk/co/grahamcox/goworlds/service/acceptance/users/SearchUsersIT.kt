@@ -145,21 +145,21 @@ class SearchUsersIT : IntegrationTestBase() {
         ))
 
         val user1Json = """{
-                            "self": "/users/${user1.id}",
+                            "id": "${user1.id}",
                             "created": "${user1.created}",
                             "updated": "${user1.updated}",
                             "name": "${user1.name}",
                             "email": "${user1.email}"
                         }"""
         val user2Json = """{
-                            "self": "/users/${user2.id}",
+                            "id": "${user2.id}",
                             "created": "${user2.created}",
                             "updated": "${user2.updated}",
                             "name": "${user2.name}",
                             "email": "${user2.email}"
                         }"""
         val user3Json = """{
-                            "self": "/users/${user3.id}",
+                            "id": "${user3.id}",
                             "created": "${user3.created}",
                             "updated": "${user3.updated}",
                             "name": "${user3.name}",

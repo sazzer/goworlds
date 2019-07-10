@@ -76,7 +76,6 @@ export function* loadUserSaga(action: Action<LoadUserAction>) : IterableIterator
             });
 
             return {
-                id: action.payload.userId,
                 ...response.body,
             };
         }, action.payload);

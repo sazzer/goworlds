@@ -107,7 +107,7 @@ class UpdateUserIT : IntegrationTestBase() {
 
                 Executable { Assertions.assertEquals("Graham", response.body?.get("name")) },
                 Executable { Assertions.assertEquals("graham@grahamcox.co.uk", response.body?.get("email")) },
-                Executable { Assertions.assertEquals("/users/${user.id}", response.body?.get("self")) }
+                Executable { Assertions.assertEquals(user.id.toString(), response.body?.get("id")) }
         )
     }
 
