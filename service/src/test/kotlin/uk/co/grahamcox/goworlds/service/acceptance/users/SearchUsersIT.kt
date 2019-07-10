@@ -20,7 +20,6 @@ class SearchUsersIT : IntegrationTestBase() {
         return listOf(
                 // No parameters
                 "/users" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
@@ -28,25 +27,21 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Parameters matching defaults
                 "/users?offset=0" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?count=10" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?offset=0&count=10" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?count=10&offset=0" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
@@ -54,25 +49,21 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Filters
                 "/users?name=unknown" to """{
-                    "self": "/users/?name=unknown&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?email=unknown" to """{
-                    "self": "/users/?email=unknown&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?name=other&email=unknown" to """{
-                    "self": "/users/?name=other&email=unknown&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?email=other&name=unknown" to """{
-                    "self": "/users/?name=unknown&email=other&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
@@ -80,25 +71,21 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Sorts
                 "/users?sort=name" to """{
-                    "self": "/users/?sort=name&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?sort=+created" to """{
-                    "self": "/users/?sort=%20created&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?sort=-updated" to """{
-                    "self": "/users/?sort=-updated&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?sort=name,+created,-updated" to """{
-                    "self": "/users/?sort=name,%20created,-updated&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
@@ -168,7 +155,6 @@ class SearchUsersIT : IntegrationTestBase() {
         return listOf(
                 // No parameters
                 "/users" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [$user1Json, $user3Json, $user2Json],
                     "offset": 0,
                     "total": 3
@@ -176,25 +162,21 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Parameters matching defaults
                 "/users?offset=0" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [$user1Json, $user3Json, $user2Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?count=10" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [$user1Json, $user3Json, $user2Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?offset=0&count=10" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [$user1Json, $user3Json, $user2Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?count=10&offset=0" to """{
-                    "self": "/users/?offset=0&count=10",
                     "entries": [$user1Json, $user3Json, $user2Json],
                     "offset": 0,
                     "total": 3
@@ -202,30 +184,21 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Adjusting Offset and Count
                 "/users?offset=1" to """{
-                    "self": "/users/?offset=1&count=10",
-                    "previous": "/users/?offset=0&count=10",
                     "entries": [$user3Json, $user2Json],
                     "offset": 1,
                     "total": 3
                     }""",
                 "/users?count=1" to """{
-                    "self": "/users/?offset=0&count=1",
-                    "next": "/users/?offset=1&count=1",
                     "entries": [$user1Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?offset=1&count=1" to """{
-                    "self": "/users/?offset=1&count=1",
-                    "previous": "/users/?offset=0&count=1",
-                    "next": "/users/?offset=2&count=1",
                     "entries": [$user3Json],
                     "offset": 1,
                     "total": 3
                     }""",
                 "/users?count=2&offset=2" to """{
-                    "self": "/users/?offset=2&count=2",
-                    "previous": "/users/?offset=0&count=2",
                     "entries": [$user2Json],
                     "offset": 2,
                     "total": 3
@@ -233,31 +206,26 @@ class SearchUsersIT : IntegrationTestBase() {
                 
                 // Filtering
                 "/users?name=ABC" to """{
-                    "self": "/users/?name=ABC&offset=0&count=10",
                     "entries": [$user1Json],
                     "offset": 0,
                     "total": 1
                     }""",
                 "/users?name=abc" to """{
-                    "self": "/users/?name=abc&offset=0&count=10",
                     "entries": [$user1Json],
                     "offset": 0,
                     "total": 1
                     }""",
                 "/users?email=ghi@example.com" to """{
-                    "self": "/users/?email=ghi@example.com&offset=0&count=10",
                     "entries": [$user3Json],
                     "offset": 0,
                     "total": 1
                     }""",
                 "/users?name=def&email=ghi@example.com" to """{
-                    "self": "/users/?name=def&email=ghi@example.com&offset=0&count=10",
                     "entries": [],
                     "offset": 0,
                     "total": 0
                     }""",
                 "/users?email=ghi@example.com&name=ghi" to """{
-                    "self": "/users/?name=ghi&email=ghi@example.com&offset=0&count=10",
                     "entries": [$user3Json],
                     "offset": 0,
                     "total": 1
@@ -265,31 +233,26 @@ class SearchUsersIT : IntegrationTestBase() {
 
                 // Sorting
                 "/users?sort=name" to """{
-                    "self": "/users/?sort=name&offset=0&count=10",
                     "entries": [$user1Json, $user2Json, $user3Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?sort=+name" to """{
-                    "self": "/users/?sort=%20name&offset=0&count=10",
                     "entries": [$user1Json, $user2Json, $user3Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?sort=-name" to """{
-                    "self": "/users/?sort=-name&offset=0&count=10",
                     "entries": [$user3Json, $user2Json, $user1Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?sort=updated" to """{
-                    "self": "/users/?sort=updated&offset=0&count=10",
                     "entries": [$user3Json, $user1Json, $user2Json],
                     "offset": 0,
                     "total": 3
                     }""",
                 "/users?sort=name,updated" to """{
-                    "self": "/users/?sort=name,updated&offset=0&count=10",
                     "entries": [$user1Json, $user2Json, $user3Json],
                     "offset": 0,
                     "total": 3

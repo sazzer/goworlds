@@ -2,7 +2,6 @@ package uk.co.grahamcox.goworlds.service.users.http
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
@@ -17,7 +16,6 @@ import uk.co.grahamcox.goworlds.service.model.Model
 import uk.co.grahamcox.goworlds.service.oauth2.authorization.Authorizer
 import uk.co.grahamcox.goworlds.service.password.HashedPassword
 import uk.co.grahamcox.goworlds.service.users.*
-import java.lang.NumberFormatException
 import java.net.URI
 import java.util.*
 
@@ -163,29 +161,6 @@ class UsersController(
         return ResourceCollection(
                 offset = users.offset,
                 total = users.total,
-                self = UsersController::searchUsers.buildUri(name,
-                        email,
-                        sort,
-                        users.offset.toString(),
-                        parsedCount.toString()),
-                next = if (parsedCount > 0 && users.hasNext) {
-                    UsersController::searchUsers.buildUri(name,
-                            email,
-                            sort,
-                            (users.offset + parsedCount).toString(),
-                            parsedCount.toString())
-                } else {
-                    null
-                },
-                previous = if (parsedCount > 0 && users.hasPrevious) {
-                    UsersController::searchUsers.buildUri(name,
-                            email,
-                            sort,
-                            Math.max(0, users.offset - parsedCount).toString(),
-                            parsedCount.toString())
-                } else {
-                    null
-                },
                 entries = users.entries.map(this::buildUserModel)
         )
     }
