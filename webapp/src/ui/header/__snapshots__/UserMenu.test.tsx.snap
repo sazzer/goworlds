@@ -14,6 +14,7 @@ exports[`Renders correctly when a user ID is available and loaded 1`] = `
         tabindex="0"
       >
         <div
+          aria-atomic="true"
           aria-live="polite"
           class="text"
           role="alert"
@@ -70,6 +71,7 @@ exports[`Renders correctly when a user ID is available but not yet loaded 1`] = 
         tabindex="0"
       >
         <div
+          aria-atomic="true"
           aria-live="polite"
           class="text"
           role="alert"
