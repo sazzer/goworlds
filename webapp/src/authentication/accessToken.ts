@@ -1,8 +1,9 @@
 import {createReducer} from "redux-create-reducer";
-import {Action, BaseAction, buildAction} from "../redux";
+import {Action, BaseAction, buildAction, buildSaga} from "../redux";
 import produce from "immer";
 import {MODULE_PREFIX} from "./module";
 import {LOGOUT_ACTION} from "./logout";
+import {clearAccessToken, setAccessToken} from "../api";
 
 /** The shape of an access token */
 export declare type Token = {
@@ -65,7 +66,28 @@ export function clearAccessTokenReducer(state: State) : State {
     });
 }
 
+/**
+ * Saga to save an access token
+ * @param action the action to handle
+ */
+export function saveAccessToken(action: Action<StoreAccessTokenAction>) {
+    setAccessToken(action.payload.token);
+}
+
+/**
+ * Saga to reset an access token
+ */
+export function resetAccessToken() {
+    clearAccessToken();
+}
+
 //////// The actual module definitions
+
+/** The sagas for this module */
+export const sagas = [
+    buildSaga(STORE_ACCESS_TOKEN_ACTION, saveAccessToken),
+    buildSaga(LOGOUT_ACTION, resetAccessToken),
+];
 
 /** The reducers for this module */
 export const reducers = createReducer(INITIAL_STATE, {

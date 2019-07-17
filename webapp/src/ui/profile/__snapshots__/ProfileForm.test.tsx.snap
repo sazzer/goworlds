@@ -1,0 +1,604 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Marks as loading when submitting valid details 1`] = `
+<body>
+  <div>
+    <form
+      class="ui loading form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="new@example.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="New Name"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders correctly when submitting triggers the callback as a duplicate email failure 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="new@example.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="New Name"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      >
+        Email Address is already registered
+      </div>
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders correctly when submitting triggers the callback as an unexpected failure 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="new@example.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="New Name"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      >
+        An unexpected error occurred
+      </div>
+    </form>
+  </div>
+</body>
+`;
+
+exports[`Renders correctly when submitting triggers the callback as success 1`] = `
+<body>
+  <div>
+    <form
+      class="ui form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="new@example.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="New Name"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+      <div
+        class="ui positive message"
+      >
+        User Profile Updated
+      </div>
+    </form>
+  </div>
+</body>
+`;
+
+exports[`renders correctly after entering new details 1`] = `
+<body>
+  <div>
+    <form
+      class="ui form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="new@example.co.uk"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="New Name"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`renders correctly after resetting 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="test@example.com"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="Test User"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary disabled button"
+        disabled=""
+        tabindex="-1"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative disabled button"
+        disabled=""
+        tabindex="-1"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`renders errors if submitting when blank 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="error field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="ui error message"
+        >
+          Please enter an Email Address
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="error field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="ui error message"
+        >
+          Please enter a user name
+        </div>
+      </div>
+      <button
+        class="ui primary button"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative button"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+    </form>
+  </div>
+</body>
+`;
+
+exports[`renders the initial state 1`] = `
+<body>
+  <div>
+    <form
+      class="ui error form"
+      data-test="ProfileForm"
+    >
+      <div
+        class="required field"
+        data-test="email"
+      >
+        <label>
+          Email Address
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="email"
+              placeholder="Enter Email Address"
+              type="text"
+              value="test@example.com"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="required field"
+        data-test="name"
+      >
+        <label>
+          Name
+        </label>
+        <div
+          class="field"
+        >
+          <div
+            class="ui fluid input"
+          >
+            <input
+              name="name"
+              placeholder="Enter Name"
+              type="text"
+              value="Test User"
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="ui primary disabled button"
+        disabled=""
+        tabindex="-1"
+        type="submit"
+      >
+        Save Changes
+      </button>
+      <button
+        class="ui negative disabled button"
+        disabled=""
+        tabindex="-1"
+        type="reset"
+      >
+        Reset Changes
+      </button>
+      <div
+        class="ui error message"
+        data-test="ProfileFormErrors"
+      />
+    </form>
+  </div>
+</body>
+`;

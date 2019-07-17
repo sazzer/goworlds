@@ -5,6 +5,10 @@ import {getConfig} from "../config";
 
 /** The Base URI for the API */
 const API_URI = process.env.REACT_APP_API_URI || getConfig('API_URI');
+
+/** The access token to use */
+let accessToken: string | undefined = undefined;
+
 /**
  * The type of a Request to make
  */
@@ -72,12 +76,27 @@ export class ProblemError extends Error {
      * @param type The type
      * @param details The details
      */
-    constructor(message: string, status: number, type: string, details: any) {
+    constructor(message: string, status: number, type: string, details?: any) {
         super(message);
         this.status = status;
         this.type = type;
         this.details = details;
     }
+}
+
+/**
+ * Set the access token to use for requests
+ * @param token The access token
+ */
+export function setAccessToken(token: string) {
+    accessToken = token;
+}
+
+/**
+ * Clear the access token to use for requests
+ */
+export function clearAccessToken() {
+    accessToken = undefined;
 }
 
 /**
@@ -102,6 +121,8 @@ export async function request<T>(url: string, params: Request = {}) : Promise<Re
             username: params.clientId,
             password: ''
         };
+    } else if (accessToken) {
+        fetchParams.headers.authorization = `Bearer ${accessToken}`;
     }
 
     try {
@@ -122,7 +143,7 @@ export async function request<T>(url: string, params: Request = {}) : Promise<Re
             const contentTypeHeader = e.response.headers['content-type'];
             const contentType = contentTypeHeader && contentTypeParser.parse(contentTypeHeader);
 
-            if (contentType.type === 'application/problem+json') {
+            if (contentType && contentType.type === 'application/problem+json') {
                 throw new ProblemError(e.response.data.title, e.response.status, e.response.data.type, e.response.data);
             } else {
                 throw new RequestError(e.response.status, contentType, e.response.data);

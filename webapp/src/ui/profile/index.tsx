@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useEffect} from 'react';
 import {Container, Grid, Loader, Menu} from "semantic-ui-react";
 import {ProfileBreadcrumbs} from "./ProfileBreadcrumbs";
 import {ProfileHeader} from "./ProfileHeader";
@@ -21,7 +21,9 @@ export const ProfilePage : FunctionComponent<any> = () => {
     const currentUserId = useSelector(selectCurrentUserId);
     const currentUser : User | undefined = useSelector(selectUserById(currentUserId), shallowEqual);
 
-    dispatch(loadUser(currentUserId, true));
+    useEffect(() => {
+        dispatch(loadUser(currentUserId, true));
+    });
 
     const namedUser = currentUser || {
         name: t('profile.loading')

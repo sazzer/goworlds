@@ -75,7 +75,7 @@ export const PasswordForm: FunctionComponent<PasswordFormProps> = ({user}) => {
                         <FormikErrorMessage name="password2" />
                     </Form.Field>
                     <Button type="submit" primary disabled={!dirty}>
-                        {t('profile.password.submit')}
+                        {t('profile.password.submit.save')}
                     </Button>
                     <ErrorMessage testName="PasswordFormErrors" errors={[
                         error && t('profile.password.submit.errors.' + error)

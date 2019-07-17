@@ -12,6 +12,7 @@ import {MODULE_PREFIX} from "./module";
 import {createReducer} from "redux-create-reducer";
 import produce from "immer";
 import {select} from 'redux-saga/effects';
+import {UPDATE_PROFILE_ACTION} from "./updateProfile";
 
 /** The shape of a user */
 export declare type User = {
@@ -121,4 +122,5 @@ export const sagas = [
 /** The reducers for this module */
 export const reducers = createReducer(INITIAL_STATE, {
     [succeededAction(LOAD_USER_ACTION)] : storeUserReducer,
+    [succeededAction(UPDATE_PROFILE_ACTION)] : storeUserReducer,
 });
