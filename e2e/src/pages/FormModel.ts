@@ -19,10 +19,20 @@ export class FormModel extends BasePage {
      * @param value the new value for the field
      */
     async setFieldValue(field: string, value: string) {
-        const emailInput = await this.webElement.findElement(By.css(`[data-test="${field}"] input`));
+        const input = await this.webElement.findElement(By.css(`[data-test="${field}"] input`));
 
-        await emailInput.clear();
-        await emailInput.sendKeys(value);
+        await input.clear();
+        await input.sendKeys(value);
+    }
+    
+    /**
+     * Get the value of a field
+     * @param field the name of the field
+     */
+    async getFieldValue(field: string) : Promise<string> {
+        const input = await this.webElement.findElement(By.css(`[data-test="${field}"] input`));
+
+        return await input.getAttribute('value');
     }
 
     /**

@@ -23,4 +23,14 @@ export class UserMenuModel {
 
         return await element.getText();
     }
+
+    /**
+     * Navigate to the User Profile page
+     */
+    async openUserProfile() {
+        await this.webElement.click();
+
+        const profileElement = await this.webElement.findElement(By.css('a[href="/profile"]'));
+        await profileElement.click();
+    }
 }
