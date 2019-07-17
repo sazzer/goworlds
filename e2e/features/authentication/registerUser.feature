@@ -30,3 +30,10 @@ Feature: Authentication: Registering a new user
       | Password          | password |
       | Re-enter Password | password |
     Then I get an error registering a user of "Email Address is already registered"
+
+  Scenario: I successfully register a valid user
+    When I try to register a user with details:
+      | Name              | Graham   |
+      | Password          | password |
+      | Re-enter Password | password |
+    Then I am logged in as "Graham"

@@ -5,6 +5,7 @@ Feature: Authentication: Logging in
     And a user exists with details:
       | Email Address | graham@grahamcox.co.uk |
       | Password      | superSecretPassword    |
+      | Name          | Test User              |
     And I try to authenticate with an email address of "graham@grahamcox.co.uk"
 
   Scenario: An error is displayed if no password is entered
@@ -15,3 +16,7 @@ Feature: Authentication: Logging in
   Scenario: An error is displayed if the wrong password is entered
     When I try to log in with a password of "wrongPassword"
     Then I get an error logging in of "Invalid password or account blocked"
+
+  Scenario: I successfully log in as a valid user
+    When I try to log in with a password of "superSecretPassword"
+    Then I am logged in as "Test User"
