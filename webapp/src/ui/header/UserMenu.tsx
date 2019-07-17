@@ -4,9 +4,10 @@ import {useTranslation} from "react-i18next";
 import {Dropdown, Icon, Menu} from "semantic-ui-react";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
-import {selectUserById, User, loadUser} from "../../users/users";
+import {selectUserById, loadUser} from "../../users/users";
 import {Link} from "react-router-dom";
 import {logout} from "../../authentication/logout";
+import {User} from "../../users/user";
 
 type UserMenuProps = {};
 

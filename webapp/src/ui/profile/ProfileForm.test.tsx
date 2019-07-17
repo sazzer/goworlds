@@ -1,10 +1,10 @@
 import React from 'react';
 import {ProfileForm} from './ProfileForm';
 import {render, fireEvent} from '@testing-library/react';
-import {User} from "../../users/users";
 import configureStore from "redux-mock-store";
 import {Provider} from "react-redux";
 import {ProblemError} from "../../api";
+import {User} from "../../users/user";
 
 /** Set up the component to test */
 function setup(user: User) {

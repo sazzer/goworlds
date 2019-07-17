@@ -6,9 +6,10 @@ import {NavLink, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
-import {loadUser, selectUserById, User} from "../../users/users";
+import {loadUser, selectUserById} from "../../users/users";
 import {ProfileForm} from "./ProfileForm";
 import {PasswordForm} from "./PasswordForm";
+import {User} from "../../users/user";
 
 /**
  * The Profile Page

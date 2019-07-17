@@ -13,15 +13,7 @@ import {createReducer} from "redux-create-reducer";
 import produce from "immer";
 import {select} from 'redux-saga/effects';
 import {UPDATE_PROFILE_ACTION} from "./updateProfile";
-
-/** The shape of a user */
-export declare type User = {
-    id: string,
-    created: string,
-    updated: string,
-    name: string,
-    email: string,
-};
+import {User} from "./user";
 
 /** The shape of the state for this module */
 export declare type State = {

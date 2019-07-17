@@ -11,7 +11,7 @@ import {
     succeededAction
 } from "../redux";
 import {request} from "../api";
-import {User} from "./users";
+import {User} from "./user";
 
 /** The action type for updating the users profile */
 export const UPDATE_PROFILE_ACTION = MODULE_PREFIX + 'updateProfile';

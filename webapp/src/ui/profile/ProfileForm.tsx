@@ -5,10 +5,10 @@ import * as Yup from "yup";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../common/FormikErrorMessage";
 import {ErrorMessage} from "../common/ErrorMessage";
-import {User} from "../../users/users";
 import {useDispatch} from "react-redux";
 import {updateUserProfile} from "../../users/updateProfile";
 import {ProblemError} from "../../api";
+import {User} from "../../users/user";
 
 /** The props that the ProfileForm area needs */
 type ProfileFormProps = {

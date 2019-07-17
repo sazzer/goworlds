@@ -5,8 +5,8 @@ import * as Yup from "yup";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../common/FormikErrorMessage";
 import {ErrorMessage} from "../common/ErrorMessage";
-import {User} from "../../users/users";
 import {StringSchema} from "yup";
+import {User} from "../../users/user";
 
 /** The props that the PasswordForm area needs */
 type PasswordFormProps = {
