@@ -44,9 +44,7 @@ describe('loadUserSaga', () => {
                 return [200, {
                     id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
-                    name: 'Graham',
-                    created: '2019-07-17T07:09:00Z',
-                    updated: '2019-07-17T07:09:00Z',
+                    name: 'Graham'
                 }, {
                     'content-type': 'application/json'
                 }];
@@ -74,9 +72,7 @@ describe('loadUserSaga', () => {
                     payload: {
                         id: 'abc123',
                         email: 'graham@grahamcox.co.uk',
-                        name: 'Graham',
-                        created: new Date('2019-07-17T07:09:00Z'),
-                        updated: new Date('2019-07-17T07:09:00Z'),
+                        name: 'Graham'
                     },
                     input: {
                         userId: 'abc123',
@@ -99,9 +95,7 @@ describe('loadUserSaga', () => {
                 return [200, {
                     id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
-                    name: 'Graham',
-                    created: '2019-07-17T07:09:00Z',
-                    updated: '2019-07-17T07:09:00Z',
+                    name: 'Graham'
                 }, {
                     'content-type': 'application/json'
                 }];
@@ -123,9 +117,7 @@ describe('loadUserSaga', () => {
                     payload: {
                         id: 'abc123',
                         email: 'graham@grahamcox.co.uk',
-                        name: 'Graham',
-                        created: new Date('2019-07-17T07:09:00Z'),
-                        updated: new Date('2019-07-17T07:09:00Z'),
+                        name: 'Graham'
                     },
                     input: {
                         userId: 'abc123',
@@ -193,9 +185,7 @@ describe('loadUserSaga', () => {
                 return [200, {
                     id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
-                    name: 'Graham',
-                    created: '2019-07-17T07:09:00Z',
-                    updated: '2019-07-17T07:09:00Z',
+                    name: 'Graham'
                 }, {
                     'content-type': 'application/json'
                 }];
@@ -217,9 +207,7 @@ describe('loadUserSaga', () => {
                     payload: {
                         id: 'abc123',
                         email: 'graham@grahamcox.co.uk',
-                        name: 'Graham',
-                        created: new Date('2019-07-17T07:09:00Z'),
-                        updated: new Date('2019-07-17T07:09:00Z'),
+                        name: 'Graham'
                     },
                     input: {
                         userId: 'abc123',
@@ -246,8 +234,8 @@ describe('storeUserReducer', () => {
             id: 'abc123',
             email: 'graham@grahamcox.co.uk',
             name: 'Graham',
-            created: new Date('2019-07-17T07:09:00Z'),
-            updated: new Date('2019-07-17T07:09:00Z'),
+            created: '',
+            updated: '',
         },
         input: {
             userId: 'abc123',
@@ -271,8 +259,8 @@ describe('storeUserReducer', () => {
                 id: 'abc123',
                 email: 'graham@grahamcox.co.uk',
                 name: 'Graham',
-                created: new Date('2019-07-17T07:09:00Z'),
-                updated: new Date('2019-07-17T07:09:00Z'),
+                created: '',
+                updated: '',
             }
         );
     });
@@ -284,8 +272,8 @@ describe('storeUserReducer', () => {
                     id: 'def321',
                     email: 'graham@grahamcox.co.uk',
                     name: 'Graham',
-                    created: new Date('2019-07-17T07:09:00Z'),
-                    updated: new Date('2019-07-17T07:09:00Z'),
+                    created: '',
+                    updated: '',
                 }
             ]
         };
@@ -298,8 +286,8 @@ describe('storeUserReducer', () => {
                     id: 'def321',
                     email: 'graham@grahamcox.co.uk',
                     name: 'Graham',
-                    created: new Date('2019-07-17T07:09:00Z'),
-                    updated: new Date('2019-07-17T07:09:00Z'),
+                    created: '',
+                    updated: '',
                 }
             ]
         });
@@ -309,8 +297,8 @@ describe('storeUserReducer', () => {
                 id: 'def321',
                 email: 'graham@grahamcox.co.uk',
                 name: 'Graham',
-                created: new Date('2019-07-17T07:09:00Z'),
-                updated: new Date('2019-07-17T07:09:00Z'),
+                created: '',
+                updated: '',
             }
         );
         expect(newState.users).toContainEqual(
@@ -318,8 +306,8 @@ describe('storeUserReducer', () => {
                 id: 'abc123',
                 email: 'graham@grahamcox.co.uk',
                 name: 'Graham',
-                created: new Date('2019-07-17T07:09:00Z'),
-                updated: new Date('2019-07-17T07:09:00Z'),
+                created: '',
+                updated: '',
             }
         );
     });
@@ -331,8 +319,8 @@ describe('storeUserReducer', () => {
                     id: 'abc123',
                     email: 'old@grahamcox.co.uk',
                     name: 'Old',
-                    created: new Date('2019-07-17T07:09:00Z'),
-                    updated: new Date('2019-07-17T07:09:00Z'),
+                    created: '',
+                    updated: '',
                 }
             ]
         };
@@ -345,8 +333,8 @@ describe('storeUserReducer', () => {
                     id: 'abc123',
                     email: 'old@grahamcox.co.uk',
                     name: 'Old',
-                    created: new Date('2019-07-17T07:09:00Z'),
-                    updated: new Date('2019-07-17T07:09:00Z'),
+                    created: '',
+                    updated: '',
                 }
             ]
         });
@@ -356,8 +344,8 @@ describe('storeUserReducer', () => {
                 id: 'abc123',
                 email: 'graham@grahamcox.co.uk',
                 name: 'Graham',
-                created: new Date('2019-07-17T07:09:00Z'),
-                updated: new Date('2019-07-17T07:09:00Z'),
+                created: '',
+                updated: '',
             }
         );
     });

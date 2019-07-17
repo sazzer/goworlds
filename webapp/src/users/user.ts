@@ -1,8 +1,8 @@
 /** The shape of a user */
 export declare type User = {
     id: string,
-    created: Date,
-    updated: Date,
+    created: string,
+    updated: string,
     name: string,
     email: string,
 };

@@ -56,8 +56,8 @@ it('renders the initial state', () => {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     expect(element.baseElement).toMatchSnapshot();
@@ -68,8 +68,8 @@ it('renders correctly after entering new details', () => {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -83,8 +83,8 @@ it('renders correctly after resetting', async () => {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -99,8 +99,8 @@ it('renders errors if submitting when blank', async () => {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('');
@@ -115,8 +115,8 @@ it('Marks as loading when submitting valid details', async () => {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -131,8 +131,8 @@ it('Triggers the correct redux action when submitting valid details', async () =
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -155,8 +155,8 @@ it('Renders correctly when submitting triggers the callback as success', async (
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -174,8 +174,8 @@ it('Renders correctly when submitting triggers the callback as an unexpected fai
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
@@ -193,8 +193,8 @@ it('Renders correctly when submitting triggers the callback as a duplicate email
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
-        created: new Date(),
-        updated: new Date(),
+        created: '',
+        updated: '',
     });
 
     enterEmail('new@example.co.uk');
