@@ -69,7 +69,11 @@ export function* loadUserSaga(action: Action<LoadUserAction>) : IterableIterator
             });
 
             return {
-                ...response.body,
+                id: response.body.id,
+                name: response.body.name,
+                email: response.body.email,
+                created: new Date(response.body.created),
+                updated: new Date(response.body.updated),
             };
         }, action.payload);
     }

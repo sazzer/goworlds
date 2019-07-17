@@ -47,7 +47,9 @@ describe('updateUserProfile saga', () => {
             return [200, {
                 id: 'abc123',
                 email: 'graham@grahamcox.co.uk',
-                name: 'Graham'
+                name: 'Graham',
+                created: '2019-07-17T07:09:00Z',
+                updated: '2019-07-17T07:09:00Z',
             }, {
                 'content-type': 'application/json'
             }];
@@ -68,7 +70,9 @@ describe('updateUserProfile saga', () => {
                 payload: {
                     id: 'abc123',
                     email: 'graham@grahamcox.co.uk',
-                    name: 'Graham'
+                    name: 'Graham',
+                    created: new Date('2019-07-17T07:09:00Z'),
+                    updated: new Date('2019-07-17T07:09:00Z'),
                 },
                 input: {
                     userId: 'abc123',
@@ -179,8 +183,8 @@ describe('updateUserProfile_SUCCEEDED saga', () => {
                 id: 'abc123',
                 email: 'graham@grahamcox.co.uk',
                 name: 'Graham',
-                created: '',
-                updated: '',
+                created: new Date(),
+                updated: new Date(),
             },
             input: {
                 userId: 'abc123',
