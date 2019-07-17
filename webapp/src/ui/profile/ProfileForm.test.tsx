@@ -7,11 +7,15 @@ import {ProblemError} from "../../api";
 import {User} from "../../users/user";
 
 /** Set up the component to test */
-function setup(user: User) {
+function setup(userId: string, user?: User) {
     const mockStoreCreator = configureStore();
-    const store = mockStoreCreator({});
+    const store = mockStoreCreator({
+        users: {
+            users: user ? [user] : [],
+        }
+    });
 
-    const element = render(<Provider store={store}><ProfileForm user={user} /></Provider>);
+    const element = render(<Provider store={store}><ProfileForm userId={userId} /></Provider>);
 
     const enterEmail = (email: string) => {
         fireEvent.change(element.getByPlaceholderText('Enter Email Address'), {
@@ -51,8 +55,8 @@ function setup(user: User) {
     };
 }
 
-it('renders the initial state', () => {
-    const {element} = setup({
+it('renders the initial state when a user is present', () => {
+    const {element} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
@@ -63,8 +67,28 @@ it('renders the initial state', () => {
     expect(element.baseElement).toMatchSnapshot();
 });
 
+it('renders the initial state when a user is not present', () => {
+    const {element} = setup('abc123');
+
+    expect(element.baseElement).toMatchSnapshot();
+});
+
+it('Loads the user on first render', () => {
+    const {store} = setup('abc123');
+
+    expect(store.getActions()).toHaveLength(1);
+    expect(store.getActions()[0]).toMatchObject({
+        type: 'Users/loadUser',
+        payload: {
+            userId: 'abc123',
+            force: true,
+        }
+    });
+
+});
+
 it('renders correctly after entering new details', () => {
-    const {element, enterName, enterEmail} = setup({
+    const {element, enterName, enterEmail} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
@@ -79,7 +103,7 @@ it('renders correctly after entering new details', () => {
 });
 
 it('renders correctly after resetting', async () => {
-    const {element, enterName, enterEmail, resetForm} = setup({
+    const {element, enterName, enterEmail, resetForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
@@ -95,7 +119,7 @@ it('renders correctly after resetting', async () => {
 });
 
 it('renders errors if submitting when blank', async () => {
-    const {element, enterName, enterEmail, submitForm} = setup({
+    const {element, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
@@ -111,7 +135,7 @@ it('renders errors if submitting when blank', async () => {
 });
 
 it('Marks as loading when submitting valid details', async () => {
-    const {element, enterName, enterEmail, submitForm} = setup({
+    const {element, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
@@ -127,13 +151,15 @@ it('Marks as loading when submitting valid details', async () => {
 });
 
 it('Triggers the correct redux action when submitting valid details', async () => {
-    const {store, enterName, enterEmail, submitForm} = setup({
+    const {store, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
         created: '',
         updated: '',
     });
+
+    store.clearActions();
 
     enterEmail('new@example.co.uk');
     enterName('New Name');
@@ -151,13 +177,15 @@ it('Triggers the correct redux action when submitting valid details', async () =
 });
 
 it('Renders correctly when submitting triggers the callback as success', async () => {
-    const {element, store, enterName, enterEmail, submitForm} = setup({
+    const {element, store, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
         created: '',
         updated: '',
     });
+
+    store.clearActions();
 
     enterEmail('new@example.co.uk');
     enterName('New Name');
@@ -170,13 +198,15 @@ it('Renders correctly when submitting triggers the callback as success', async (
 });
 
 it('Renders correctly when submitting triggers the callback as an unexpected failure', async () => {
-    const {element, store, enterName, enterEmail, submitForm} = setup({
+    const {element, store, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
         created: '',
         updated: '',
     });
+
+    store.clearActions();
 
     enterEmail('new@example.co.uk');
     enterName('New Name');
@@ -189,13 +219,15 @@ it('Renders correctly when submitting triggers the callback as an unexpected fai
 });
 
 it('Renders correctly when submitting triggers the callback as a duplicate email failure', async () => {
-    const {element, store, enterName, enterEmail, submitForm} = setup({
+    const {element, store, enterName, enterEmail, submitForm} = setup('abc123', {
         id: 'abc123',
         name: 'Test User',
         email: 'test@example.com',
         created: '',
         updated: '',
     });
+
+    store.clearActions();
 
     enterEmail('new@example.co.uk');
     enterName('New Name');

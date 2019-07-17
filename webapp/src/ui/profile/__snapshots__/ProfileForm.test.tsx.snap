@@ -527,7 +527,13 @@ exports[`renders errors if submitting when blank 1`] = `
 </body>
 `;
 
-exports[`renders the initial state 1`] = `
+exports[`renders the initial state when a user is not present 1`] = `
+<body>
+  <div />
+</body>
+`;
+
+exports[`renders the initial state when a user is present 1`] = `
 <body>
   <div>
     <form

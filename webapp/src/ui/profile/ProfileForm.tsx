@@ -1,30 +1,38 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Button, Form, Message} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import * as Yup from "yup";
 import {Formik} from "formik";
 import {FormikErrorMessage} from "../common/FormikErrorMessage";
 import {ErrorMessage} from "../common/ErrorMessage";
-import {useDispatch} from "react-redux";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {updateUserProfile} from "../../users/updateProfile";
 import {ProblemError} from "../../api";
 import {User} from "../../users/user";
+import {loadUser, selectUserById} from "../../users/users";
 
 /** The props that the ProfileForm area needs */
 type ProfileFormProps = {
-    user: User,
+    userId: string,
 };
 
 /**
  * Component for editing the core profile details for a user
  * @constructor
  */
-export const ProfileForm: FunctionComponent<ProfileFormProps> = ({user}) => {
+const InnerProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
+
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
     const [success, setSuccess] = useState<boolean>(false);
+
+    const user : User | undefined = useSelector(selectUserById(userId), shallowEqual);
+
+    if (user === undefined) {
+        return <></>
+    }
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -109,4 +117,18 @@ export const ProfileForm: FunctionComponent<ProfileFormProps> = ({user}) => {
             }
         </Formik>
     );
+};
+
+/**
+ * Wrapper around the Profile Form to request the user details are loaded first
+ * @constructor
+ */
+export const ProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(loadUser(userId, true));
+    });
+
+    return <InnerProfileForm userId={userId} />;
 };

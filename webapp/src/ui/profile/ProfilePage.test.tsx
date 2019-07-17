@@ -57,35 +57,15 @@ describe('Rendering the page', () => {
         };
 
         it('renders the profile tab', () => {
-            const {element, store} = setup({state, location: '/profile'});
+            const {element} = setup({state, location: '/profile'});
 
             expect(element.baseElement).toMatchSnapshot();
-            expect(store.getActions()).toHaveLength(1);
-            expect(store.getActions()).toContainEqual(
-                {
-                    'type': 'Users/loadUser',
-                    'payload': {
-                        'userId': 'abc123',
-                        'force': true,
-                    },
-                }
-            )
         });
 
         it('renders the password tab', () => {
-            const {element, store} = setup({state, location: '/profile/password'});
+            const {element} = setup({state, location: '/profile/password'});
 
             expect(element.baseElement).toMatchSnapshot();
-            expect(store.getActions()).toHaveLength(1);
-            expect(store.getActions()).toContainEqual(
-                {
-                    'type': 'Users/loadUser',
-                    'payload': {
-                        'userId': 'abc123',
-                        'force': true,
-                    },
-                }
-            )
         });
     });
 
@@ -108,35 +88,15 @@ describe('Rendering the page', () => {
         };
 
         it('renders the profile tab', () => {
-            const {element, store} = setup({state, location: '/profile'});
+            const {element} = setup({state, location: '/profile'});
 
             expect(element.baseElement).toMatchSnapshot();
-            expect(store.getActions()).toHaveLength(1);
-            expect(store.getActions()).toContainEqual(
-                {
-                    'type': 'Users/loadUser',
-                    'payload': {
-                        'userId': 'abc123',
-                        'force': true,
-                    },
-                }
-            )
         });
 
         it('renders the password tab', () => {
-            const {element, store} = setup({state, location: '/profile/password'});
+            const {element} = setup({state, location: '/profile/password'});
 
             expect(element.baseElement).toMatchSnapshot();
-            expect(store.getActions()).toHaveLength(1);
-            expect(store.getActions()).toContainEqual(
-                {
-                    'type': 'Users/loadUser',
-                    'payload': {
-                        'userId': 'abc123',
-                        'force': true,
-                    },
-                }
-            )
         });
     });
 

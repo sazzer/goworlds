@@ -1,12 +1,12 @@
-import React, {FunctionComponent, useEffect} from 'react';
+import React, {FunctionComponent} from 'react';
 import {Container, Grid, Loader, Menu} from "semantic-ui-react";
 import {ProfileBreadcrumbs} from "./ProfileBreadcrumbs";
 import {ProfileHeader} from "./ProfileHeader";
 import {NavLink, Route} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {shallowEqual, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
-import {loadUser, selectUserById} from "../../users/users";
+import {selectUserById} from "../../users/users";
 import {ProfileForm} from "./ProfileForm";
 import {PasswordForm} from "./PasswordForm";
 import {User} from "../../users/user";
@@ -18,13 +18,8 @@ import {User} from "../../users/user";
 export const ProfilePage : FunctionComponent<any> = () => {
     const { t } = useTranslation();
 
-    const dispatch = useDispatch();
     const currentUserId = useSelector(selectCurrentUserId);
     const currentUser : User | undefined = useSelector(selectUserById(currentUserId), shallowEqual);
-
-    useEffect(() => {
-        dispatch(loadUser(currentUserId, true));
-    });
 
     const namedUser = currentUser || {
         name: t('profile.loading')
@@ -44,7 +39,7 @@ export const ProfilePage : FunctionComponent<any> = () => {
                 </Grid.Column>
                 <Grid.Column stretched width={12}>
                     { currentUser === undefined && <Loader active /> }
-                    { currentUser !== undefined && <Route path='/profile' exact render={() => <ProfileForm user={currentUser} />} />}
+                    { currentUser !== undefined && <Route path='/profile' exact render={() => <ProfileForm userId={currentUserId} />} />}
                     { currentUser !== undefined && <Route path='/profile/password' exact render={() => <PasswordForm user={currentUser} />} />}
                 </Grid.Column>
             </Grid>
