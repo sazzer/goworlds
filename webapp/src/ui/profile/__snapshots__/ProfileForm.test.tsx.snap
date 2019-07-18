@@ -76,7 +76,7 @@ exports[`Renders correctly when submitting triggers the callback as a duplicate 
 <body>
   <div>
     <form
-      class="ui error form"
+      class="ui error loading form"
       data-test="ProfileForm"
     >
       <div
@@ -150,7 +150,7 @@ exports[`Renders correctly when submitting triggers the callback as an unexpecte
 <body>
   <div>
     <form
-      class="ui error form"
+      class="ui error loading form"
       data-test="ProfileForm"
     >
       <div
@@ -224,7 +224,7 @@ exports[`Renders correctly when submitting triggers the callback as success 1`] 
 <body>
   <div>
     <form
-      class="ui form"
+      class="ui loading form"
       data-test="ProfileForm"
     >
       <div
@@ -301,7 +301,7 @@ exports[`renders correctly after entering new details 1`] = `
 <body>
   <div>
     <form
-      class="ui form"
+      class="ui loading form"
       data-test="ProfileForm"
     >
       <div
@@ -373,7 +373,7 @@ exports[`renders correctly after resetting 1`] = `
 <body>
   <div>
     <form
-      class="ui error form"
+      class="ui error loading form"
       data-test="ProfileForm"
     >
       <div
@@ -449,7 +449,7 @@ exports[`renders errors if submitting when blank 1`] = `
 <body>
   <div>
     <form
-      class="ui error form"
+      class="ui error loading form"
       data-test="ProfileForm"
     >
       <div
@@ -537,7 +537,7 @@ exports[`renders the initial state when a user is present 1`] = `
 <body>
   <div>
     <form
-      class="ui error form"
+      class="ui error loading form"
       data-test="ProfileForm"
     >
       <div

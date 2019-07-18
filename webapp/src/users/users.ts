@@ -1,9 +1,9 @@
 import {
-    Action,
+    Action, AsyncAction,
     asyncAction,
     buildAction,
     buildSaga,
-    buildSelector,
+    buildSelector, finishedAction,
     ResolvedAsyncAction,
     succeededAction
 } from "../redux";
@@ -34,17 +34,20 @@ const LOAD_USER_ACTION = MODULE_PREFIX + 'loadUser';
 declare type LoadUserAction = {
     userId: string,
     force: boolean,
+    callback: () => void
 }
 
 /**
  * Build the Redux action to load a user
  * @param userId The ID of the User to load
  * @param force Set to true to re-load the user even if we've already got a copy of it
+ * @param callback Callback to trigger on loading the user
  */
-export function loadUser(userId: string, force: boolean = false): Action<LoadUserAction> {
+export function loadUser(userId: string, force: boolean = false, callback?: () => void): Action<LoadUserAction> {
     return buildAction(LOAD_USER_ACTION, {
         userId,
-        force
+        force,
+        callback: callback || (() => {}),
     });
 }
 
@@ -72,6 +75,16 @@ export function* loadUserSaga(action: Action<LoadUserAction>) : IterableIterator
                 ...response.body,
             };
         }, action.payload);
+    }
+}
+
+/**
+ * Trigger the callback when loading the user has finished
+ * @param action the action to handle
+ */
+export function loadUserFinishedSaga(action: AsyncAction<LoadUserAction>) {
+    if (action.input) {
+        action.input.callback();
     }
 }
 
@@ -109,6 +122,7 @@ export const selectUserById = (id: string) =>
 /** The sagas for this module */
 export const sagas = [
     buildSaga(LOAD_USER_ACTION, loadUserSaga),
+    buildSaga(finishedAction(LOAD_USER_ACTION), loadUserFinishedSaga),
 ];
 
 /** The reducers for this module */

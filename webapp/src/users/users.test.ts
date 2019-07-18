@@ -9,21 +9,27 @@ const mockAxios = new MockAdapter(axios);
 
 describe('loadUser action', () => {
     it('Generates the correct action when forcing a reload', () => {
-        expect(testSubject.loadUser('abc123', true)).toEqual({
+        const callback = jest.fn();
+
+        expect(testSubject.loadUser('abc123', true, callback)).toEqual({
             type: 'Users/loadUser',
             payload: {
                 userId: 'abc123',
                 force: true,
+                callback,
             },
         });
     });
 
     it('Generates the correct action when not forcing a reload', () => {
-        expect(testSubject.loadUser('abc123')).toEqual({
+        const callback = jest.fn();
+
+        expect(testSubject.loadUser('abc123', false, callback)).toEqual({
             type: 'Users/loadUser',
             payload: {
                 userId: 'abc123',
                 force: false,
+                callback,
             },
         });
     });
@@ -224,6 +230,25 @@ describe('loadUserSaga', () => {
                 .dispatch(action)
                 .run();
         });
+    });
+});
+
+describe('loadUserFinishedSaga', () => {
+    it('triggers the callback', () => {
+        const callback = jest.fn();
+
+        const action = {
+            type: 'Users/loadUser_FINISHED',
+            input: {
+                userId: 'abc123',
+                force: false,
+                callback,
+            },
+        };
+
+        testSubject.loadUserFinishedSaga(action);
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toBeCalledWith();
     });
 });
 

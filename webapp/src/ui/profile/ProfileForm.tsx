@@ -11,28 +11,23 @@ import {ProblemError} from "../../api";
 import {User} from "../../users/user";
 import {loadUser, selectUserById} from "../../users/users";
 
-/** The props that the ProfileForm area needs */
-type ProfileFormProps = {
-    userId: string,
+/** The props that the InnerProfileForm area needs */
+type InnerProfileFormProps = {
+    user: User,
+    loading: boolean,
 };
 
 /**
  * Component for editing the core profile details for a user
  * @constructor
  */
-const InnerProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
+const InnerProfileForm: FunctionComponent<InnerProfileFormProps> = ({user, loading}) => {
     const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
 
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | undefined>(undefined);
     const [success, setSuccess] = useState<boolean>(false);
-
-    const user : User | undefined = useSelector(selectUserById(userId), shallowEqual);
-
-    if (user === undefined) {
-        return <></>
-    }
 
     const schema = Yup.object().shape({
         email: Yup.string()
@@ -72,7 +67,7 @@ const InnerProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
             {({values, isValid, errors, touched, handleSubmit, handleChange, handleBlur, handleReset, dirty}) =>
                 <Form onSubmit={handleSubmit}
                       error={!isValid || error !== undefined}
-                      loading={submitting}
+                      loading={submitting || loading}
                       data-test="ProfileForm">
                     <Form.Field required data-test="email">
                         <label>
@@ -119,16 +114,31 @@ const InnerProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
     );
 };
 
+/** The props that the ProfileForm area needs */
+type ProfileFormProps = {
+    userId: string,
+};
+
 /**
  * Wrapper around the Profile Form to request the user details are loaded first
  * @constructor
  */
 export const ProfileForm: FunctionComponent<ProfileFormProps> = ({userId}) => {
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+
+    const user : User | undefined = useSelector(selectUserById(userId), shallowEqual);
 
     useEffect(() => {
-        dispatch(loadUser(userId, true));
-    });
+        setLoading(true);
+        dispatch(loadUser(userId, true, () => {
+            setLoading(false);
+        }));
+    }, [userId, dispatch]);
 
-    return <InnerProfileForm userId={userId} />;
+    if (user === undefined) {
+        return <></>;
+    }
+
+    return <InnerProfileForm user={user} loading={loading} />;
 };

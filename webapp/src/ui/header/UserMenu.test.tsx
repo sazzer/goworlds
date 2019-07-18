@@ -37,7 +37,7 @@ it('Renders correctly when a user ID is available but not yet loaded', () => {
 
     expect(element.baseElement).toMatchSnapshot();
     expect(store.getActions()).toHaveLength(1);
-    expect(store.getActions()).toContainEqual(
+    expect(store.getActions()[0]).toMatchObject(
         {
             'type': 'Users/loadUser',
             'payload': {
