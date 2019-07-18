@@ -18,3 +18,10 @@ When('I update the User Profile form to:', async (dataTable: TableDefinition) =>
 
     await userProfileForm.submitForm();
 });
+
+Then('The User Profile Form has errors:', async (dataTable: TableDefinition) => {
+    const userProfilePageModel = await getPageModel(userProfilePage);
+    let userProfileForm = await userProfilePageModel.getUserProfileForm();
+
+    await userProfileForm.assertFormErrors(dataTable.rowsHash());
+});
