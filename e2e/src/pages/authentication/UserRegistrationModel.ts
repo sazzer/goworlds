@@ -27,4 +27,15 @@ export class UserRegistrationModel extends FormModel {
 
         return await errorField.getText();
     }
+
+    /**
+     * Get the mappings from Cucumber fields to HTML Fields
+     */
+    protected getFieldMappings() : Map<string, string> {
+        const fieldMappings = new Map<string, string>();
+        fieldMappings.set('Name', 'name');
+        fieldMappings.set('Password', 'password');
+        fieldMappings.set('Re-enter Password', 'password2');
+        return fieldMappings;
+    }
 }

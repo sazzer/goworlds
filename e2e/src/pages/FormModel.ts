@@ -1,5 +1,7 @@
 import {BasePage} from "./BasePage";
 import {By, WebElement} from "selenium-webdriver";
+import * as chai from "chai";
+import {waitUntilTrue} from "./selenium/waitUtils";
 
 /**
  * Page Model that represents a form
@@ -65,5 +67,58 @@ export class FormModel extends BasePage {
         const submit = await this.webElement.findElement(By.css('button.primary'));
 
         await submit.click();
+    }
+
+    /**
+     * Get the mappings from Cucumber fields to HTML Fields
+     */
+    protected getFieldMappings() : Map<string, string> {
+        return new Map<string, string>();
+    }
+
+    private async processForm(data: { [key: string]: string }, processor: (mappedField: string, value: string) => Promise<void>) {
+        chai.expect(await this.isVisible()).eq(true);
+        const fieldMappings = this.getFieldMappings();
+
+        for (const field of Object.keys(data)) {
+            const fieldValue = data[field];
+
+            const mappedField = fieldMappings.get(field);
+
+            if (mappedField !== undefined) {
+                await processor(mappedField, fieldValue);
+            }
+        }
+    }
+
+    /**
+     * Populate the form with the provided data
+     */
+    async populateForm(data: { [key: string]: string }) {
+        await this.processForm(data, async (mappedField, fieldValue) => {
+            await this.setFieldValue(mappedField, fieldValue);
+        });
+    }
+
+    /**
+     * Assert the form has the provided data
+     */
+    async assertFormData(data: { [key: string]: string }) {
+        await this.processForm(data, async (mappedField, fieldValue) => {
+            let value = await this.getFieldValue(mappedField);
+            chai.expect(value).eq(fieldValue);
+        });
+    }
+
+    /**
+     * Assert the form has the provided errors
+     */
+    async assertFormErrors(data: { [key: string]: string }) {
+        await this.processForm(data, async (mappedField, errorMessage) => {
+            if (errorMessage !== undefined && errorMessage.trim() !== '') {
+                chai.expect(await waitUntilTrue(() => this.isFieldError(mappedField)), `Field is in error: ${mappedField}`).eq(true);
+                chai.expect(await this.getFieldErrorText(mappedField)).eq(errorMessage);
+            }
+        });
     }
 }

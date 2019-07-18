@@ -27,4 +27,13 @@ export class LoginModel extends FormModel {
 
         return await errorField.getText();
     }
+
+    /**
+     * Get the mappings from Cucumber fields to HTML Fields
+     */
+    protected getFieldMappings() : Map<string, string> {
+        const fieldMappings = new Map<string, string>();
+        fieldMappings.set('Password', 'password');
+        return fieldMappings;
+    }
 }
