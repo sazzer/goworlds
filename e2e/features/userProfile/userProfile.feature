@@ -36,24 +36,23 @@ Feature: User Profile: Profile Form
       | Email Address | new@example.com |
       | Name          | New Name        |
 
-# Needs a fix to indicate when the user has stopped loading
-#  @wip
-#  Scenario Outline: Appropriate errors are displayed when the form is not filled out correctly: <Comment>
-#    Given I open the User Profile page
-#    When I update the User Profile form to:
-#      | Email Address | <Email> |
-#      | Name          | <Name>  |
-#    Then The User Profile Form has errors:
-#      | Email Address | <Email Error> |
-#      | Name          | <Name Error>  |
-#    And I am logged in as "New Name"
+  Scenario Outline: Appropriate errors are displayed when the form is not filled out correctly: <Comment>
+    Given I open the User Profile page
+    When I update the User Profile form to:
+      | Email Address | <Email> |
+      | Name          | <Name>  |
+    Then The User Profile Form has errors:
+      | Email Address | <Email Error> |
+      | Name          | <Name Error>  |
+    And I am logged in as "Test User"
 #    And I open the User Profile page
 #    And The User Profile Form has details:
 #      | Email Address | graham@grahamcox.co.uk |
 #      | Name          | Test User              |
-#
-#    Examples:
-#      | Name   | Email                  | Name Error               | Email Error                        | Comment                |
-#      |        |                        | Please enter a user name | Please enter an Email Address      | No fields populated    |
-#      |        | graham@grahamcox.co.uk | Please enter a user name |                                    | Name not populated     |
-#      | Graham | invalid                |                          | Please enter a valid Email Address | Password not populated |
+
+    Examples:
+      | Name   | Email                  | Name Error               | Email Error                        | Comment                |
+      |        |                        | Please enter a user name | Please enter an Email Address      | No fields populated    |
+      |        | graham@grahamcox.co.uk | Please enter a user name |                                    | Name not populated     |
+      | Graham |                        |                          | Please enter an Email Address      | Email not populated    |
+      | Graham | invalid                |                          | Please enter a valid Email Address | Email not valid        |

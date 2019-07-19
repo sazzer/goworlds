@@ -2,6 +2,14 @@ import {error} from "selenium-webdriver";
 import NoSuchElementError = error.NoSuchElementError;
 
 /**
+ * Wait a period of time
+ * @param wait the number of millis to wait
+ */
+export function waitTime(wait: number = 1000) {
+    return new Promise((resolve) => setTimeout(resolve, wait));
+}
+
+/**
  * Call the given function on repeat until it doesn't throw a NoSuchElementError
  * @param fn the function to call
  * @param count the number of times to repeat
@@ -15,7 +23,7 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
         } catch (e) {
             if (e instanceof NoSuchElementError && i < count) {
                 // Wait and retry
-                await new Promise((resolve) => setTimeout(resolve, wait));
+                await waitTime(wait);
             } else {
                 throw e;
             }
@@ -48,7 +56,7 @@ export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number
             }
         }
 
-        await new Promise((resolve) => setTimeout(resolve, wait));
+        await waitTime(wait);
     }
 
     return false;

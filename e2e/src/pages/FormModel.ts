@@ -2,6 +2,7 @@ import {BasePage} from "./BasePage";
 import {By, WebElement} from "selenium-webdriver";
 import * as chai from "chai";
 import {waitUntilTrue} from "./selenium/waitUtils";
+import {waitUntilClassIsAbsent} from "./selenium/cssUtils";
 
 /**
  * Page Model that represents a form
@@ -16,15 +17,33 @@ export class FormModel extends BasePage {
     }
 
     /**
+     * Wait until the form has finished loading
+     */
+    protected async isLoaded() {
+        await waitUntilClassIsAbsent(this.webElement, 'loading');
+    }
+
+    /**
      * Set the value of a field
      * @param field the name of the field
      * @param value the new value for the field
      */
     async setFieldValue(field: string, value: string) {
+        await this.isLoaded();
         const input = await this.webElement.findElement(By.css(`[data-test="${field}"] input`));
 
+        await input.click();
+
         await input.clear();
+        // Clearing and then *not* populating a field - e.g. when setting to blank - doesn't trigger the onChange
+        // So we type and backspace a dummy character just to that something has happened
+        await input.sendKeys(' ');
+        await input.sendKeys('\b');
+
         await input.sendKeys(value);
+
+        const label = await this.webElement.findElement(By.css(`[data-test="${field}"] label`));
+        await label.click();
     }
     
     /**
@@ -32,6 +51,7 @@ export class FormModel extends BasePage {
      * @param field the name of the field
      */
     async getFieldValue(field: string) : Promise<string> {
+        await this.isLoaded();
         const input = await this.webElement.findElement(By.css(`[data-test="${field}"] input`));
 
         return await input.getAttribute('value');
@@ -42,6 +62,7 @@ export class FormModel extends BasePage {
      * @param field the name of the field
      */
     async isFieldError(field: string) : Promise<boolean> {
+        await this.isLoaded();
         const fieldElement = await this.webElement.findElement(By.css(`[data-test="${field}"] .field`));
 
         const className = await fieldElement.getAttribute('class');
@@ -55,6 +76,7 @@ export class FormModel extends BasePage {
      * @param field the name of the field
      */
     async getFieldErrorText(field: string) : Promise<string> {
+        await this.isLoaded();
         const fieldError = await this.webElement.findElement(By.css(`[data-test="${field}"] div.error.message`));
 
         return await fieldError.getText();
@@ -64,6 +86,7 @@ export class FormModel extends BasePage {
      * Submit the form
      */
     async submitForm() {
+        await this.isLoaded();
         const submit = await this.webElement.findElement(By.css('button.primary'));
 
         await submit.click();
@@ -78,6 +101,7 @@ export class FormModel extends BasePage {
 
     private async processForm(data: { [key: string]: string }, processor: (mappedField: string, value: string) => Promise<void>) {
         chai.expect(await this.isVisible()).eq(true);
+        await this.isLoaded();
         const fieldMappings = this.getFieldMappings();
 
         for (const field of Object.keys(data)) {
@@ -115,7 +139,7 @@ export class FormModel extends BasePage {
      */
     async assertFormErrors(data: { [key: string]: string }) {
         await this.processForm(data, async (mappedField, errorMessage) => {
-            if (errorMessage !== undefined && errorMessage.trim() !== '') {
+            if (errorMessage.trim() !== '') {
                 chai.expect(await waitUntilTrue(() => this.isFieldError(mappedField)), `Field is in error: ${mappedField}`).eq(true);
                 chai.expect(await this.getFieldErrorText(mappedField)).eq(errorMessage);
             }

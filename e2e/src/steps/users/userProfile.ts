@@ -15,7 +15,6 @@ When('I update the User Profile form to:', async (dataTable: TableDefinition) =>
     let userProfileForm = await userProfilePageModel.getUserProfileForm();
 
     await userProfileForm.populateForm(dataTable.rowsHash());
-
     await userProfileForm.submitForm();
 });
 
