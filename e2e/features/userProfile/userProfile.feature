@@ -90,3 +90,17 @@ Feature: User Profile: Profile Form
       |        | graham@grahamcox.co.uk | Please enter a user name |                                    | Name not populated  |
       | Graham |                        |                          | Please enter an Email Address      | Email not populated |
       | Graham | invalid                |                          | Please enter a valid Email Address | Email not valid     |
+
+    Scenario: An error occurs when the new email address is a duplicate
+      Given a user exists with details:
+        | Email Address | duplicate@example.com |
+      And I open the User Profile page
+      When I update the User Profile form to:
+        | Email Address | duplicate@example.com |
+      Then I get an error updating the user profile of "Email Address is already registered"
+      And I am logged in as "Test User"
+      And I open the Change Password page
+      And I open the User Profile page
+      And The User Profile Form has details:
+        | Email Address | graham@grahamcox.co.uk |
+        | Name          | Test User              |

@@ -1,5 +1,7 @@
 import {FormModel} from "../FormModel";
-import {WebElement} from "selenium-webdriver";
+import {By, WebElement} from "selenium-webdriver";
+import {waitUntilAvailable, waitUntilTrue} from "../selenium/waitUtils";
+import * as chai from "chai";
 
 /**
  * Page Model that represents the User Profile form
@@ -21,5 +23,19 @@ export class ProfileFormModel extends FormModel {
         fieldMappings.set('Name', 'name');
         fieldMappings.set('Email Address', 'email');
         return fieldMappings;
+    }
+
+
+    /**
+     * Get the text from a global user profile error
+     */
+    async getError() : Promise<string> {
+        const errorField = await waitUntilAvailable(async () =>
+            await this.webElement.findElement(By.css('[data-test="ProfileFormErrors"]')));
+
+        const visible = await waitUntilTrue(async () => await errorField.isDisplayed());
+        chai.expect(visible, 'Error Message Visibility').eq(true);
+
+        return await errorField.getText();
     }
 }
