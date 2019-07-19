@@ -6,6 +6,8 @@ const options = {
     output: 'output/report/cucumber_report.html',
     reportSuiteAsScenarios: true,
     launchReport: false,
+    storeScreenshots: true,
+    noInlineScreenshots: true,
 };
 
 reporter.generate(options);
