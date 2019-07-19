@@ -42,14 +42,13 @@ Feature: User Profile: Profile Form
       | Dörte@Sörensen.example.com | Sörensen    | German, Unicode   |
       | коля@пример.рф             | пример.рф   | Russian, Unicode  |
 
-  # Need to support navigating away and back for this to work
-  @ignore
   Scenario Outline: Changes to the User Profile form are persisted correctly: <Comment>
     Given I open the User Profile page
     And I update the User Profile form to:
       | Email Address | <Email> |
       | Name          | <Name>  |
-    When I open the User Profile page
+    When I open the Change Password page
+    And I open the User Profile page
     Then The User Profile Form has details:
       | Email Address | <Email> |
       | Name          | <Name>  |
@@ -79,11 +78,11 @@ Feature: User Profile: Profile Form
       | Email Address | <Email Error> |
       | Name          | <Name Error>  |
     And I am logged in as "Test User"
-# Need to support navigating away and back for this to work
-#    And I open the User Profile page
-#    And The User Profile Form has details:
-#      | Email Address | graham@grahamcox.co.uk |
-#      | Name          | Test User              |
+    And I open the Change Password page
+    And I open the User Profile page
+    And The User Profile Form has details:
+      | Email Address | graham@grahamcox.co.uk |
+      | Name          | Test User              |
 
     Examples:
       | Name   | Email                  | Name Error               | Email Error                        | Comment             |

@@ -1,5 +1,5 @@
 import {BasePage} from "./BasePage";
-import {By, WebElement} from "selenium-webdriver";
+import {By, WebElement, Key} from "selenium-webdriver";
 import * as chai from "chai";
 import {waitUntilTrue} from "./selenium/waitUtils";
 import {waitUntilClassIsAbsent} from "./selenium/cssUtils";
@@ -34,11 +34,17 @@ export class FormModel extends BasePage {
 
         await input.click();
 
-        await input.clear();
-        // Clearing and then *not* populating a field - e.g. when setting to blank - doesn't trigger the onChange
-        // So we type and backspace a dummy character just to that something has happened
-        await input.sendKeys(' ');
-        await input.sendKeys('\b');
+        // input.clear() should be used here. It doesn't work. So instead we do it manually :(
+        while (true) {
+            const currentValue = await input.getAttribute('value');
+            if (currentValue === '') {
+                break;
+            }
+            await input.sendKeys(Key.END);
+            for (let i = 0; i < currentValue.length; ++i) {
+                await input.sendKeys(Key.BACK_SPACE);
+            }
+        }
 
         await input.sendKeys(value);
 
