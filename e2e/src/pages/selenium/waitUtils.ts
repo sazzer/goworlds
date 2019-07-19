@@ -35,6 +35,31 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
 
 
 /**
+ * Call the given function on repeat until it does throw a NoSuchElementError
+ * @param fn the function to call
+ * @param count the number of times to repeat
+ * @param wait the wait between repeats
+ */
+export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: number = 10, wait: number = 1000): Promise<any> {
+    for (let i = 0; i < count; ++i) {
+        try {
+            await fn();
+            await waitTime(wait);
+        } catch (e) {
+            if (e instanceof NoSuchElementError && i < count) {
+                // Wait and retry
+                return;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    throw new Error('Element still present after timeout');
+}
+
+
+/**
  * Call the given function on repeat until it returns true
  * @param fn the function to call
  * @param count the number of times to repeat

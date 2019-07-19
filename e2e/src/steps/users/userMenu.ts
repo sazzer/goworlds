@@ -20,3 +20,15 @@ When('I open the User Profile page', async () => {
     const userProfilePageModel = await getPageModel(userProfilePage);
     await userProfilePageModel.getUserProfileForm();
 });
+
+When('I log out', async() => {
+    const basePageModel = await getPageModel(basePage);
+    const userMenu = await basePageModel.getUserMenu();
+
+    await userMenu.logout();
+});
+
+Then('I am not logged in', async () => {
+    const basePageModel = await getPageModel(basePage);
+    chai.expect(await basePageModel.userMenuNotPresent()).eq(true);
+});

@@ -1,5 +1,5 @@
 import {By, error, WebElement} from "selenium-webdriver";
-import {waitUntilAvailable} from "./selenium/waitUtils";
+import {waitUntilAvailable, waitUntilUnavailable} from "./selenium/waitUtils";
 import {HomePage} from "./HomePage";
 import {UserMenuModel} from "./header/UserMenuModel";
 
@@ -37,6 +37,17 @@ export class BasePage {
 
             return new UserMenuModel(userMenuElement);
         });
+    }
+
+    /**
+     * Return whether the User Menu is present in the UI
+     */
+    async userMenuNotPresent() : Promise<boolean> {
+        await waitUntilUnavailable(async () => {
+            const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown'));
+            await userMenuElement.isDisplayed();
+        });
+        return true;
     }
 }
 

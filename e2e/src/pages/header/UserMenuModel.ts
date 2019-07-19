@@ -33,4 +33,14 @@ export class UserMenuModel {
         const profileElement = await this.webElement.findElement(By.css('a[href="/profile"]'));
         await profileElement.click();
     }
+
+    /**
+     * Log out
+     */
+    async logout() {
+        await this.webElement.click();
+
+        const logOutElement = await this.webElement.findElement(By.css('i.log.out.icon'));
+        await logOutElement.click();
+    }
 }
