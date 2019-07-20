@@ -1,5 +1,9 @@
 import {Given, TableDefinition} from "cucumber";
 import axios from 'axios';
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:user:seed');
 
 const FIELD_MAPPING = new Map<string, string>();
 FIELD_MAPPING.set('Email Address', 'email');
@@ -24,6 +28,7 @@ Given('a user exists with details:', async (dataTable: TableDefinition) => {
             user[mappedField] = fieldValue;
         }
     }
+    LOG('Seeding user details: %o', user);
 
     const response = await axios('/users', {
         method: 'POST',

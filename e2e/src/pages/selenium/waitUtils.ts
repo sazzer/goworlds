@@ -1,11 +1,16 @@
 import {error} from "selenium-webdriver";
 import NoSuchElementError = error.NoSuchElementError;
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:waitUtils');
 
 /**
  * Wait a period of time
  * @param wait the number of millis to wait
  */
 export function waitTime(wait: number = 100) {
+    LOG('Pausing %d millis', wait);
     return new Promise((resolve) => setTimeout(resolve, wait));
 }
 
@@ -18,6 +23,7 @@ export function waitTime(wait: number = 100) {
  */
 export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number = 10, wait: number = 100): Promise<T> {
     for (let i = 0; i < count; ++i) {
+        LOG('Performing wait check %d of %d', i, count);
         try {
             return await fn();
         } catch (e) {
@@ -25,6 +31,7 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
                 // Wait and retry
                 await waitTime(wait);
             } else {
+                LOG('Unexpected error: %o', e);
                 throw e;
             }
         }
@@ -42,6 +49,7 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
  */
 export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: number = 10, wait: number = 100): Promise<any> {
     for (let i = 0; i < count; ++i) {
+        LOG('Performing wait check %d of %d', i, count);
         try {
             await fn();
             await waitTime(wait);
@@ -50,6 +58,7 @@ export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: numbe
                 // Wait and retry
                 return;
             } else {
+                LOG('Unexpected error: %o', e);
                 throw e;
             }
         }
@@ -68,6 +77,7 @@ export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: numbe
  */
 export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number = 10, wait: number = 1000): Promise<boolean> {
     for (let i = 0; i < count; ++i) {
+        LOG('Performing wait check %d of %d', i, count);
         try {
             const result = await fn();
             if (result) {
@@ -77,6 +87,7 @@ export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number
             if (e instanceof NoSuchElementError && i < count) {
                 // Wait and retry
             } else {
+                LOG('Unexpected error: %o', e);
                 throw e;
             }
         }

@@ -1,7 +1,10 @@
-import {By, error, WebElement} from "selenium-webdriver";
+import {By, WebElement} from "selenium-webdriver";
 import {waitUntilAvailable, waitUntilUnavailable} from "./selenium/waitUtils";
-import {HomePage} from "./HomePage";
 import {UserMenuModel} from "./header/UserMenuModel";
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:BasePage');
 
 /**
  * Base class for page models
@@ -31,6 +34,7 @@ export class BasePage {
      * Get the User Menu, once it's available
      */
     async getUserMenu() : Promise<UserMenuModel> {
+        LOG('Waiting for the User Menu to be displayed');
         return await waitUntilAvailable(async () => {
             const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown'));
             await userMenuElement.isDisplayed();
@@ -43,6 +47,7 @@ export class BasePage {
      * Return whether the User Menu is present in the UI
      */
     async userMenuNotPresent() : Promise<boolean> {
+        LOG('Waiting for the User Menu to be removed');
         await waitUntilUnavailable(async () => {
             const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown'));
             await userMenuElement.isDisplayed();

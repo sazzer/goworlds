@@ -1,12 +1,16 @@
 import {AfterAll, Before, BeforeAll} from "cucumber";
 import {Pool} from "pg";
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:database');
 
 let pool: Pool;
 
 BeforeAll(async () => {
     const connectionString = process.env.DATABASE_URI as string;
 
-    console.log(`Connecting to database: ${connectionString}`);
+    LOG('Connecting to database: %s', connectionString);
 
     pool = new Pool({
         connectionString: connectionString
@@ -22,7 +26,7 @@ Before(async () => {
         .filter(table => table !== 'users')
         .filter(table => table !== 'oauth2_clients');
 
-    console.log('Truncating tables: ' + tableNames);
+    LOG('Truncating tables: %s', tableNames);
     await pool.query('TRUNCATE ' + tableNames.join(', '));
 
     // Now delete the users that do *not* have OAuth2 Credentials
@@ -30,6 +34,6 @@ Before(async () => {
 });
 
 AfterAll(async () => {
-    console.log('Disconnecting from database');
+    LOG('Disconnecting from database');
     await pool.end();
 });

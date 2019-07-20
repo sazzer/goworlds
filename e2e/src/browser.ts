@@ -1,6 +1,10 @@
 import {After, AfterAll, BeforeAll} from 'cucumber';
 import {Builder, By, logging, ThenableWebDriver, WebElement} from "selenium-webdriver";
 import {BasePage} from "./pages/BasePage";
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:browser');
 
 /** The actual web driver */
 let driver: ThenableWebDriver;
@@ -8,14 +12,14 @@ let driver: ThenableWebDriver;
 BeforeAll(() => {
     const browser = process.env.SELENIUM_BROWSER as string;
 
-    console.log('Loading browser: ' + browser);
+    LOG('Loading browser: %s', browser);
     driver = new Builder()
         .forBrowser(browser)
         .build();
 });
 
 AfterAll(async () => {
-    console.log('Killing browser');
+    LOG('Killing browser');
     await driver.quit();
 });
 
