@@ -40,10 +40,9 @@ export class FormModel extends BasePage {
             if (currentValue === '') {
                 break;
             }
+
             await input.sendKeys(Key.END);
-            for (let i = 0; i < currentValue.length; ++i) {
-                await input.sendKeys(Key.BACK_SPACE);
-            }
+            await input.sendKeys(Key.BACK_SPACE.repeat(currentValue.length));
         }
 
         await input.sendKeys(value);
