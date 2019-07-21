@@ -31,3 +31,11 @@ Then('I get an error updating the user profile of {string}', async (error: strin
 
     chai.expect(await userProfileForm.getError()).eq(error);
 });
+
+Then('The User Profile is updated successfully', async () => {
+    const userProfilePageModel = await getPageModel(userProfilePage);
+    let userProfileForm = await userProfilePageModel.getUserProfileForm();
+
+    chai.expect(await userProfileForm.hasSuccessMessage()).eq(true);
+
+});

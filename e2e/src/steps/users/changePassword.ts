@@ -1,4 +1,4 @@
-import {Then, When} from "cucumber";
+import {TableDefinition, Then, When} from "cucumber";
 import * as chai from 'chai';
 import {getPageModel} from "../../browser";
 import {basePage} from "../../pages/BasePage";
@@ -12,4 +12,26 @@ When('I open the Change Password page', async () => {
 
     const userProfilePageModel = await getPageModel(userProfilePage);
     await userProfilePageModel.getChangePasswordForm();
+});
+
+When('I change the password to:', async (dataTable: TableDefinition) => {
+    const userProfilePageModel = await getPageModel(userProfilePage);
+    let changePasswordForm = await userProfilePageModel.getChangePasswordForm();
+
+    await changePasswordForm.populateForm(dataTable.rowsHash());
+    await changePasswordForm.submitForm();
+});
+
+Then('The password is updated successfully', async () => {
+    const userProfilePageModel = await getPageModel(userProfilePage);
+    let changePasswordForm = await userProfilePageModel.getChangePasswordForm();
+
+    chai.expect(await changePasswordForm.hasSuccessMessage()).eq(true);
+});
+
+Then('The Change Password Form has errors:', async (dataTable: TableDefinition) => {
+    const userProfilePageModel = await getPageModel(userProfilePage);
+    let changePasswordForm = await userProfilePageModel.getChangePasswordForm();
+
+    await changePasswordForm.assertFormErrors(dataTable.rowsHash());
 });

@@ -21,7 +21,8 @@ Feature: User Profile: Profile Form
     When I update the User Profile form to:
       | Email Address | <Email> |
       | Name          | <Name>  |
-    Then The User Profile Form has details:
+    Then The User Profile is updated successfully
+    And The User Profile Form has details:
       | Email Address | <Email> |
       | Name          | <Name>  |
     And I am logged in as "<Name>"
