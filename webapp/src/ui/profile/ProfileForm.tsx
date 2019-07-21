@@ -107,7 +107,7 @@ const InnerProfileForm: FunctionComponent<InnerProfileFormProps> = ({user, loadi
                     <ErrorMessage testName="ProfileFormErrors" errors={[
                         error && t('profile.form.submit.errors.' + error)
                     ]}/>
-                    { success && <Message positive>User Profile Updated</Message> }
+                    { success && <Message positive>{t('profile.form.submit.success')}</Message> }
                 </Form>
             }
         </Formik>

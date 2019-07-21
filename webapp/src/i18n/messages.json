@@ -28,7 +28,7 @@
     },
     "password2": {
       "label": "Re-enter Password",
-      "placeholder": "Enter Password",
+      "placeholder": "Re-enter Password",
       "errors": {
         "required": "Please re-enter the password",
         "match": "Passwords do not match"
@@ -79,6 +79,7 @@
       "submit": {
         "save": "Save Changes",
         "reset": "Reset Changes",
+        "success": "User Profile Updated",
         "errors": {
           "unexpected_error": "An unexpected error occurred",
           "tag:goworlds,2019:users/problems/duplicate-email-address": "Email Address is already registered"
@@ -95,7 +96,7 @@
       },
       "password2": {
         "label": "Re-enter New Password",
-        "placeholder": "Enter Password",
+        "placeholder": "Re-enter Password",
         "errors": {
           "required": "Please re-enter the password",
           "match": "Passwords do not match"
@@ -103,6 +104,7 @@
       },
       "submit": {
         "save": "Change Password",
+        "success": "Password Changed",
         "errors": {
         }
       }
