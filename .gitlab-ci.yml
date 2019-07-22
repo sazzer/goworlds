@@ -155,6 +155,10 @@ deploy-webapp:
   stage: deploy
   image: node:alpine
 
+  only:
+    refs:
+      - master
+
   variables:
     API_URI: https://goworlds-cd.herokuapp.com
     API_CLIENTID: 46F02F12-C566-4A23-BE53-801D3313C3A8
@@ -173,6 +177,10 @@ deploy-service:
   services:
     - docker:dind
   
+  only:
+    refs:
+      - master
+
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
