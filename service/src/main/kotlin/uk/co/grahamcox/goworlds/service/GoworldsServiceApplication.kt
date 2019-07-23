@@ -11,6 +11,7 @@ import uk.co.grahamcox.goworlds.service.http.problems.StandardProblemControllerA
 import uk.co.grahamcox.goworlds.service.oauth2.spring.OAuth2Config
 import uk.co.grahamcox.goworlds.service.spring.WebMvcConfig
 import uk.co.grahamcox.goworlds.service.users.spring.UsersConfig
+import uk.co.grahamcox.goworlds.service.worlds.spring.WorldsConfig
 import java.time.Clock
 
 /**
@@ -21,6 +22,7 @@ import java.time.Clock
 @Import(
 		UsersConfig::class,
 		OAuth2Config::class,
+		WorldsConfig::class,
 		WebMvcConfig::class
 )
 class GoworldsServiceApplication(context: GenericApplicationContext) {
