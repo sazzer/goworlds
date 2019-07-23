@@ -6,5 +6,6 @@ CREATE TABLE worlds
     updated        TIMESTAMP NOT NULL,
     name           TEXT      NOT NULL,
     owner_id       UUID      NOT NULL REFERENCES users (user_id),
-    description    TEXT      NOT NULL
+    description    TEXT      NOT NULL,
+    slug           TEXT      NOT NULL UNIQUE
 );
