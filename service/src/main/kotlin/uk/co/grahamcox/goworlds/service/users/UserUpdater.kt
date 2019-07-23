@@ -12,5 +12,5 @@ interface UserUpdater {
      * @param modifier The means to mutate the user
      * @return the newly updated user
      */
-    fun updateUser(userId: UserId, modifier: (Model<UserId, UserData>) -> UserData) : Model<UserId, UserData>
+    fun update(userId: UserId, modifier: (Model<UserId, UserData>) -> UserData) : Model<UserId, UserData>
 }

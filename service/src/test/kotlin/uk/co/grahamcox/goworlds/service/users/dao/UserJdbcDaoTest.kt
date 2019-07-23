@@ -31,7 +31,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun getUnknownUserById() {
         val userId = UserId(UUID.randomUUID())
         val exception = Assertions.assertThrows(UnknownUserException::class.java) {
-            userJdbcDao.getUserById(userId)
+            userJdbcDao.getById(userId)
         }
 
         Assertions.assertEquals(userId, exception.id)
@@ -42,7 +42,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         val seededUser = seed(UserSeed())
 
         val userId = UserId(seededUser.id)
-        val user = userJdbcDao.getUserById(userId)
+        val user = userJdbcDao.getById(userId)
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(userId, user.identity.id) },
@@ -60,7 +60,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun getUnknownUserByEmail() {
         val email = "unknown@example.com"
         val exception = Assertions.assertThrows(UnknownUserException::class.java) {
-            userJdbcDao.getUserByEmail(email)
+            userJdbcDao.getByEmail(email)
         }
 
         Assertions.assertEquals(email, exception.id)
@@ -70,7 +70,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun getKnownUserByEmail() {
         val seededUser = seed(UserSeed())
 
-        val user = userJdbcDao.getUserByEmail(seededUser.email)
+        val user = userJdbcDao.getByEmail(seededUser.email)
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(UserId(seededUser.id), user.identity.id) },
@@ -108,7 +108,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 )
         ).map { test ->
             DynamicTest.dynamicTest(test.name) {
-                val results = userJdbcDao.searchUsers(test.filters, test.sorts, test.offset, test.count)
+                val results = userJdbcDao.search(test.filters, test.sorts, test.offset, test.count)
 
                 Assertions.assertAll(
                         Executable { Assertions.assertEquals(0, results.entries.size) },
@@ -232,7 +232,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 )
         ).map { test ->
             DynamicTest.dynamicTest(test.name) {
-                val results = userJdbcDao.searchUsers(test.filters, test.sorts, test.offset, test.count)
+                val results = userJdbcDao.search(test.filters, test.sorts, test.offset, test.count)
 
                 Assertions.assertAll(
                         Executable { Assertions.assertEquals(test.results.size, results.entries.size, "Number of results") },
@@ -255,7 +255,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun createNewUser() {
         val hashedPassword = HashedPassword.hash("secret")
 
-        val user = userJdbcDao.createUser(UserData(
+        val user = userJdbcDao.create(UserData(
                 name = "Graham",
                 email = "graham@grahamcox.co.uk",
                 password = hashedPassword
@@ -267,7 +267,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 Executable { Assertions.assertEquals(hashedPassword, user.data.password) }
         )
 
-        val loaded = userJdbcDao.getUserById(user.identity.id)
+        val loaded = userJdbcDao.getById(user.identity.id)
 
         Assertions.assertEquals(loaded, user)
     }
@@ -279,7 +279,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         ))
 
         val e = Assertions.assertThrows(DuplicateEmailException::class.java) {
-            userJdbcDao.createUser(UserData(
+            userJdbcDao.create(UserData(
                     name = "Graham",
                     email = "graham@grahamcox.co.uk",
                     password = HashedPassword.hash("secret")
@@ -295,7 +295,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
                 password = "password"
         ))
 
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id)) { user ->
+        val updatedUser = userJdbcDao.update(UserId(user.id)) { user ->
             user.data.copy(
                     name = "new name",
                     email = "new email"
@@ -319,14 +319,14 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
     fun updateUserReRetrieve() {
         val user = seed(UserSeed())
 
-        val updatedUser = userJdbcDao.updateUser(UserId(user.id)) { user ->
+        val updatedUser = userJdbcDao.update(UserId(user.id)) { user ->
             user.data.copy(
                     name = "new name",
                     email = "new email"
             )
         }
 
-        val retrievedUser = userJdbcDao.getUserById(UserId(user.id))
+        val retrievedUser = userJdbcDao.getById(UserId(user.id))
         Assertions.assertEquals(updatedUser, retrievedUser)
     }
 
@@ -335,7 +335,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         val userId = UserId(UUID.randomUUID())
 
         val e = Assertions.assertThrows(UnknownUserException::class.java) {
-            userJdbcDao.updateUser(userId) { user -> user.data }
+            userJdbcDao.update(userId) { user -> user.data }
         }
 
         Assertions.assertEquals(userId, e.id)
@@ -347,7 +347,7 @@ internal class UserJdbcDaoTest : IntegrationTestBase() {
         val user2 = seed(UserSeed(email = "user2@example.com"))
 
         val e = Assertions.assertThrows(DuplicateEmailException::class.java) {
-            userJdbcDao.updateUser(UserId(user1.id)) { user ->
+            userJdbcDao.update(UserId(user1.id)) { user ->
                 user.data.copy(
                         email = user2.email
                 )

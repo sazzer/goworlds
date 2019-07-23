@@ -11,5 +11,5 @@ interface ClientRetriever {
      * @param id The ID of the client
      * @return the client details
      */
-    fun getClientById(id : ClientId) : Model<ClientId, ClientData>
+    fun getById(id : ClientId) : Model<ClientId, ClientData>
 }

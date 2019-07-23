@@ -13,14 +13,14 @@ interface UserRetriever {
      * @param id The ID of the user
      * @return the user details
      */
-    fun getUserById(id : UserId) : Model<UserId, UserData>
+    fun getById(id : UserId) : Model<UserId, UserData>
 
     /**
      * Get the user with the given Email
      * @param email The email of the user
      * @return the user details
      */
-    fun getUserByEmail(email: String) : Model<UserId, UserData>
+    fun getByEmail(email: String) : Model<UserId, UserData>
 
     /**
      * Search for users in the system
@@ -30,8 +30,8 @@ interface UserRetriever {
      * @param count The count of results to return
      * @return the matching users
      */
-    fun searchUsers(filters: UserSearchFilters = UserSearchFilters(),
-                    sorts: List<Sort<UserSort>> = emptyList(),
-                    offset: Long = 0,
-                    count: Long = 10) : Page<Model<UserId, UserData>>
+    fun search(filters: UserSearchFilters = UserSearchFilters(),
+               sorts: List<Sort<UserSort>> = emptyList(),
+               offset: Long = 0,
+               count: Long = 10) : Page<Model<UserId, UserData>>
 }

@@ -34,7 +34,7 @@ class ClientCredentialsGrantTypeHandler(
      * @return the user
      */
     override fun getUser(client: Model<ClientId, ClientData>, scopes: Collection<Scope>, params: Map<String, String>): Model<UserId, UserData> {
-        val user = userRetriever.getUserById(client.data.owner)
+        val user = userRetriever.getById(client.data.owner)
 
         ClientCredentialsGrantTypeHandler.LOG.debug("Performing a Client Credentials Grant for user {} and client {} with scopes {}", user, client, scopes)
 

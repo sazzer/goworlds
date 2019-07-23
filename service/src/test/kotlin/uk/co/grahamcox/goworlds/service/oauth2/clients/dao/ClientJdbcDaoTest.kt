@@ -29,7 +29,7 @@ internal class ClientJdbcDaoTest : IntegrationTestBase() {
     fun getUnknownClientById() {
         val clientId = ClientId(UUID.randomUUID())
         val exception = Assertions.assertThrows(UnknownClientException::class.java) {
-            clientJdbcDao.getClientById(clientId)
+            clientJdbcDao.getById(clientId)
         }
 
         Assertions.assertEquals(clientId, exception.id)
@@ -41,7 +41,7 @@ internal class ClientJdbcDaoTest : IntegrationTestBase() {
         val seededClient = seed(ClientSeed(ownerId = seededUser.id, grantTypes = emptySet()))
 
         val clientId = ClientId(seededClient.id)
-        val client = clientJdbcDao.getClientById(clientId)
+        val client = clientJdbcDao.getById(clientId)
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(clientId, client.identity.id) },
@@ -69,7 +69,7 @@ internal class ClientJdbcDaoTest : IntegrationTestBase() {
                 ))
 
         val clientId = ClientId(seededClient.id)
-        val client = clientJdbcDao.getClientById(clientId)
+        val client = clientJdbcDao.getById(clientId)
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(clientId, client.identity.id) },

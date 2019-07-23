@@ -46,7 +46,7 @@ class EmailExtensionGrantTypeHandler(
         }
 
         val user = try {
-            userRetriever.getUserByEmail(email)
+            userRetriever.getByEmail(email)
         } catch (e: UnknownUserException) {
             LOG.info("Authentication attempt from unknown email address: {}", email)
             throw OAuth2Exception(ErrorCode.ACCESS_DENIED, "Unknown email address: $email")

@@ -39,7 +39,7 @@ class UsersController(
         } catch (e: IllegalArgumentException) {
             throw UnknownUserException(null)
         }
-        val user = userService.getUserById(userId)
+        val user = userService.getById(userId)
 
         return buildUserResponse(user)
     }
@@ -65,7 +65,7 @@ class UsersController(
         }
 
         // Actually create the user
-        val user = userService.createUser(UserData(
+        val user = userService.create(UserData(
                 name = input.name,
                 email = input.email,
                 password = HashedPassword.hash(input.password)
@@ -110,7 +110,7 @@ class UsersController(
         }
 
         // Actually update the user
-        val user = userService.updateUser(userId) {currentUser ->
+        val user = userService.update(userId) { currentUser ->
             currentUser.data.copy(
                     name = input.name ?: currentUser.data.name,
                     email = input.email ?: currentUser.data.email,
@@ -150,7 +150,7 @@ class UsersController(
         val parsedSorts = sort?.let { parseSorts<UserSort>(it) } ?: emptyList()
 
         // Actually fetch the users
-        val users = userService.searchUsers(
+        val users = userService.search(
                 filters = UserSearchFilters(name = name, email = email),
                 offset = parsedOffset,
                 count = parsedCount,

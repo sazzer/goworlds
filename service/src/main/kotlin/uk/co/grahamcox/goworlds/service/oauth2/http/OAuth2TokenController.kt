@@ -119,7 +119,7 @@ class OAuth2TokenController(
         val (clientId, clientSecret) = parts
 
         val client = try {
-            clientRetriever.getClientById(ClientId(UUID.fromString(clientId)))
+            clientRetriever.getById(ClientId(UUID.fromString(clientId)))
         } catch (e: UnknownClientException) {
             LOG.warn("Client ID is not a valid Client: {}", clientId)
             throw OAuth2Exception(ErrorCode.INVALID_CLIENT, "Unknown Client ID and Secret")

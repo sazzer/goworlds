@@ -13,5 +13,5 @@ interface UserCreator {
      * @param data The data for the user
      * @return the created user
      */
-    fun createUser(data: UserData) : Model<UserId, UserData>
+    fun create(data: UserData) : Model<UserId, UserData>
 }
