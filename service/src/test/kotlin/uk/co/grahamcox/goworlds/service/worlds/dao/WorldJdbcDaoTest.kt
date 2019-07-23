@@ -32,6 +32,15 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
     }
 
     @Test
+    fun getUnknownWorldBySlug() {
+        val exception = Assertions.assertThrows(UnknownWorldException::class.java) {
+            worldJdbcDao.getBySlug("unknown")
+        }
+
+        Assertions.assertEquals("unknown", exception.id)
+    }
+
+    @Test
     fun getWorldById() {
         val seededUser = seed(UserSeed())
         val seededWorld = seed(WorldSeed(ownerId = seededUser.id))
@@ -41,6 +50,26 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
 
         Assertions.assertAll(
                 Executable { Assertions.assertEquals(worldId, world.identity.id) },
+                Executable { Assertions.assertEquals(seededWorld.version, world.identity.version) },
+                Executable { Assertions.assertEquals(seededWorld.created, world.identity.created) },
+                Executable { Assertions.assertEquals(seededWorld.updated, world.identity.updated) },
+
+                Executable { Assertions.assertEquals(seededWorld.name, world.data.name) },
+                Executable { Assertions.assertEquals(UserId(seededUser.id), world.data.owner) },
+                Executable { Assertions.assertEquals(seededWorld.description, world.data.description) },
+                Executable { Assertions.assertEquals(seededWorld.slug, world.data.slug) }
+        )
+    }
+
+    @Test
+    fun getWorldBySlug() {
+        val seededUser = seed(UserSeed())
+        val seededWorld = seed(WorldSeed(ownerId = seededUser.id, slug = "test_client"))
+
+        val world = worldJdbcDao.getBySlug("test_client")
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(WorldId(seededWorld.id), world.identity.id) },
                 Executable { Assertions.assertEquals(seededWorld.version, world.identity.version) },
                 Executable { Assertions.assertEquals(seededWorld.created, world.identity.created) },
                 Executable { Assertions.assertEquals(seededWorld.updated, world.identity.updated) },

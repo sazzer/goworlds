@@ -53,7 +53,32 @@ open class WorldJdbcDao(
             throw UnknownWorldException(id)
         }
     }
-    
+
+    /**
+     * Get the world with the given URL Slug
+     * @param slug The URL Slug of the World
+     * @return the World details
+     */
+    override fun getBySlug(slug: String): Model<WorldId, WorldData> {
+        LOG.debug("Getting world with Slug: {}", slug)
+        try {
+            val query = select {
+                val (worlds) = from("worlds")
+                where {
+                    eq(worlds["slug"], bind(slug))
+                }
+            }
+
+            val world = jdbcOperations.queryForObject(query, this::parseWorld)
+
+            LOG.debug("Loaded world: {}", world)
+            return world
+        } catch (e: EmptyResultDataAccessException) {
+            LOG.debug("No world found with Slug {}", slug)
+            throw UnknownWorldException(slug)
+        }
+    }
+
     /**
      * Parse the world that is represented by the current row in the given resultset
      * @param rs The result set to parse
