@@ -39,6 +39,18 @@ class WorldsController(private val worldService: WorldService) {
     }
 
     /**
+     * Get the World with the given slug
+     * @param slug The slug of the world
+     * @return the world
+     */
+    @RequestMapping(value = ["/by-slug/{slug}"], method = [RequestMethod.GET])
+    fun getWorldBySlug(@PathVariable("slug") slug: String) : ResponseEntity<WorldModel> {
+        val world = worldService.getBySlug(slug)
+
+        return buildWorldResponse(world)
+    }
+
+    /**
      * Build the World Model response that represents the returned World
      * @param world The world to translate
      * @return the translated World Model
