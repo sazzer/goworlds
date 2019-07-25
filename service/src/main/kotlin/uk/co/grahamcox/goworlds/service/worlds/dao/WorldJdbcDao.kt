@@ -7,14 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 import uk.co.grahamcox.goworlds.service.database.getInstant
 import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.database.queryForObject
-import uk.co.grahamcox.goworlds.service.model.Identity
-import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.database.queryForPage
+import uk.co.grahamcox.goworlds.service.model.*
+import uk.co.grahamcox.goworlds.service.users.UserData
 import uk.co.grahamcox.goworlds.service.users.UserId
-import uk.co.grahamcox.goworlds.service.worlds.UnknownWorldException
-import uk.co.grahamcox.goworlds.service.worlds.WorldData
-import uk.co.grahamcox.goworlds.service.worlds.WorldId
-import uk.co.grahamcox.goworlds.service.worlds.WorldService
-import uk.co.grahamcox.skl.select
+import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
+import uk.co.grahamcox.goworlds.service.users.UserSort
+import uk.co.grahamcox.goworlds.service.worlds.*
+import uk.co.grahamcox.skl.*
 import java.sql.ResultSet
 
 /**
@@ -79,6 +79,64 @@ open class WorldJdbcDao(
         }
     }
 
+    /**
+     * Search for worlds in the system
+     * @param filters Filters to apply when searching
+     * @param sorts Sorts to apply for the returned worlds
+     * @param offset The offset of the results to return
+     * @param count The count of results to return
+     * @return the matching worlds
+     */
+    override fun search(filters: WorldSearchFilters, sorts: List<Sort<WorldSort>>, offset: Long, count: Long): Page<Model<WorldId, WorldData>> {
+        val selectBuilder: SelectBuilder.() -> Unit = {
+            // Tables to select from
+            val (worlds) = from("worlds")
+            selecting(worlds["*"])
+
+            val usersTable = if (filters.owner != null || sorts.any { it.field == WorldSort.OWNER }) {
+                // We're doing something with the owner of the world, so join across
+                val (users) = from("users")
+                where {
+                    eq(worlds["owner_id"], users["user_id"])
+                }
+                users
+            } else {
+                null
+            }
+
+            // Where clause to apply
+            where {
+                filters.apply {
+                    name?.let { eq(upper(worlds["name"]), upper(bind(it))) }
+                    owner?.let { eq(usersTable!!["user_id"], bind(it)) }
+                }
+            }
+
+            // Sorts to apply
+            sorts.map { sort ->
+                val sortField = when(sort.field) {
+                    WorldSort.NAME -> upper(worlds["name"])
+                    WorldSort.CREATED -> worlds["created"]
+                    WorldSort.UPDATED -> worlds["updated"]
+                    WorldSort.OWNER -> upper(usersTable!!["name"])
+
+                }
+                val direction = when(sort.direction) {
+                    SortDirection.ASCENDING -> SortOrder.ASCENDING
+                    SortDirection.DESCENDING -> SortOrder.DESCENDING
+                }
+
+                OrderBy(sortField, direction)
+            }.forEach {
+                orderBy(it)
+            }
+
+            orderBy(worlds["world_id"], SortOrder.ASCENDING)
+        }
+
+        return jdbcOperations.queryForPage(selectBuilder, offset, count, this::parseWorld)
+    }
+    
     /**
      * Parse the world that is represented by the current row in the given resultset
      * @param rs The result set to parse

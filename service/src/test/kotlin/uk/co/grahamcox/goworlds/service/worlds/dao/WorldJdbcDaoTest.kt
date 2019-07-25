@@ -1,14 +1,19 @@
 package uk.co.grahamcox.goworlds.service.worlds.dao
 
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.function.Executable
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
+import uk.co.grahamcox.goworlds.service.model.Sort
+import uk.co.grahamcox.goworlds.service.model.SortDirection
 import uk.co.grahamcox.goworlds.service.users.UserId
+import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
+import uk.co.grahamcox.goworlds.service.users.UserSort
 import uk.co.grahamcox.goworlds.service.users.dao.UserSeed
 import uk.co.grahamcox.goworlds.service.worlds.UnknownWorldException
 import uk.co.grahamcox.goworlds.service.worlds.WorldId
+import uk.co.grahamcox.goworlds.service.worlds.WorldSearchFilters
+import uk.co.grahamcox.goworlds.service.worlds.WorldSort
+import java.time.Instant
 import java.util.*
 
 internal class WorldJdbcDaoTest : IntegrationTestBase() {
@@ -80,4 +85,192 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 Executable { Assertions.assertEquals(seededWorld.slug, world.data.slug) }
         )
     }
+
+    @TestFactory
+    fun searchNoWorlds(): List<DynamicTest> {
+        data class Test(
+                val name: String,
+                val filters: WorldSearchFilters = WorldSearchFilters(),
+                val sorts: List<Sort<WorldSort>> = emptyList(),
+                val offset: Long = 0,
+                val count: Long = 10
+        )
+
+        return listOf(
+                Test("Default values"),
+                Test(
+                        name = "Everything",
+                        filters = WorldSearchFilters(name = "Graham", owner = UUID.randomUUID()),
+                        sorts = listOf(
+                                Sort(WorldSort.NAME, SortDirection.DESCENDING),
+                                Sort(WorldSort.UPDATED, SortDirection.ASCENDING),
+                                Sort(WorldSort.OWNER, SortDirection.ASCENDING)
+                        ),
+                        offset = 10,
+                        count = 10
+                )
+        ).map { test ->
+            DynamicTest.dynamicTest(test.name) {
+                val results = worldJdbcDao.search(test.filters, test.sorts, test.offset, test.count)
+
+                Assertions.assertAll(
+                        Executable { Assertions.assertEquals(0, results.entries.size) },
+                        Executable { Assertions.assertEquals(0, results.total) },
+                        Executable { Assertions.assertEquals(test.offset, results.offset) }
+                )
+            }
+        }
+    }
+
+    @TestFactory
+    fun searchWorlds(): List<DynamicTest> {
+        val user1 = seed(UserSeed(
+                name = "ABC",
+                email = "ABC"
+        ))
+        val user2 = seed(UserSeed(
+                name = "def",
+                email = "def"
+        ))
+
+        // Sort by name - 1, 2, 3
+        // Sort by created - 2, 1, 3
+        // Sort by updated - 3, 1, 2
+        // Sort by id - 1, 3, 2
+        // Sort by owner - 1, 3, 2
+        val world1 = seed(WorldSeed(
+                id = UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                created = Instant.parse("2019-03-01T12:34:56Z"),
+                updated = Instant.parse("2019-03-01T12:34:56Z"),
+                name = "ABC",
+                ownerId = user1.id,
+                slug = "ABC"
+        ))
+        val world2 = seed(WorldSeed(
+                id = UUID.fromString("22222222-2222-2222-2222-222222222222"),
+                created = Instant.parse("2019-02-01T12:34:56Z"),
+                updated = Instant.parse("2019-04-01T12:34:56Z"),
+                name = "def",
+                ownerId = user2.id,
+                slug = "def"
+        ))
+        val world3 = seed(WorldSeed(
+                id = UUID.fromString("11111111-1111-1111-1111-111111111111"),
+                created = Instant.parse("2019-04-01T12:34:56Z"),
+                updated = Instant.parse("2019-02-01T12:34:56Z"),
+                name = "GHI",
+                ownerId = user1.id,
+                slug = "GHI"
+        ))
+
+
+        data class Test(
+                val name: String,
+                val filters: WorldSearchFilters = WorldSearchFilters(),
+                val sorts: List<Sort<WorldSort>> = emptyList(),
+                val offset: Long = 0,
+                val count: Long = 10,
+                val results: List<WorldSeed>,
+                val totalCount: Long = results.size.toLong()
+        )
+
+        return listOf(
+                Test(
+                        name = "Default values",
+                        results = listOf(world1, world3, world2)
+                ),
+
+                Test(
+                        name = "Filter - Name - No Matches",
+                        filters = WorldSearchFilters(name = "Other"),
+                        results = listOf()
+                ),
+                Test(
+                        name = "Filter - Name - Matches",
+                        filters = WorldSearchFilters(name = world2.name),
+                        results = listOf(world2)
+                ),
+
+                Test(
+                        name = "Filter - Owner - No Matches",
+                        filters = WorldSearchFilters(owner = UUID.randomUUID()),
+                        results = listOf()
+                ),
+                Test(
+                        name = "Filter - Owner - Matches",
+                        filters = WorldSearchFilters(owner = user1.id),
+                        results = listOf(world1, world3)
+                ),
+
+                Test(
+                        name = "Sort - Name Ascending",
+                        sorts = listOf(Sort(WorldSort.NAME, SortDirection.ASCENDING)),
+                        results = listOf(world1, world2, world3)
+                ),
+                Test(
+                        name = "Sort - Name Descending",
+                        sorts = listOf(Sort(WorldSort.NAME, SortDirection.DESCENDING)),
+                        results = listOf(world3, world2, world1)
+                ),
+                Test(
+                        name = "Sort - Updated Ascending",
+                        sorts = listOf(Sort(WorldSort.UPDATED, SortDirection.ASCENDING)),
+                        results = listOf(world3, world1, world2)
+                ),
+                Test(
+                        name = "Sort - Created Descending",
+                        sorts = listOf(Sort(WorldSort.CREATED, SortDirection.DESCENDING)),
+                        results = listOf(world3, world1, world2)
+                ),
+                Test(
+                        name = "Sort - Owner Ascending",
+                        sorts = listOf(Sort(WorldSort.OWNER, SortDirection.ASCENDING)),
+                        results = listOf(world1, world3, world2)
+                ),
+
+                Test(
+                        name = "Limit 0",
+                        count = 0,
+                        results = listOf(),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Limit 1",
+                        count = 1,
+                        results = listOf(world1),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Offset off the end",
+                        offset = 10,
+                        results = listOf(),
+                        totalCount = 3
+                ),
+                Test(
+                        name = "Offset overlaps the end",
+                        offset = 2,
+                        results = listOf(world2),
+                        totalCount = 3
+                )
+        ).map { test ->
+            DynamicTest.dynamicTest(test.name) {
+                val results = worldJdbcDao.search(test.filters, test.sorts, test.offset, test.count)
+
+                Assertions.assertAll(
+                        Executable { Assertions.assertEquals(test.results.size, results.entries.size, "Number of results") },
+                        Executable { Assertions.assertEquals(test.totalCount, results.total, "Total Count") },
+                        Executable { Assertions.assertEquals(test.offset, results.offset, "Offset") },
+
+                        Executable {
+                            Assertions.assertEquals(
+                                    test.results.map(WorldSeed::id).map(::WorldId),
+                                    results.entries.map { it.identity.id },
+                                    "Returned IDs"
+                            )
+                        }
+                )
+            }
+        }
+    }
+
 }
