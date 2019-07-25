@@ -333,6 +333,18 @@ internal class SelectTest {
                         },
                         expectedSql = "SELECT * FROM users"
                 ),
+                Test(
+                        name = "With Lambda-based Condition - One populated and one empty",
+                        builder = {
+                            from("users")
+                            where {
+                                eq(Field("name"), Constant("Graham"))
+                            }
+                            where {
+                            }
+                        },
+                        expectedSql = "SELECT * FROM users WHERE (name = 'Graham')"
+                ),
 
                 // Everything together
                 Test(
