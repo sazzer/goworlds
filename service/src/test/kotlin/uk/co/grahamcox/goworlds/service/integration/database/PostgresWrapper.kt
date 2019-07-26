@@ -14,7 +14,7 @@ class PostgresWrapper {
     }
 
     /** The postgres server  */
-    private val postgres = EmbeddedPostgres(Version.V10_6)
+    private val postgres = EmbeddedPostgres(Version.V11_1)
 
     /** The database connection URL */
     lateinit var url: String
