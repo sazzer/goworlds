@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.function.Executable
+import uk.co.grahamcox.skl.postgres.*
 
 internal class SelectTest {
     @TestFactory
@@ -344,6 +345,33 @@ internal class SelectTest {
                             }
                         },
                         expectedSql = "SELECT * FROM users WHERE (name = 'Graham')"
+                ),
+
+                // Free Text Search
+                Test(
+                        name = "Free Text Search",
+                        builder = {
+                            val (data) = from("data")
+                            selecting(data["*"])
+
+                            val tsVector = Concatenate(
+                                    setWeight(data["name"], "A", true),
+                                    setWeight(data["description"], "B", true)
+                            )
+                            val tsQuery = toTsQuery(bind("query string"), TsQueryForm.WEB_SEARCH)
+
+                            where {
+                                this.matches(tsVector, tsQuery)
+                            }
+
+                            orderBy(tsRankCd(tsVector, tsQuery), SortOrder.DESCENDING)
+                        },
+                        expectedSql = "SELECT data.* FROM data " +
+                                "WHERE (setweight(to_tsvector(data.name),'A')||setweight(to_tsvector(data.description),'B') @@ websearch_to_tsquery(:bind0)) " +
+                                "ORDER BY ts_rank_cd(setweight(to_tsvector(data.name),'A')||setweight(to_tsvector(data.description),'B'),websearch_to_tsquery(:bind0)) DESC",
+                        expectedBinds = mapOf(
+                                "bind0" to "query string"
+                        )
                 ),
 
                 // Everything together
