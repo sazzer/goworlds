@@ -21,5 +21,7 @@ class DatabaseConfig {
     @Bean
     fun datasource(postgres: PostgresWrapper) = DataSourceBuilder.create()
             .url(postgres.url)
+            .username("worlds")
+            .password("worlds")
             .build()
 }
