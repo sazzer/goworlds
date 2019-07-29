@@ -27,16 +27,18 @@ fun setWeight(input: Expression, weight: String, wrap: Boolean = false): Express
 enum class TsQueryForm {
     DEFAULT,
     PLAIN,
+    PHRASE,
     WEB_SEARCH
 }
 
 /**
- * Wrap an expression in a call to to_tsquery, plainto_tsquery or websearch_to_tsquery as appropriate
+ * Wrap an expression in a call to to_tsquery, plainto_tsquery, phraseto_tsquery or websearch_to_tsquery as appropriate
  */
 fun toTsQuery(input: Expression, form: TsQueryForm) = Function(
         when(form) {
             TsQueryForm.DEFAULT -> "to_tsquery"
             TsQueryForm.PLAIN -> "plainto_tsquery"
+            TsQueryForm.PHRASE -> "phraseto_tsquery"
             TsQueryForm.WEB_SEARCH -> "websearch_to_tsquery"
         },
         input)

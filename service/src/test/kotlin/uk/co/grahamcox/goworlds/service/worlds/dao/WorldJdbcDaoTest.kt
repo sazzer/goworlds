@@ -144,7 +144,12 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 updated = Instant.parse("2019-03-01T12:34:56Z"),
                 name = "ABC",
                 ownerId = user1.id,
-                slug = "ABC"
+                slug = "ABC",
+                description = "Faerûn /feɪˈruːn/ is a fictional continent, the primary setting of the Dungeons & Dragons " +
+                        "world of Forgotten Realms. It is described in detail in several editions of the Forgotten Realms " +
+                        "Campaign Setting (first published in 1987 by TSR, Inc.) with the most recent being the 5th edition " +
+                        "from Wizards of the Coast, and various locales and aspects are described in more depth in separate " +
+                        "campaign setting books.[3] Around a hundred novels and several computer and video games use the Faerûn setting"
         ))
         val world2 = seed(WorldSeed(
                 id = UUID.fromString("22222222-2222-2222-2222-222222222222"),
@@ -152,7 +157,12 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 updated = Instant.parse("2019-04-01T12:34:56Z"),
                 name = "def",
                 ownerId = user2.id,
-                slug = "def"
+                slug = "def",
+                description = "Eberron is a campaign setting for the Dungeons & Dragons (D&D) role-playing game, set in " +
+                        "a period after a vast destructive war on the continent of Khorvaire. Eberron is designed to " +
+                        "accommodate traditional D&D elements and races within a differently toned setting; Eberron combines " +
+                        "a fantasy tone with pulp and dark adventure elements, and some non-traditional fantasy technologies " +
+                        "such as trains, skyships, and mechanical beings which are all powered by magic."
         ))
         val world3 = seed(WorldSeed(
                 id = UUID.fromString("11111111-1111-1111-1111-111111111111"),
@@ -160,7 +170,14 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 updated = Instant.parse("2019-02-01T12:34:56Z"),
                 name = "GHI",
                 ownerId = user1.id,
-                slug = "GHI"
+                slug = "GHI",
+                description = "Dragonlance is a shared universe created by Laura and Tracy Hickman, and expanded by " +
+                        "Tracy Hickman and Margaret Weis under the direction of TSR, Inc. into a series of fantasy novels. " +
+                        "The Hickmans conceived Dragonlance while driving in their car on the way to TSR for a job interview. " +
+                        "At TSR Tracy Hickman met Margaret Weis, his future writing partner, and they gathered a group " +
+                        "of associates to play the Dungeons & Dragons role-playing game. The adventures during that game " +
+                        "inspired a series of gaming modules, a series of novels, licensed products such as board games, " +
+                        "and lead miniature figures."
         ))
 
 
@@ -203,6 +220,17 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 ),
 
                 Test(
+                        name = "Filter - Keyword - Dungeons & Dragons",
+                        filters = WorldSearchFilters(keyword = "Dungeons & Dragons"),
+                        results = listOf(world1, world3, world2)
+                ),
+                Test(
+                        name = "Filter - Keyword - TSR",
+                        filters = WorldSearchFilters(keyword = "TSR"),
+                        results = listOf(world1, world3)
+                ),
+
+                Test(
                         name = "Sort - Name Ascending",
                         sorts = listOf(Sort(WorldSort.NAME, SortDirection.ASCENDING)),
                         results = listOf(world1, world2, world3)
@@ -226,6 +254,20 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                         name = "Sort - Owner Ascending",
                         sorts = listOf(Sort(WorldSort.OWNER, SortDirection.ASCENDING)),
                         results = listOf(world1, world3, world2)
+                ),
+
+
+                Test(
+                        name = "Sort - Relevance - Dungeons & Dragons",
+                        filters = WorldSearchFilters(keyword = "Dungeons & Dragons"),
+                        sorts = listOf(Sort(WorldSort.RELEVANCE, SortDirection.ASCENDING)),
+                        results = listOf(world1, world3, world2)
+                ),
+                Test(
+                        name = "Sort - Relevance - TSR",
+                        filters = WorldSearchFilters(keyword = "TSR"),
+                        sorts = listOf(Sort(WorldSort.RELEVANCE, SortDirection.DESCENDING)),
+                        results = listOf(world3, world1)
                 ),
 
                 Test(

@@ -14,5 +14,8 @@ enum class WorldSort {
     UPDATED,
 
     /** Sort by the name of the owner */
-    OWNER
+    OWNER,
+
+    /** Sort by the relevance of the keyword filter. Only valid if a keyword filter is provided */
+    RELEVANCE
 }

@@ -15,6 +15,7 @@ import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
 import uk.co.grahamcox.goworlds.service.users.UserSort
 import uk.co.grahamcox.goworlds.service.worlds.*
 import uk.co.grahamcox.skl.*
+import uk.co.grahamcox.skl.postgres.*
 import java.sql.ResultSet
 
 /**
@@ -104,32 +105,45 @@ open class WorldJdbcDao(
                 null
             }
 
+            // Build the Keyword Search details in case we need them
+            val tsVector = Concatenate(
+                    setWeight(worlds["name"], "A", true),
+                    setWeight(worlds["description"], "B", true)
+            )
+            val tsQuery = toTsQuery(bind(filters.keyword), TsQueryForm.WEB_SEARCH)
+
             // Where clause to apply
             where {
                 filters.apply {
                     name?.let { eq(upper(worlds["name"]), upper(bind(it))) }
                     owner?.let { eq(usersTable!!["user_id"], bind(it)) }
+                    keyword?.let { matches(tsVector, tsQuery) }
                 }
             }
 
             // Sorts to apply
-            sorts.map { sort ->
-                val sortField = when(sort.field) {
+            sorts.mapNotNull { sort ->
+                val sortField = when (sort.field) {
                     WorldSort.NAME -> upper(worlds["name"])
                     WorldSort.CREATED -> worlds["created"]
                     WorldSort.UPDATED -> worlds["updated"]
                     WorldSort.OWNER -> upper(usersTable!!["name"])
+                    WorldSort.RELEVANCE -> {
+                        filters.keyword?.let { tsRankCd(tsVector, tsQuery) }
+                    }
 
                 }
-                val direction = when(sort.direction) {
-                    SortDirection.ASCENDING -> SortOrder.ASCENDING
-                    SortDirection.DESCENDING -> SortOrder.DESCENDING
-                }
+                if (sortField != null) {
+                    val direction = when (sort.direction) {
+                        SortDirection.ASCENDING -> SortOrder.ASCENDING
+                        SortDirection.DESCENDING -> SortOrder.DESCENDING
+                    }
 
-                OrderBy(sortField, direction)
-            }.forEach {
-                orderBy(it)
-            }
+                    OrderBy(sortField, direction)
+                } else {
+                    null
+                }
+            }.forEach { orderBy(it) }
 
             orderBy(worlds["world_id"], SortOrder.ASCENDING)
         }

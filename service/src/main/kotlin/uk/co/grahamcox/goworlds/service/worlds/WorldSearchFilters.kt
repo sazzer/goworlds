@@ -7,5 +7,6 @@ import java.util.*
  */
 data class WorldSearchFilters(
         val name: String? = null,
-        val owner: UUID? = null
+        val owner: UUID? = null,
+        val keyword: String? = null
 )
