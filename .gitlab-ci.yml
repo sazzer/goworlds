@@ -18,11 +18,11 @@ build-service:
 
   script:
     - cd service
-    - su -p -c "./mvnw $MAVEN_CLI_OPTS clean install" builder
+    - su -p -c "./gradlew build" builder
 
   artifacts:
     paths:
-      - service/target/goworlds-service.jar
+      - service/build/libs/goworlds-service-0.0.1-SNAPSHOT.jar
 
   cache:
     key: goworlds-service
@@ -67,7 +67,7 @@ build-service-container:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - cd service
-    - docker build -t $IMAGE_TAG:latest --build-arg JAR_FILE=target/goworlds-service.jar .
+    - docker build -t $IMAGE_TAG:latest --build-arg JAR_FILE=build/libs/goworlds-service-0.0.1-SNAPSHOT.jar .
   after_script:
     - docker push $IMAGE_TAG:latest
 
