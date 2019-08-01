@@ -2,6 +2,7 @@ HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 pom.xml.bak
+.gradle/
 
 ### STS ###
 .apt_generated
