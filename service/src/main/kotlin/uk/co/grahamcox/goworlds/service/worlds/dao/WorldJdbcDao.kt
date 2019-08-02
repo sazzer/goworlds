@@ -1,6 +1,8 @@
 package uk.co.grahamcox.goworlds.service.worlds.dao
 
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations
 import org.springframework.transaction.annotation.Transactional
@@ -9,21 +11,21 @@ import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.database.queryForObject
 import uk.co.grahamcox.goworlds.service.database.queryForPage
 import uk.co.grahamcox.goworlds.service.model.*
-import uk.co.grahamcox.goworlds.service.users.UserData
-import uk.co.grahamcox.goworlds.service.users.UserId
-import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
-import uk.co.grahamcox.goworlds.service.users.UserSort
+import uk.co.grahamcox.goworlds.service.users.*
 import uk.co.grahamcox.goworlds.service.worlds.*
 import uk.co.grahamcox.skl.*
 import uk.co.grahamcox.skl.postgres.*
 import java.sql.ResultSet
+import java.time.Clock
+import java.util.*
 
 /**
  * JDBC based DAO for working with Worlds
  */
 @Transactional
 open class WorldJdbcDao(
-        private val jdbcOperations: NamedParameterJdbcOperations
+        private val jdbcOperations: NamedParameterJdbcOperations,
+        private val clock: Clock
 ) : WorldService {
     companion object {
         /** The logger to use */
@@ -150,7 +152,45 @@ open class WorldJdbcDao(
 
         return jdbcOperations.queryForPage(selectBuilder, offset, count, this::parseWorld)
     }
-    
+
+    /**
+     * Create a new record
+     * @param data The data for the record
+     * @return the created data
+     */
+    override fun create(data: WorldData): Model<WorldId, WorldData> {
+        LOG.debug("Creating world with details: {}", data)
+
+        val now = Date.from(clock.instant())
+
+        val query = insert("worlds") {
+            set("world_id", bind(UUID.randomUUID()))
+            set("version", bind(UUID.randomUUID()))
+            set("created", bind(now))
+            set("updated", bind(now))
+
+            set("name", bind(data.name))
+            set("owner_id", bind(data.owner.id))
+            set("description", bind(data.description))
+            set("slug", bind(data.slug))
+
+            returnAll()
+        }
+
+        val world = try {
+            jdbcOperations.queryForObject(query, this::parseWorld)
+        } catch (e: DuplicateKeyException) {
+            LOG.warn("Duplicate Key Exception creating new world {}", data, e)
+            throw DuplicateSlugException(data.slug)
+        } catch (e: DataIntegrityViolationException) {
+            LOG.warn("Data Integrity Violation Exception creating new world {}", data, e)
+            throw UnknownUserException(data.owner)
+        }
+
+        LOG.debug("Created world: {}", world)
+        return world
+    }
+
     /**
      * Parse the world that is represented by the current row in the given resultset
      * @param rs The result set to parse

@@ -5,25 +5,28 @@ import org.junit.jupiter.api.function.Executable
 import uk.co.grahamcox.goworlds.service.integration.IntegrationTestBase
 import uk.co.grahamcox.goworlds.service.model.Sort
 import uk.co.grahamcox.goworlds.service.model.SortDirection
+import uk.co.grahamcox.goworlds.service.users.UnknownUserException
 import uk.co.grahamcox.goworlds.service.users.UserId
-import uk.co.grahamcox.goworlds.service.users.UserSearchFilters
-import uk.co.grahamcox.goworlds.service.users.UserSort
 import uk.co.grahamcox.goworlds.service.users.dao.UserSeed
-import uk.co.grahamcox.goworlds.service.worlds.UnknownWorldException
-import uk.co.grahamcox.goworlds.service.worlds.WorldId
-import uk.co.grahamcox.goworlds.service.worlds.WorldSearchFilters
-import uk.co.grahamcox.goworlds.service.worlds.WorldSort
+import uk.co.grahamcox.goworlds.service.worlds.*
+import java.time.Clock
 import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 internal class WorldJdbcDaoTest : IntegrationTestBase() {
+    companion object {
+        /** The "current" time */
+        private val NOW = Instant.parse("2019-06-06T20:28:00Z")
+    }
+
     /** The test subject */
     private lateinit var worldJdbcDao: WorldJdbcDao
 
     /** Set up the test subject */
     @BeforeEach
     fun setup() {
-        worldJdbcDao = WorldJdbcDao(jdbcTemplate)
+        worldJdbcDao = WorldJdbcDao(jdbcTemplate, Clock.fixed(NOW, ZoneId.of("UTC")))
     }
 
     @Test
@@ -312,6 +315,64 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                 )
             }
         }
+    }
+
+    @Test
+    fun createNewWorld() {
+        val seededUser = seed(UserSeed())
+        val world = worldJdbcDao.create(WorldData(
+                name = "Test World",
+                description = "This is a test world",
+                slug = "test-world",
+                owner = UserId(seededUser.id)
+        ))
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(NOW, world.identity.created) },
+                Executable { Assertions.assertEquals(NOW, world.identity.updated) },
+
+                Executable { Assertions.assertEquals("Test World", world.data.name) },
+                Executable { Assertions.assertEquals("This is a test world", world.data.description) },
+                Executable { Assertions.assertEquals("test-world", world.data.slug) },
+                Executable { Assertions.assertEquals(seededUser.id, world.data.owner.id) }
+        )
+
+        val loaded = worldJdbcDao.getById(world.identity.id)
+
+        Assertions.assertEquals(loaded, world)
+    }
+
+    @Test
+    fun createNewWorldNoOwner() {
+        val owner = UserId(UUID.randomUUID())
+
+        val exception = Assertions.assertThrows(UnknownUserException::class.java) {
+            worldJdbcDao.create(WorldData(
+                    name = "Test World",
+                    description = "This is a test world",
+                    slug = "test-world",
+                    owner = owner
+            ))
+        }
+
+        Assertions.assertEquals(owner, exception.id)
+    }
+
+    @Test
+    fun createNewWorldDuplicateSlug() {
+        val seededUser = seed(UserSeed())
+        seed(WorldSeed(ownerId = seededUser.id, slug = "test-world"))
+
+        val exception = Assertions.assertThrows(DuplicateSlugException::class.java) {
+            worldJdbcDao.create(WorldData(
+                    name = "Test World",
+                    description = "This is a test world",
+                    slug = "test-world",
+                    owner = UserId(seededUser.id)
+            ))
+        }
+
+        Assertions.assertEquals("test-world", exception.slug)
     }
 
 }
