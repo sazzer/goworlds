@@ -11,6 +11,7 @@ build-service:
     - docker:dind
 
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
     MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
     MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
@@ -21,13 +22,11 @@ build-service:
 
   script:
     - cd service
-    - su -p -c "./gradlew build $GRADLE_ARGS" builder
+    - su -p -c "./gradlew build" builder
 
   artifacts:
-    when: always
     paths:
       - service/build/libs/goworlds-service-0.0.1-SNAPSHOT.jar
-      - service/build/reports
 
   cache:
     key: goworlds-service
@@ -61,6 +60,7 @@ build-service-container:
   services:
     - docker:dind
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-service
 
@@ -81,6 +81,7 @@ build-webapp-container:
   services:
     - docker:dind
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-webapp
 
@@ -101,6 +102,7 @@ build-e2e-container:
   services:
     - docker:dind
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
     IMAGE_TAG: $CI_REGISTRY/sazzer/goworlds/goworlds-e2e
 
@@ -121,6 +123,7 @@ run-e2e-tests:
   services:
     - docker:dind
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
 
   dependencies: []
@@ -183,6 +186,7 @@ deploy-service:
       - master
 
   variables:
+    DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
 
   before_script:
