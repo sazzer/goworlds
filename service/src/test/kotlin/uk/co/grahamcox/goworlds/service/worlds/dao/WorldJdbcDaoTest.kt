@@ -180,7 +180,6 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
                         "and lead miniature figures."
         ))
 
-
         data class Test(
                 val name: String,
                 val filters: WorldSearchFilters = WorldSearchFilters(),
