@@ -375,4 +375,91 @@ internal class WorldJdbcDaoTest : IntegrationTestBase() {
         Assertions.assertEquals("test-world", exception.slug)
     }
 
+    @Test
+    fun updateWorldSuccess() {
+        val seededUser = seed(UserSeed())
+        val world = seed(WorldSeed(ownerId = seededUser.id))
+
+        val updatedWorld = worldJdbcDao.update(WorldId(world.id)) { world ->
+            world.data.copy(
+                    name = "new name",
+                    description = "new description",
+                    slug = "new-slug"
+            )
+        }
+
+        Assertions.assertAll(
+                Executable { Assertions.assertEquals(updatedWorld.identity.id, WorldId(world.id)) },
+                Executable { Assertions.assertNotEquals(updatedWorld.identity.version, world.version) },
+                Executable { Assertions.assertEquals(updatedWorld.identity.created, world.created) },
+                Executable { Assertions.assertNotEquals(updatedWorld.identity.updated, world.updated) },
+
+                Executable { Assertions.assertEquals(updatedWorld.data.name, "new name") },
+                Executable { Assertions.assertEquals(updatedWorld.data.description, "new description") },
+                Executable { Assertions.assertEquals(updatedWorld.data.slug, "new-slug") },
+                // Unchanged
+                Executable { Assertions.assertEquals(updatedWorld.data.owner.id, world.ownerId) }
+        )
+    }
+
+    @Test
+    fun updateWorldReRetrieve() {
+        val seededUser = seed(UserSeed())
+        val world = seed(WorldSeed(ownerId = seededUser.id))
+
+        val updatedWorld = worldJdbcDao.update(WorldId(world.id)) { world ->
+            world.data.copy(
+                    name = "new name",
+                    description = "new description",
+                    slug = "new-slug"
+            )
+        }
+
+        val retrievedWorld = worldJdbcDao.getById(WorldId(world.id))
+        Assertions.assertEquals(updatedWorld, retrievedWorld)
+    }
+
+    @Test
+    fun updateUnknownWorld() {
+        val worldId = WorldId(UUID.randomUUID())
+
+        val e = Assertions.assertThrows(UnknownWorldException::class.java) {
+            worldJdbcDao.update(worldId) { world -> world.data }
+        }
+
+        Assertions.assertEquals(worldId, e.id)
+    }
+
+    @Test
+    fun updateWorldDuplicateSlug() {
+        val seededUser = seed(UserSeed())
+        val world1 = seed(WorldSeed(ownerId = seededUser.id, slug = "world-1"))
+        val world2 = seed(WorldSeed(ownerId = seededUser.id, slug = "world-2"))
+
+        val e = Assertions.assertThrows(DuplicateSlugException::class.java) {
+            worldJdbcDao.update(WorldId(world1.id)) { world ->
+                world.data.copy(
+                        slug = world2.slug
+                )
+            }
+        }
+        Assertions.assertEquals("world-2", e.slug)
+    }
+
+    @Test
+    fun updateWorldInvalidOwer() {
+        val seededUser = seed(UserSeed())
+        val world = seed(WorldSeed(ownerId = seededUser.id))
+
+        val newOwner = UserId(UUID.randomUUID())
+        val e = Assertions.assertThrows(UnknownUserException::class.java) {
+            worldJdbcDao.update(WorldId(world.id)) { world ->
+                world.data.copy(
+                        owner = newOwner
+                )
+            }
+        }
+        Assertions.assertEquals(newOwner, e.id)
+    }
+
 }

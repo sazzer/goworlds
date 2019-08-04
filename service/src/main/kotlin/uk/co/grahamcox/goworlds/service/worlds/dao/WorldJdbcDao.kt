@@ -11,7 +11,8 @@ import uk.co.grahamcox.goworlds.service.database.getUUID
 import uk.co.grahamcox.goworlds.service.database.queryForObject
 import uk.co.grahamcox.goworlds.service.database.queryForPage
 import uk.co.grahamcox.goworlds.service.model.*
-import uk.co.grahamcox.goworlds.service.users.*
+import uk.co.grahamcox.goworlds.service.users.UnknownUserException
+import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.worlds.*
 import uk.co.grahamcox.skl.*
 import uk.co.grahamcox.skl.postgres.*
@@ -191,6 +192,61 @@ open class WorldJdbcDao(
         return world
     }
 
+    /**
+     * Update the world with the given lambda
+     * @param worldId The ID of the world
+     * @param modifier The means to mutate the world
+     * @return the newly updated world
+     */
+    override fun update(worldId: WorldId, modifier: (Model<WorldId, WorldData>) -> WorldData): Model<WorldId, WorldData> {
+        val currentWorld = getById(worldId)
+
+        val newData = modifier(currentWorld)
+
+        return updateWorld(worldId, newData)
+    }
+
+    /**
+     * Update the world to the given data
+     * @param worldId The ID of the world
+     * @param data The new data
+     * @return the newly updated world
+     */
+    private fun updateWorld(worldId: WorldId, data: WorldData): Model<WorldId, WorldData> {
+        LOG.debug("Updating world {} with details: {}", worldId, data)
+
+        val now = Date.from(clock.instant())
+
+        val query = update("worlds") {
+            set("version", bind(UUID.randomUUID()))
+            set("updated", bind(now))
+
+            set("name", bind(data.name))
+            set("owner_id", bind(data.owner.id))
+            set("description", bind(data.description))
+            set("slug", bind(data.slug))
+
+            where {
+                eq(field("world_id"), bind(worldId.id))
+            }
+
+            returnAll()
+        }
+
+        val world = try {
+            jdbcOperations.queryForObject(query, this::parseWorld)
+        } catch (e: DuplicateKeyException) {
+            LOG.warn("Duplicate Key Exception creating new world {}", data, e)
+            throw DuplicateSlugException(data.slug)
+        } catch (e: DataIntegrityViolationException) {
+            LOG.warn("Data Integrity Violation Exception creating new world {}", data, e)
+            throw UnknownUserException(data.owner)
+        }
+
+        LOG.debug("Updated world: {}", world)
+        return world
+    }
+    
     /**
      * Parse the world that is represented by the current row in the given resultset
      * @param rs The result set to parse
