@@ -31,7 +31,7 @@ class ClientJdbcDao(private val jdbcOperations: NamedParameterJdbcOperations) : 
      * @param id The ID of the client
      * @return the client details
      */
-    override fun getClientById(id: ClientId): Model<ClientId, ClientData> {
+    override fun getById(id: ClientId): Model<ClientId, ClientData> {
         ClientJdbcDao.LOG.debug("Getting client with ID: {}", id)
         try {
             val query = select {

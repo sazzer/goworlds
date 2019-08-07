@@ -7,8 +7,12 @@ stages:
 build-service:
   stage: build
   image: adoptopenjdk/openjdk12:latest
+  services:
+    - docker:19.03.0-dind
 
   variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
     MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
     MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
 
@@ -21,8 +25,10 @@ build-service:
     - su -p -c "./gradlew build" builder
 
   artifacts:
+    when: always
     paths:
       - service/build/libs/goworlds-service-0.0.1-SNAPSHOT.jar
+      - service/build/reports
 
   cache:
     key: goworlds-service
@@ -54,7 +60,7 @@ build-service-container:
   stage: docker
   image: docker:stable
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
@@ -75,7 +81,7 @@ build-webapp-container:
   stage: docker
   image: docker:stable
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
@@ -96,7 +102,7 @@ build-e2e-container:
   stage: docker
   image: docker:stable
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
@@ -117,7 +123,7 @@ run-e2e-tests:
   stage: e2e
   image: docker:stable
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
@@ -175,7 +181,7 @@ deploy-service:
   stage: deploy
   image: docker:stable
   services:
-    - docker:dind
+    - docker:19.03.0-dind
   
   only:
     refs:

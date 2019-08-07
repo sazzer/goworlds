@@ -13,7 +13,11 @@ data class CombiningConditional(val conditions: List<Conditional>,
             if (conditions.isEmpty()) {
                 ""
             } else {
-                conditions.joinToString(separator = " $combining ",
+                val queries = conditions.map(Conditional::buildQueryString)
+                        .map(String::trim)
+                        .filter(String::isNotBlank)
+
+                queries.joinToString(separator = " $combining ",
                         prefix = when (brackets) {
                             true -> "("
                             false -> ""
@@ -21,7 +25,6 @@ data class CombiningConditional(val conditions: List<Conditional>,
                         postfix = when (brackets) {
                             true -> ")"
                             false -> ""
-                        },
-                        transform = Conditional::buildQueryString)
+                        })
             }
 }

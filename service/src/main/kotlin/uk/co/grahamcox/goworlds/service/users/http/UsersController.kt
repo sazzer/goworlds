@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.http.collection.ResourceCollection
+import uk.co.grahamcox.goworlds.service.http.parseSearchFields
 import uk.co.grahamcox.goworlds.service.http.problem.ProblemModel
 import uk.co.grahamcox.goworlds.service.http.problems.InvalidCountException
 import uk.co.grahamcox.goworlds.service.http.problems.InvalidOffsetException
@@ -39,7 +40,7 @@ class UsersController(
         } catch (e: IllegalArgumentException) {
             throw UnknownUserException(null)
         }
-        val user = userService.getUserById(userId)
+        val user = userService.getById(userId)
 
         return buildUserResponse(user)
     }
@@ -65,7 +66,7 @@ class UsersController(
         }
 
         // Actually create the user
-        val user = userService.createUser(UserData(
+        val user = userService.create(UserData(
                 name = input.name,
                 email = input.email,
                 password = HashedPassword.hash(input.password)
@@ -110,7 +111,7 @@ class UsersController(
         }
 
         // Actually update the user
-        val user = userService.updateUser(userId) {currentUser ->
+        val user = userService.update(userId) { currentUser ->
             currentUser.data.copy(
                     name = input.name ?: currentUser.data.name,
                     email = input.email ?: currentUser.data.email,
@@ -133,28 +134,14 @@ class UsersController(
                     @RequestParam(name = "count", required = false) count: String?) : ResourceCollection<UserModel> {
 
         // Parse the inputs into values we can use, failing if any are invalid
-        val parsedOffset = try {
-            offset?.toLong() ?: 0
-        } catch (e: NumberFormatException) {
-            throw InvalidOffsetException()
-        }
-        if (parsedOffset < 0) throw InvalidOffsetException()
-
-        val parsedCount = try {
-            count?.toLong() ?: 10
-        } catch (e: NumberFormatException) {
-            throw InvalidCountException()
-        }
-        if (parsedCount < 0) throw InvalidCountException()
-
-        val parsedSorts = sort?.let { parseSorts<UserSort>(it) } ?: emptyList()
+        val parsedSearchFields = parseSearchFields<UserSort>(offset, count, sort)
 
         // Actually fetch the users
-        val users = userService.searchUsers(
+        val users = userService.search(
                 filters = UserSearchFilters(name = name, email = email),
-                offset = parsedOffset,
-                count = parsedCount,
-                sorts = parsedSorts
+                offset = parsedSearchFields.offset,
+                count = parsedSearchFields.count,
+                sorts = parsedSearchFields.sorts
         )
 
         // Return the resources back to the client

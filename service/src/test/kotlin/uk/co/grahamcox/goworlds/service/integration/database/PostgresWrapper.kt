@@ -1,8 +1,7 @@
 package uk.co.grahamcox.goworlds.service.integration.database
 
 import org.slf4j.LoggerFactory
-import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres
-import ru.yandex.qatools.embed.postgresql.distribution.Version
+import org.testcontainers.containers.PostgreSQLContainerProvider;
 
 /**
  * Wrapper around the Postgres Server
@@ -14,7 +13,10 @@ class PostgresWrapper {
     }
 
     /** The postgres server  */
-    private val postgres = EmbeddedPostgres(Version.V10_6)
+    private val postgres = PostgreSQLContainerProvider().newInstance("11.3-alpine")
+            .withUsername("worlds")
+            .withPassword("worlds")
+            .withDatabaseName("worlds")
 
     /** The database connection URL */
     lateinit var url: String
@@ -23,8 +25,9 @@ class PostgresWrapper {
      * Start the server
      */
     fun start() {
-        url = postgres.start()
-        LOG.debug("Started Postgres server on {}", url)
+        postgres.start()
+        url = postgres.getJdbcUrl()
+        LOG.info("Started Postgres server on {}", url)
     }
 
     /**

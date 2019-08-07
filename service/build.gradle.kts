@@ -26,13 +26,14 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-freemarker:2.2.0.M4")
   implementation("org.springframework.boot:spring-boot-starter-jdbc:2.2.0.M4")
   implementation("org.springframework.boot:spring-boot-starter-web:2.2.0.M4")
-  implementation("ru.yandex.qatools.embed:postgresql-embedded:2.10")
 
   runtime("org.postgresql:postgresql:42.2.6")
   runtime("org.springframework.boot:spring-boot-devtools:2.2.0.M4")
 
   testImplementation("io.mockk:mockk:1.9.3")
   testImplementation("org.apache.httpcomponents:httpclient:4.5.9")
+  testImplementation("org.testcontainers:postgresql:1.12.0")
+  testImplementation("org.testcontainers:testcontainers:1.12.0")
   testImplementation("org.springframework.boot:spring-boot-starter-test:2.2.0.M4") {
     exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     exclude(group = "junit", module = "junit")

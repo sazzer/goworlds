@@ -23,7 +23,7 @@ class EmailController(
     @RequestMapping(value = ["/{email}"], method = [RequestMethod.GET])
     fun getUserById(@PathVariable("email") email: String) : Map<String, Boolean> {
         val exists = try {
-            userRetriever.getUserByEmail(email)
+            userRetriever.getByEmail(email)
             true
         } catch (e: UnknownUserException) {
             false

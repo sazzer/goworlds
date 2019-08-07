@@ -23,11 +23,6 @@ abstract class QueryBuilder {
     fun alias(expression: Expression, alias: String) = ExpressionAlias(expression, alias)
 
     /**
-     * Wrap the given expression in the "UPPER" function
-     */
-    fun upper(expression: Expression) = UnaryFunction("UPPER", expression)
-
-    /**
      * Actually build the query
      */
     abstract fun build(): Query

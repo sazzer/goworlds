@@ -35,7 +35,7 @@ open class UserJdbcDao(
      * @param id The ID of the user
      * @return the user details
      */
-    override fun getUserById(id: UserId): Model<UserId, UserData> {
+    override fun getById(id: UserId): Model<UserId, UserData> {
         LOG.debug("Getting user with ID: {}", id)
         try {
             val query = select {
@@ -60,7 +60,7 @@ open class UserJdbcDao(
      * @param email The email of the user
      * @return the user details
      */
-    override fun getUserByEmail(email: String): Model<UserId, UserData> {
+    override fun getByEmail(email: String): Model<UserId, UserData> {
         LOG.debug("Getting user with Email: {}", email)
         try {
             val query = select {
@@ -88,7 +88,7 @@ open class UserJdbcDao(
      * @param count The count of results to return
      * @return the matching users
      */
-    override fun searchUsers(filters: UserSearchFilters, sorts: List<Sort<UserSort>>, offset: Long, count: Long): Page<Model<UserId, UserData>> {
+    override fun search(filters: UserSearchFilters, sorts: List<Sort<UserSort>>, offset: Long, count: Long): Page<Model<UserId, UserData>> {
         val selectBuilder: SelectBuilder.() -> Unit = {
             // Tables to select from
             val (users) = from("users")
@@ -129,7 +129,7 @@ open class UserJdbcDao(
      * @param data The data for the user
      * @return the created user
      */
-    override fun createUser(data: UserData): Model<UserId, UserData> {
+    override fun create(data: UserData): Model<UserId, UserData> {
         LOG.debug("Creating user with details: {}", data)
 
         val now = Date.from(clock.instant())
@@ -203,8 +203,8 @@ open class UserJdbcDao(
      * @param modifier The means to mutate the user
      * @return the newly updated user
      */
-    override fun updateUser(userId: UserId, modifier: (Model<UserId, UserData>) -> UserData): Model<UserId, UserData> {
-        val currentUser = getUserById(userId)
+    override fun update(userId: UserId, modifier: (Model<UserId, UserData>) -> UserData): Model<UserId, UserData> {
+        val currentUser = getById(userId)
 
         val newData = modifier(currentUser)
 
