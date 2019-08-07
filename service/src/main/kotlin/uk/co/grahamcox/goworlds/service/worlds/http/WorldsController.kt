@@ -11,6 +11,7 @@ import uk.co.grahamcox.goworlds.service.http.problem.ProblemModel
 import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestException
 import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestFieldException
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.oauth2.authorization.Authorizer
 import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.worlds.*
 import java.net.URI
@@ -116,6 +117,54 @@ class WorldsController(private val worldService: WorldService) {
                 slug = input.slug,
                 owner = userId
         ))
+
+        // And return the response
+        return buildWorldResponse(world)
+    }
+
+    /**
+     * Update an existing world with the given details
+     * @param id The ID of the world to update
+     * @param input The input details from which to update the world
+     * @return the created world
+     */
+    @RequestMapping(value = ["/{id}"], method = [RequestMethod.PATCH])
+    fun patchWorld(@PathVariable("id") id: String,
+                  @RequestBody input: WorldInputModel?,
+                  authorizer: Authorizer) : ResponseEntity<WorldModel> {
+        // Validate our inputs
+        input ?: throw MissingRequestException()
+
+        if (input.name?.isBlank() == true) {
+            throw MissingRequestFieldException("name")
+        }
+        if (input.description?.isBlank() == true) {
+            throw MissingRequestFieldException("description")
+        }
+        if (input.slug?.isBlank() == true) {
+            throw MissingRequestFieldException("slug")
+        }
+
+        val worldId = try {
+            WorldId(UUID.fromString(id))
+        } catch (e: IllegalArgumentException) {
+            throw UnknownWorldException(null)
+        }
+
+        // Actually update the world
+        val world = worldService.update(worldId) { currentWorld ->
+
+            // Authorize the request
+            authorizer {
+                sameUser(currentWorld.data.owner)
+            }
+
+            currentWorld.data.copy(
+                    name = input.name ?: currentWorld.data.name,
+                    description = input.description ?: currentWorld.data.description,
+                    slug = input.slug ?: currentWorld.data.slug
+            )
+        }
 
         // And return the response
         return buildWorldResponse(world)
