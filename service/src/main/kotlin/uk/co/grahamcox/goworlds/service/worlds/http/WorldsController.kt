@@ -8,7 +8,10 @@ import uk.co.grahamcox.goworlds.service.http.buildUri
 import uk.co.grahamcox.goworlds.service.http.collection.ResourceCollection
 import uk.co.grahamcox.goworlds.service.http.parseSearchFields
 import uk.co.grahamcox.goworlds.service.http.problem.ProblemModel
+import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestException
+import uk.co.grahamcox.goworlds.service.http.problems.MissingRequestFieldException
 import uk.co.grahamcox.goworlds.service.model.Model
+import uk.co.grahamcox.goworlds.service.users.UserId
 import uk.co.grahamcox.goworlds.service.worlds.*
 import java.net.URI
 import java.util.*
@@ -85,6 +88,38 @@ class WorldsController(private val worldService: WorldService) {
                 entries = worlds.entries.map(this::buildWorldModel)
         )
     }
+
+    /**
+     * Create a new world with the given details
+     * @param input The input details from which to create a world
+     * @return the created world
+     */
+    @RequestMapping(method = [RequestMethod.POST])
+    fun createWorld(@RequestBody input: WorldInputModel?, userId: UserId) : ResponseEntity<WorldModel> {
+        // Validate our inputs
+        input ?: throw MissingRequestException()
+
+        if (input.name.isNullOrBlank()) {
+            throw MissingRequestFieldException("name")
+        }
+        if (input.description.isNullOrBlank()) {
+            throw MissingRequestFieldException("description")
+        }
+        if (input.slug.isNullOrBlank()) {
+            throw MissingRequestFieldException("slug")
+        }
+
+        // Actually create the world
+        val world = worldService.create(WorldData(
+                name = input.name,
+                description = input.description,
+                slug = input.slug,
+                owner = userId
+        ))
+
+        // And return the response
+        return buildWorldResponse(world)
+    }
     
     /**
      * Build the World Model response that represents the returned World
@@ -126,5 +161,15 @@ class WorldsController(private val worldService: WorldService) {
             type = URI("tag:goworlds,2019:worlds/problems/unknown-world"),
             title = "The requested world could not be found",
             statusCode = HttpStatus.NOT_FOUND
+    )
+
+    /**
+     * Handler for when the requested URL Slug is a duplicate
+     */
+    @ExceptionHandler(DuplicateSlugException::class)
+    fun handleDuplicateSlug() = ProblemModel(
+            type = URI("tag:goworlds,2019:worlds/problems/duplicate-slug"),
+            title = "The provided URL Slug is already in use",
+            statusCode = HttpStatus.CONFLICT
     )
 }
