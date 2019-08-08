@@ -37,5 +37,7 @@ export function buildStore() {
         yield all(sagas.map(saga => saga()));
     });
 
+    store.dispatch({type: 'Initialise'});
+
     return store;
 }

@@ -14,11 +14,19 @@ import jwtDecode from 'jwt-decode';
 import {storeCurrentUser} from "./currentUserId";
 import {MODULE_PREFIX} from "./module";
 import {getConfig} from "../config";
+import {LOGOUT_ACTION} from "./logout";
+import debug from 'debug';
+
+/** The logger to use */
+const LOG = debug('goworlds:Authentication:authenticate');
 
 //////// Action for authenticating to request an Access Token and ID Token
 
 /** The action type for checking if an email exists */
 const AUTHENTICATE_ACTION = MODULE_PREFIX + 'authenticate';
+
+/** The local storage key for the authentication details */
+let AUTH_STORAGE_KEY = 'goworlds:authentication';
 
 /** The shape of the action to authenticate a user */
 declare type AuthenticateAction = {
@@ -117,10 +125,38 @@ export function* authenticateSucceededSaga(action: ResolvedAsyncAction<Authentic
         if (idToken.sub) {
             yield put(storeCurrentUser(idToken.sub));
         }
+
+        if (sessionStorage) {
+            LOG('Storing authentication in local storage: %o', action);
+            sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(action));
+        }
     }
 
-    if (action.input) {
+    if (action.input && action.input.callback) {
         action.input.callback(undefined);
+    }
+}
+
+/**
+ * Saga to re-log in the user when the page reloads
+ */
+export function* authenticateOnReload() : IterableIterator<any> {
+    if (sessionStorage) {
+        const authentication = sessionStorage.getItem(AUTH_STORAGE_KEY);
+        LOG('Found authentication in local storage: %s', authentication);
+        if (authentication) {
+            yield put(JSON.parse(authentication));
+        }
+    }
+}
+
+/**
+ * Saga to forget the authentication details on logout
+ */
+export function forgetAuthentication() {
+    if (sessionStorage) {
+        LOG('Removing authentication from local storage');
+        sessionStorage.removeItem(AUTH_STORAGE_KEY);
     }
 }
 
@@ -131,4 +167,6 @@ export const sagas = [
     buildSaga(AUTHENTICATE_ACTION, authenticateSaga),
     buildSaga(succeededAction(AUTHENTICATE_ACTION), authenticateSucceededSaga),
     buildSaga(failedAction(AUTHENTICATE_ACTION), authenticateFailedSaga),
+    buildSaga(LOGOUT_ACTION, forgetAuthentication),
+    buildSaga("Initialise", authenticateOnReload),
 ];
