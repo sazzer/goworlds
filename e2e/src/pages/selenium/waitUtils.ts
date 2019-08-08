@@ -21,7 +21,7 @@ export function waitTime(wait: number = 100) {
  * @param wait the wait between repeats
  * @return the result of the function
  */
-export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number = 10, wait: number = 100): Promise<T> {
+export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number = 25, wait: number = 100): Promise<T> {
     for (let i = 0; i < count; ++i) {
         LOG('Performing wait check %d of %d', i, count);
         try {
@@ -47,7 +47,7 @@ export async function waitUntilAvailable<T>(fn: () => Promise<T>, count: number 
  * @param count the number of times to repeat
  * @param wait the wait between repeats
  */
-export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: number = 10, wait: number = 100): Promise<any> {
+export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: number = 25, wait: number = 100): Promise<any> {
     for (let i = 0; i < count; ++i) {
         LOG('Performing wait check %d of %d', i, count);
         try {
@@ -75,7 +75,7 @@ export async function waitUntilUnavailable<T>(fn: () => Promise<T>, count: numbe
  * @param wait the wait between repeats
  * @return the result of the function
  */
-export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number = 10, wait: number = 1000): Promise<boolean> {
+export async function waitUntilTrue<T>(fn: () => Promise<boolean>, count: number = 25, wait: number = 1000): Promise<boolean> {
     for (let i = 0; i < count; ++i) {
         LOG('Performing wait check %d of %d', i, count);
         try {
