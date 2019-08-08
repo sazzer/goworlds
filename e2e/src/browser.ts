@@ -24,6 +24,10 @@ AfterAll(async () => {
 });
 
 After(async function () {
+    await driver.executeScript('window.sessionStorage.clear();');
+});
+
+After(async function () {
     const screenshot = await driver.takeScreenshot();
     this.attach(screenshot, 'image/png');
 
