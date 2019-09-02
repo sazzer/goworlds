@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<body>
+  <div>
+    <div
+      class="ui large dividing header"
+    >
+      Create New World
+    </div>
+  </div>
+</body>
+`;

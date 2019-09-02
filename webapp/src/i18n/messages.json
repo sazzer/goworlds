@@ -113,5 +113,14 @@
   "worldsMenu": {
     "label": "Worlds",
     "create": "Create New World"
+  },
+  "worlds": {
+    "create": {
+      "title": "Create New World",
+      "breadcrumbs": {
+        "home": "Home",
+        "label": "Create New World"
+      }
+    }
   }
 }
