@@ -6,7 +6,7 @@ import {HomePage} from './homepage';
 import {IsAuthenticated} from "./common/Authenticated";
 import {Route, Switch} from "react-router";
 import {ProfilePage} from "./profile";
-import {CreateWorldPage} from "./worlds/create";
+import {WorldsRouter} from "./worlds";
 
 /** The props that an App needs */
 type AppProps = {};
@@ -25,7 +25,7 @@ export const App: FunctionComponent<AppProps> = () => {
                         {!auth && <Route render={() => <HomePage/>} />}
 
                         {auth && <Route path="/profile" render={() => <ProfilePage/>} />}
-                        {auth && <Route path="/worlds/create" render={() => <CreateWorldPage/>} />}
+                        {auth && <Route path="/worlds" render={() => <WorldsRouter/>} />}
                         {auth && <Route render={() => "Hello"} />}
                     </Switch>
                 )}/>
