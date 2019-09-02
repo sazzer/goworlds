@@ -109,5 +109,9 @@
         }
       }
     }
+  },
+  "worldsMenu": {
+    "label": "Worlds",
+    "create": "Create New World"
   }
 }

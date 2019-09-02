@@ -3,6 +3,7 @@ import {Menu} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {UserMenu} from "./UserMenu";
 import {Authenticated} from "../common/Authenticated";
+import {WorldsMenu} from "./WorldsMenu";
 
 /** The props that a HeaderBar needs */
 type HeaderBarProps = {};
@@ -20,9 +21,12 @@ export const HeaderBar: FunctionComponent<HeaderBarProps> = () => {
                 {t('page.header')}
             </Menu.Item>
 
-            <Authenticated>
-                <UserMenu />
-            </Authenticated>
+            <Menu.Menu position='right'>
+                <Authenticated>
+                    <WorldsMenu/>
+                    <UserMenu />
+                </Authenticated>
+            </Menu.Menu>
         </Menu>
     );
 };
