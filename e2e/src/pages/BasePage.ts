@@ -36,7 +36,7 @@ export class BasePage {
     async getUserMenu() : Promise<UserMenuModel> {
         LOG('Waiting for the User Menu to be displayed');
         return await waitUntilAvailable(async () => {
-            const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown'));
+            const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown[data-test="UserMenu"]'));
             await userMenuElement.isDisplayed();
 
             return new UserMenuModel(userMenuElement);
@@ -49,7 +49,7 @@ export class BasePage {
     async userMenuNotPresent() : Promise<boolean> {
         LOG('Waiting for the User Menu to be removed');
         await waitUntilUnavailable(async () => {
-            const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown'));
+            const userMenuElement = await this.webElement.findElement(By.css('.top.fixed.menu .right.menu .dropdown[data-test="UserMenu"]'));
             await userMenuElement.isDisplayed();
         });
         return true;

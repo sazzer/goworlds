@@ -23,7 +23,7 @@ exports[`renders without crashing 1`] = `
       <div
         class="active section"
       >
-        !!worlds.create.breadcrumbs.label!!
+        Create New World
       </div>
     </div>
   </div>

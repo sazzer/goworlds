@@ -1,5 +1,5 @@
 import React, {FunctionComponent} from "react";
-import {Dropdown, Icon, Menu} from "semantic-ui-react";
+import {Dropdown, Icon} from "semantic-ui-react";
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 
@@ -14,16 +14,14 @@ export const WorldsMenu: FunctionComponent<WorldsMenuProps> = () => {
     const { t } = useTranslation();
 
     return (
-        <Menu.Menu position="right">
-            <Dropdown item text={t('worldsMenu.label')}>
-                <Dropdown.Menu>
-                    <Dropdown.Divider />
-                    <Link to="/worlds/create" className="ui item">
-                        <Icon name="write" />
-                        {t('worldsMenu.create')}
-                    </Link>
-                </Dropdown.Menu>
-            </Dropdown>
-        </Menu.Menu>
+        <Dropdown item text={t('worldsMenu.label')} data-test="WorldsMenu">
+            <Dropdown.Menu>
+                <Dropdown.Divider />
+                <Link to="/worlds/create" className="ui item">
+                    <Icon name="write" />
+                    {t('worldsMenu.create')}
+                </Link>
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };

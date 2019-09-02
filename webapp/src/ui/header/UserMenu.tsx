@@ -1,10 +1,10 @@
 /** The props that a HeaderBar needs */
 import React, {FunctionComponent} from "react";
 import {useTranslation} from "react-i18next";
-import {Dropdown, Icon, Menu} from "semantic-ui-react";
+import {Dropdown, Icon} from "semantic-ui-react";
 import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {selectCurrentUserId} from "../../authentication/currentUserId";
-import {selectUserById, loadUser} from "../../users/users";
+import {loadUser, selectUserById} from "../../users/users";
 import {Link} from "react-router-dom";
 import {logout} from "../../authentication/logout";
 import {User} from "../../users/user";
@@ -26,21 +26,18 @@ export const UserMenu: FunctionComponent<UserMenuProps> = () => {
     }
 
     return (
-        <Menu.Menu position="right">
-            <Dropdown item text={currentUser === undefined ? '' : currentUser.name} loading={currentUser === undefined}>
-                <Dropdown.Menu>
-                    <Link to="/profile" className="ui item">
-                        <Icon name="edit" />
-                        {t('userMenu.editProfile')}
-                    </Link>
-                    <Dropdown.Divider />
-                    <div className="ui item" onClick={() => dispatch(logout())}>
-                        <Icon name="log out" />
-                        {t('userMenu.logOut')}
-                    </div>
-                </Dropdown.Menu>
-            </Dropdown>
-
-        </Menu.Menu>
+        <Dropdown item text={currentUser === undefined ? '' : currentUser.name} loading={currentUser === undefined} data-test="UserMenu">
+            <Dropdown.Menu>
+                <Link to="/profile" className="ui item">
+                    <Icon name="edit" />
+                    {t('userMenu.editProfile')}
+                </Link>
+                <Dropdown.Divider />
+                <div className="ui item" onClick={() => dispatch(logout())}>
+                    <Icon name="log out" />
+                    {t('userMenu.logOut')}
+                </div>
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };
